@@ -63,7 +63,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; text-wrap: bala
 .nav a[aria-current="page"] { color: var(--ink); background: var(--code-soft); }
 .nav .n { font-size: 12px; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
 .nav .due { font: 700 11.5px/1 var(--font-body); background: var(--red); color: #fff; border-radius: 99px; padding: 3px 6px; }
-.search { position: relative; flex: 1; min-width: 180px; max-width: 340px; margin-left: auto; }
+.search { position: relative; flex: 1; min-width: 150px; max-width: 340px; margin-left: auto; }
 .search input[type="search"] { width: 100%; height: 38px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 0 34px 0 36px; font-weight: 500; }
 .search input:focus { background: var(--surface); border-color: var(--code); outline: none; box-shadow: 0 0 0 3px var(--code-soft); }
 .search > svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
@@ -296,6 +296,79 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .node .flag::after { content: ""; position: absolute; left: 50%; bottom: -4px; margin-left: -4px; border: 4px solid transparent; border-bottom: 0; border-top-color: var(--sd); }
 .node.st-due .flag { background: var(--red); } .node.st-due .flag::after { border-top-color: var(--red); }
 
+
+/* ---------- roadmap ---------- */
+.rm-head { display: grid; grid-template-columns: 1fr auto; gap: 14px 28px; align-items: end; }
+.rm-head h2 { font-size: clamp(28px, 3.6vw, 38px); font-weight: 800; }
+.rm-head .prose { margin-top: 6px; max-width: 70ch; }
+.rm-form { display: grid; grid-template-columns: 170px 190px auto 130px auto 1fr; gap: 14px 18px; align-items: end; padding: 16px 18px; }
+.rm-form .field select, .rm-form .field input { width: 100%; }
+.rm-form .field > span { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.rm-sd { padding-bottom: 8px; white-space: nowrap; }
+.rm-actions { display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+.rm-state { font-size: 14px; color: var(--ink-2); }
+.rm-note { grid-column: 1 / -1; margin: -2px 0 0; }
+.rm-mapcard { position: relative; overflow: hidden; padding: 18px 14px 6px;
+  background:
+    radial-gradient(600px 260px at 12% 8%, rgba(98,70,234,.07), transparent 70%),
+    radial-gradient(520px 260px at 88% 55%, rgba(28,140,224,.08), transparent 70%),
+    radial-gradient(520px 240px at 30% 95%, rgba(34,176,125,.08), transparent 70%),
+    var(--surface); }
+.rm-mapcard.is-draft::before { content: "Preview"; position: absolute; top: 12px; right: 14px; font-size: 12px; font-weight: 700; color: var(--yellow-ink); background: var(--yellow-soft); border-radius: 6px; padding: 2px 8px; z-index: 3; }
+.rm-map { position: relative; min-height: 200px; }
+.rm-road { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+.rm-road path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.rm-road .r-edge { stroke: var(--ink); stroke-width: 21.5; opacity: .85; }
+.rm-road .r-base { stroke: #e4e0f2; stroke-width: 18; }
+.rm-road .r-done { stroke: var(--code); stroke-width: 18; }
+.rm-road .r-dash { stroke: #fff; stroke-width: 2.5; stroke-dasharray: 9 11; opacity: .95; }
+.rm-node { position: absolute; display: flex; flex-direction: column; align-items: center; }
+.rm-node .st { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--ink); background: var(--surface); display: grid; place-items: center; font: 800 15px/1 var(--font-display); color: var(--ink); box-shadow: 0 3px 0 var(--ink); cursor: pointer; position: relative; z-index: 2; padding: 0; transition: transform .1s; }
+.rm-node .st:hover { transform: translateY(-2px); }
+.st.st-done { background: var(--green); }
+.st.st-current { background: var(--code); color: #fff; animation: rm-pulse 2.2s ease-out infinite; }
+.st.st-behind { background: var(--yellow); }
+.st.st-polish { background: #fff4d6; color: var(--yellow-ink); font-size: 18px; }
+.st.st-polish.st-current { background: var(--code); color: #fff; }
+.st.st-start { background: var(--green-soft); color: var(--green-ink); cursor: default; }
+.st.st-finish { background: #ffe9a8; color: #7a5200; cursor: default; width: 46px; height: 46px; }
+@keyframes rm-pulse { 0% { box-shadow: 0 3px 0 var(--ink), 0 0 0 0 rgba(98,70,234,.45); } 70% { box-shadow: 0 3px 0 var(--ink), 0 0 0 14px rgba(98,70,234,0); } 100% { box-shadow: 0 3px 0 var(--ink), 0 0 0 0 rgba(98,70,234,0); } }
+.rm-here { position: absolute; top: -30px; z-index: 3; font-size: 11.5px; font-weight: 800; color: #fff; background: var(--ink); border-radius: 7px; padding: 3px 8px; white-space: nowrap; }
+.rm-here::after { content: ""; position: absolute; left: 50%; bottom: -5px; margin-left: -5px; border: 5px solid transparent; border-bottom: 0; border-top-color: var(--ink); }
+.rm-sign { position: absolute; top: -30px; left: -6px; z-index: 1; font-size: 11.5px; font-weight: 800; color: var(--ink-2); background: #fff; border: 1.5px solid var(--ink-2); border-radius: 5px; padding: 2px 7px; transform: rotate(-4deg); white-space: nowrap; }
+.rm-node:has(.rm-here) .rm-sign { left: auto; right: -6px; transform: rotate(4deg); }
+.rm-card { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; box-shadow: var(--lift); display: flex; flex-direction: column; gap: 6px; cursor: pointer; text-align: left; }
+.rm-card:hover { border-color: var(--ink-2); }
+.rm-card[aria-pressed="true"] { border-color: var(--code); box-shadow: 0 0 0 3px var(--code-soft), var(--lift); }
+.rm-card.rm-current { border-color: var(--code); }
+.rm-card.rm-behind { border-color: color-mix(in srgb, var(--yellow) 70%, var(--line)); }
+.rm-card.rm-done { background: #fbfefc; }
+.rm-card.rm-endcap { cursor: default; align-items: center; text-align: center; box-shadow: none; background: transparent; border: 0; padding: 0; gap: 0; }
+.rm-card-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.rm-card-h b, .rm-endcap b { display: block; font: 700 15.5px/1.2 var(--font-display); }
+.rm-dates { font-size: 12.5px; color: var(--ink-2); font-weight: 600; }
+.rm-line { margin: 0; font-size: 13px; color: var(--ink-2); line-height: 1.45; }
+.rm-line b { color: var(--ink); }
+.rm-line .tag { margin-right: 4px; vertical-align: 1px; }
+.rm-behind { margin: 0; font-size: 12.5px; font-weight: 700; color: var(--yellow-ink); }
+.rm-ring { --p: 0%; flex: none; width: 34px; height: 34px; border-radius: 50%; background: conic-gradient(var(--green) var(--p), var(--heat-0) 0); display: grid; place-items: center; }
+.rm-ring i { width: 26px; height: 26px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font: 700 9.5px/1 var(--font-body); font-style: normal; color: var(--ink-2); }
+.rm-node.is-col { flex-direction: row; align-items: flex-start; gap: 14px; padding-left: 6px; }
+.rm-node.is-col .rm-card { margin-top: 0; }
+.rm-node.is-col .rm-card.rm-endcap { align-items: flex-start; text-align: left; padding-top: 10px; }
+.rm-node.is-col .rm-here { top: 6px; left: 54px; display: none; }
+.rm-node.is-col .rm-sign { top: -24px; left: 50px; }
+@media (max-width: 1080px) {
+  .rm-form { grid-template-columns: 1fr 1fr 1fr; }
+  .rm-form .rm-actions { grid-column: 1 / -1; justify-content: flex-start; }
+}
+@media (max-width: 760px) {
+  .rm-head { grid-template-columns: 1fr; }
+  .rm-kpis { grid-template-columns: repeat(2, 1fr); }
+  .rm-form { grid-template-columns: 1fr 1fr; }
+  .rm-form .field:nth-child(3) { grid-column: 1 / -1; }
+}
+
 /* ---------- progress ---------- */
 .tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
 .tile { padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
@@ -435,7 +508,9 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 #confetti { position: fixed; inset: 0; z-index: 98; pointer-events: none; }
 
 @media (max-width: 1240px) { .brand-text b { font-size: 15.5px; } }
-@media (max-width: 1080px) { .nav .n { display: none; } }
+@media (max-width: 1340px) { .nav .n { display: none; } }
+.nav .ns { display: none; }
+@media (max-width: 1040px) { .nav .nl { display: none; } .nav .ns { display: inline; } .nav a { padding: 7px 9px; } .top-in { gap: 12px; } }
 @media (max-width: 900px) { .brand-text { display: none; } }
 @media (max-width: 980px) {
   .today-head { grid-template-columns: 1fr; }
@@ -460,7 +535,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
   .brand-text, .nav, .search kbd { display: none; }
   .search { max-width: none; }
   .tabbar {
-    display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 35;
+    display: grid; grid-template-columns: repeat(6, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 35;
     background: rgba(255,255,255,.97); border-top: 1px solid var(--line); padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
   }
   .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; color: var(--muted); font-size: 11.5px; font-weight: 700; padding: 4px 0; border-radius: 10px; position: relative; }
@@ -624,7 +699,7 @@ const GUIDE = {
 };
 const guideFor = it => it.track === "code" ? GUIDE.code : it.kind === "design" ? GUIDE.design : GUIDE.learn;
 const DEFAULTS = { code: { intervals: { Red: 1, Yellow: 3, Green: 18 }, mastered: 3 }, sd: { intervals: { Red: 2, Yellow: 7, Green: 21 }, mastered: 2 } };
-const VIEWS = ["today", "problems", "design", "progress", "config"];
+const VIEWS = ["today", "roadmap", "problems", "design", "progress", "config"];
 
 /* ================= utils ================= */
 const $ = (s, r = document) => r.querySelector(s);
@@ -723,7 +798,9 @@ const byKey = (list, key) => list.find(p => p.key === key) || null;
 const pending = new Map(), inflight = new Map();
 function writeDoc(id, data, opts = {}) {
   if (S.readOnly) { toast("This view can't save changes."); return Promise.resolve(); }
+  const wasEmpty = !S.docs.size;
   if (data === null) S.docs.delete(id); else S.docs.set(id, data);
+  if (wasEmpty !== !S.docs.size) renderBanners();
   if (S.mode === "db") {
     pending.set(id, data);
     if (!inflight.has(id)) inflight.set(id, flush(id));
@@ -850,6 +927,7 @@ const ICON = {
   code: '<path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/>',
   sd: '<rect x="3" y="4" width="7" height="6" rx="1.5"/><rect x="14" y="4" width="7" height="6" rx="1.5"/><rect x="8.5" y="15" width="7" height="6" rx="1.5"/><path d="M6.5 10v2.5h11V10M12 12.5V15"/>',
   chart: '<path d="M3 20h18M7 20v-6M12 20V6M17 20v-9"/>',
+  map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/>',
   gear: '<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>'
 };
 const icon = k => `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
@@ -858,6 +936,7 @@ function getPref(k) { try { return localStorage.getItem("b75." + k); } catch (e)
 function setPref(k, v) { try { if (v === null) localStorage.removeItem("b75." + k); else localStorage.setItem("b75." + k, v); } catch (e) {} }
 const NAV = [
   { v: "today", label: "Today", short: "Today", icon: "today" },
+  { v: "roadmap", label: "Roadmap", short: "Roadmap", icon: "map" },
   { v: "problems", label: "Coding", short: "Coding", icon: "code" },
   { v: "design", label: "System design", short: "Design", icon: "sd" },
   { v: "progress", label: "Progress", short: "Progress", icon: "chart" },
@@ -871,6 +950,7 @@ function render() {
   const list = allItems();
   renderNav(list);
   if (S.view === "today") renderToday(list);
+  else if (S.view === "roadmap") renderRoadmap();
   else if (S.view === "problems") renderProblems(list.filter(p => p.track === "code"));
   else if (S.view === "design") renderDesign(list.filter(p => p.track === "sd"));
   else if (S.view === "progress") renderProgress(list);
@@ -881,11 +961,12 @@ function render() {
 function renderNav(list) {
   const due = list.filter(p => p.status === "due").length;
   const code = list.filter(p => p.track === "code"), sd = list.filter(p => p.track === "sd");
-  const extra = { today: due ? `<span class="due">${due}</span>` : "", problems: `<span class="n">${code.filter(p => p.n).length}/${code.length}</span>`, design: `<span class="n">${sd.filter(p => p.n).length}/${sd.length}</span>` };
+  const rp = savedPlan(), rw = rp ? Math.floor(diffDays(rp.start, S.today) / 7) : -1;
+  const extra = { today: due ? `<span class="due">${due}</span>` : "", roadmap: rp && rw >= 0 && rw < rp.weeks.length ? `<span class="n">wk ${rw + 1}/${rp.weeks.length}</span>` : "", problems: `<span class="n">${code.filter(p => p.n).length}/${code.length}</span>`, design: `<span class="n">${sd.filter(p => p.n).length}/${sd.length}</span>` };
   const cur = v => v === S.view ? ' aria-current="page"' : "";
   const L = LISTS[activeList()];
   $("#brand-mark").textContent = L.short; $("#brand-name").textContent = L.name; document.title = "Algo and Architecture";
-  $("#nav").innerHTML = NAV.map(n => `<a href="#${n.v}"${cur(n.v)}>${n.label} ${extra[n.v] || ""}</a>`).join("");
+  $("#nav").innerHTML = NAV.map(n => `<a href="#${n.v}"${cur(n.v)}><span class="nl">${n.label}</span>${n.short !== n.label ? `<span class="ns">${n.short}</span>` : ""} ${extra[n.v] || ""}</a>`).join("");
   $("#tabbar").innerHTML = NAV.map(n => `<a href="#${n.v}"${cur(n.v)}>${icon(n.icon)}${n.short}${n.v === "today" && due ? `<span class="due">${due}</span>` : ""}</a>`).join("");
 }
 function renderBanners() {
@@ -960,7 +1041,14 @@ function renderToday(list) {
   const due = list.filter(p => p.status === "due").sort(dueSort);
   const soon = list.filter(p => p.status === "scheduled" && p.delta <= 7).sort((a, b) => a.delta - b.delta || a.order - b.order);
   const code = list.filter(p => p.track === "code"), sd = list.filter(p => p.track === "sd");
-  const fresh = code.filter(p => p.status === "new").slice(0, 3).concat(sd.filter(p => p.status === "new").slice(0, 2));
+  let fresh = null, freshHint = "Next in list order";
+  const rplan = savedPlan();
+  if (rplan) {
+    const RV = planView(rplan);
+    const pending = RV.weeks.filter(w => w.i <= Math.max(0, RV.cur)).flatMap(w => w.items).filter(p => !p.n && p.status !== "paused");
+    if (pending.length) { fresh = pending.slice(0, 5); freshHint = `From your roadmap, week ${Math.min(Math.max(0, RV.cur), RV.W - 1) + 1}`; }
+  }
+  if (!fresh) fresh = code.filter(p => p.status === "new").slice(0, 3).concat(sd.filter(p => p.status === "new").slice(0, 2));
   const anyStarted = list.some(p => p.n), n = due.length, iv = settings().code.intervals;
   const tp = parts(S.today);
   const head = !S.loaded ? "Loading your reviews…" : n ? plural(n, "review") + " due today" : "You're all caught up";
@@ -1015,7 +1103,7 @@ function renderToday(list) {
 
   <div class="two">
     <section class="sec" aria-labelledby="h-new">
-      <div class="sec-head"><h2 id="h-new">Start something new</h2><span class="hint">Next in list order</span></div>
+      <div class="sec-head"><h2 id="h-new">Start something new</h2><a class="hint" href="#roadmap">${esc(freshHint)}</a></div>
       <div class="card rows">
         ${fresh.map(p => `
           <div class="row new">
@@ -1169,6 +1257,249 @@ function layoutPaths() {
     const svg = $("svg.trail", path); svg.setAttribute("width", W); svg.setAttribute("height", H);
     $("path", svg).setAttribute("d", d);
   }
+}
+
+
+/* ================= roadmap ================= */
+const PHASES = ["Foundations", "Core patterns", "Advanced"];
+const RM = { draft: false, form: null, sel: null };
+function savedPlan() { const d = S.docs.get("settings"); const r = d && d.roadmap; return r && r.v === 1 && Array.isArray(r.weeks) && LISTS[r.list] ? r : null; }
+function planForm(plan) {
+  return plan ? { list: plan.list, end: plan.end, days: plan.days || 5, sd: plan.sd !== false }
+    : { list: activeList(), end: addDays(S.today, 8 * 7 - 1), days: 5, sd: true };
+}
+function buildPlan(f) {
+  const st = settings();
+  const end = f.end > S.today ? f.end : addDays(S.today, 6);
+  const W = Math.max(1, Math.ceil((diffDays(S.today, end) + 1) / 7));
+  const reserve = W >= 4 ? 1 : 0, L = W - reserve;
+  const code = CATS[f.list].map(c => derive(Object.assign({}, c, { doc: S.docs.get(c.key) || null }), st));
+  const todo = code.filter(p => !p.n);
+  const sdAll = sdItems(st), sdTodo = f.sd ? sdAll.filter(p => !p.n) : [];
+  const part = (arr, i) => arr.slice(Math.floor(i * arr.length / L), Math.floor((i + 1) * arr.length / L)).map(p => p.key);
+  const weeks = [];
+  for (let i = 0; i < W; i++) {
+    const s = addDays(S.today, i * 7), e = i === W - 1 ? end : addDays(S.today, i * 7 + 6);
+    weeks.push(i < L ? { s, e, dsa: part(todo, i), sd: part(sdTodo, i) } : { s, e, dsa: [], sd: [], polish: true });
+  }
+  return { v: 1, list: f.list, start: S.today, end, days: Number(f.days) || 5, sd: !!f.sd, weeks, already: (code.length - todo.length) + (f.sd ? sdAll.length - sdTodo.length : 0) };
+}
+// Everything the map needs to draw a plan, with live progress.
+function planView(plan) {
+  const st = settings(), byK = new Map();
+  for (const c of CATS[plan.list]) byK.set(c.key, derive(Object.assign({}, c, { doc: S.docs.get(c.key) || null }), st));
+  for (const p of sdItems(st)) byK.set(p.key, p);
+  const W = plan.weeks.length, since = diffDays(plan.start, S.today);
+  const cur = since < 0 ? -1 : Math.min(W, Math.floor(since / 7));
+  const totalDsa = plan.weeks.reduce((s, w) => s + w.dsa.length, 0);
+  let seen = 0, lastPhase = -1;
+  const weeks = plan.weeks.map((w, i) => {
+    const dsa = w.dsa.map(k => byK.get(k)).filter(Boolean), sd = w.sd.map(k => byK.get(k)).filter(Boolean);
+    const items = dsa.concat(sd), done = items.filter(p => p.n > 0).length;
+    let phase = w.polish ? "Interview polish" : PHASES[Math.min(2, Math.floor(3 * (totalDsa ? seen / totalDsa : i / Math.max(1, W - 1))))];
+    seen += w.dsa.length;
+    const sign = phase !== lastPhase ? phase : null; lastPhase = phase;
+    const status = w.polish ? (i < cur ? "done" : i === cur ? "current" : "upcoming")
+      : items.length && done === items.length ? "done" : i === cur ? "current" : i < cur ? "behind" : "upcoming";
+    const groups = [];
+    for (const p of dsa) { const t = p.sub || p.topic, g = groups[groups.length - 1]; if (g && g.t === t) g.n++; else groups.push({ t, n: 1 }); }
+    return { i, s: w.s, e: w.e, polish: !!w.polish, dsa, sd, items, done, status, groups, sign };
+  });
+  const left = weeks.filter(w => w.i < cur).reduce((s, w) => s + w.items.length - w.done, 0);
+  const todo = weeks.flatMap(w => w.items).filter(p => !p.n);
+  return { plan, weeks, cur, left, todo, W };
+}
+function estimate(dsaCount, sdList, weeks) {
+  const hours = dsaCount * 1.25 + sdList.reduce((s, p) => s + (p.kind === "design" ? 1.5 : 1), 0);
+  return weeks ? hours / weeks : 0;
+}
+function fmtRange(a, b) { const pa = parts(a), pb = parts(b); return MON[pa.m - 1] + " " + pa.d + " to " + (pa.m === pb.m ? "" : MON[pb.m - 1] + " ") + pb.d; }
+const FLAG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>';
+const TROPHY = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 20h8M10 17h4"/></svg>';
+
+function renderRoadmap() {
+  const saved = savedPlan();
+  if (!RM.form || (!RM.draft && saved && RM.formFor !== saved.start + saved.end + saved.list)) { RM.form = planForm(saved); RM.formFor = saved ? saved.start + saved.end + saved.list : ""; }
+  const draft = !saved || RM.draft;
+  const plan = draft ? buildPlan(RM.form) : saved;
+  const V = planView(plan);
+  const learn = plan.weeks.filter(w => !w.polish).length || 1;
+  const dsaN = plan.weeks.reduce((s, w) => s + w.dsa.length, 0), sdKeys = plan.weeks.flatMap(w => w.sd);
+  const sdList = sdKeys.map(k => SD.find(x => x.key === k)).filter(Boolean);
+  const perWeek = estimate(dsaN, sdList, learn);
+  const f = RM.form;
+  if (RM.sel === null || RM.sel >= V.W) RM.sel = Math.max(0, Math.min(V.W - 1, V.cur));
+  const fast = dsaN / learn > 20;
+  $("#view").innerHTML = `
+  <section class="rm-head">
+    <div>
+      <h2>Roadmap</h2>
+      <p class="prose">A week-by-week route through ${esc(LISTS[plan.list].name)}${plan.sd ? " and the system design path" : ""}, finishing ${esc(fmtFull(plan.end))}. Problems you've already started stay in your review queue; the map spreads out everything else.</p>
+    </div>
+    <div class="kpis rm-kpis">
+      <div class="kpi"><b>${plan.weeks.length}</b><span>${plan.weeks.length === 1 ? "week" : "weeks"}</span></div>
+      <div class="kpi"><b>${dsaN}</b><span>new problems</span></div>
+      <div class="kpi"><b>${sdKeys.length}</b><span>design topics</span></div>
+      <div class="kpi"><b>~${Math.max(1, Math.round(perWeek))}h</b><span>a week, est.</span></div>
+    </div>
+  </section>
+  <form class="card rm-form" id="rm-form" autocomplete="off">
+    <label class="field">Coding list<select id="rm-list">${LIST_IDS.map(id => `<option value="${id}" ${id === f.list ? "selected" : ""}>${esc(LISTS[id].name)}</option>`).join("")}</select></label>
+    <label class="field">Interview or finish date<input type="date" id="rm-end" min="${addDays(S.today, 6)}" value="${esc(f.end)}"></label>
+    <div class="field"><span>Quick pick</span><div class="datechips">${[4, 8, 12, 16].map(n => `<button type="button" class="chip" data-act="rm-weeks" data-n="${n}" aria-pressed="${f.end === addDays(S.today, n * 7 - 1)}">${n} weeks</button>`).join("")}</div></div>
+    <label class="field">Study days a week<select id="rm-days">${[3, 4, 5, 6, 7].map(n => `<option ${n === Number(f.days) ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+    <label class="check rm-sd"><input type="checkbox" id="rm-sd" ${f.sd ? "checked" : ""}> Include system design</label>
+    <div class="rm-actions">
+      ${draft ? `<button type="submit" class="btn btn-primary">${saved ? "Save new plan" : "Start this roadmap"}</button>${saved ? `<button type="button" class="btn btn-ghost" data-act="rm-cancel">Cancel</button>` : ""}`
+        : `<span class="rm-state">${V.cur >= V.W ? "Finished." : V.left ? `<b>${V.left}</b> left from earlier weeks.` : "On track."}</span><button type="button" class="btn btn-ghost btn-sm btn-danger" data-act="rm-remove">Remove roadmap</button>`}
+    </div>
+    ${draft ? `<p class="fine rm-note">${saved ? "Previewing changes. Saving rebuilds the plan from today with what you haven't started yet." : "This is a preview. Start it to save the plan and track your progress on the map."}${fast ? " That's more than 20 new problems a week; a later date or skipping system design gives you more breathing room." : ""} About ${Math.max(10, Math.round(perWeek * 60 / (Number(f.days) || 5) / 5) * 5)} minutes a study day.</p>` : ""}
+  </form>
+  <section class="card rm-mapcard ${draft ? "is-draft" : ""}" aria-label="Roadmap map">
+    <div class="rm-map" id="rm-map">
+      <svg class="rm-road" aria-hidden="true"><path class="r-edge"/><path class="r-base"/><path class="r-done"/><path class="r-dash"/></svg>
+      ${rmNode("start", `<div class="rm-card rm-endcap"><b>Start</b><span class="rm-dates">${esc(fmtShort(plan.start))}</span></div>`, `<span class="st st-start">${FLAG}</span>`)}
+      ${V.weeks.map(w => rmNode("w" + w.i, rmCard(w), rmStation(w, V), w.sign)).join("")}
+      ${rmNode("finish", `<div class="rm-card rm-endcap"><b>Interview ready</b><span class="rm-dates">${esc(fmtShort(plan.end))}</span></div>`, `<span class="st st-finish">${TROPHY}</span>`)}
+    </div>
+  </section>
+  <section class="sec" id="rm-detail"></section>`;
+  S.shellFor = "roadmap";
+  $("#rm-form").addEventListener("input", e => {
+    const t = e.target;
+    if (t.id === "rm-list") RM.form.list = t.value;
+    else if (t.id === "rm-end") { if (!/^\d{4}-\d{2}-\d{2}$/.test(t.value)) return; RM.form.end = t.value; }
+    else if (t.id === "rm-days") RM.form.days = Number(t.value);
+    else if (t.id === "rm-sd") RM.form.sd = t.checked;
+    else return;
+    RM.draft = true; renderRoadmap();
+  });
+  $("#rm-form").addEventListener("submit", e => { e.preventDefault(); saveRoadmap(); });
+  layoutRoadmap(V);
+  renderWeekDetail(V);
+}
+function rmNode(id, card, station, sign) {
+  return `<div class="rm-node" data-node="${id}">${sign ? `<span class="rm-sign">${esc(sign)}</span>` : ""}${station}${card}</div>`;
+}
+function rmStation(w, V) {
+  const here = w.i === V.cur ? `<span class="rm-here">You are here</span>` : "";
+  const inner = w.status === "done" ? CHECK.replace('width="24" height="24"', 'width="18" height="18"') : w.polish ? "★" : String(w.i + 1);
+  return `${here}<button type="button" class="st st-${w.status}${w.polish ? " st-polish" : ""}" data-act="rm-week" data-i="${w.i}" aria-label="Week ${w.i + 1}, ${w.status}">${inner}</button>`;
+}
+function rmCard(w) {
+  const pct = w.items.length ? Math.round(100 * w.done / w.items.length) : 0;
+  const ring = w.items.length ? `<span class="rm-ring" style="--p:${pct}%" title="${w.done} of ${w.items.length} started"><i>${w.done}/${w.items.length}</i></span>` : "";
+  const topics = w.groups.length ? w.groups.map(g => `${esc(g.t)} <b>${g.n}</b>`).join(", ") : "";
+  const sdNames = w.sd.slice(0, 2).map(p => esc(p.name)).join(", ") + (w.sd.length > 2 ? `, +${w.sd.length - 2} more` : "");
+  return `<div class="rm-card rm-${w.status}" data-act="rm-week" data-i="${w.i}" role="button" tabindex="0" aria-pressed="${RM.sel === w.i}">
+    <div class="rm-card-h"><div><b>${w.polish ? "Final week" : "Week " + (w.i + 1)}</b><span class="rm-dates">${esc(fmtRange(w.s, w.e))}</span></div>${ring}</div>
+    ${w.polish ? `<p class="rm-line">Mock interviews and review. Redo your Red and Yellow problems against the clock and talk through two designs out loud.</p>` : ""}
+    ${topics ? `<p class="rm-line"><span class="tag code">DSA</span> ${topics}</p>` : ""}
+    ${w.sd.length ? `<p class="rm-line"><span class="tag sd">Design</span> ${sdNames}</p>` : ""}
+    ${w.status === "behind" ? `<p class="rm-behind">${w.items.length - w.done} still to start</p>` : ""}
+  </div>`;
+}
+function layoutRoadmap(Vin) {
+  const map = $("#rm-map"); if (!map) return;
+  const nodes = $$(".rm-node", map); if (!nodes.length) return;
+  const W = map.clientWidth; if (!W) return;
+  const cols = W >= 1060 ? 4 : W >= 800 ? 3 : W >= 560 ? 2 : 1;
+  const pts = [];
+  if (cols === 1) {
+    let y = 34;
+    nodes.forEach(n => {
+      const card = $(".rm-card", n);
+      n.className = "rm-node is-col";
+      card.style.width = (W - 74) + "px";
+      n.style.left = "0px"; n.style.top = (y - 20) + "px";
+      pts.push({ x: 26, y, row: 0 });
+      y += Math.max(64, card.offsetHeight + 26);
+    });
+    map.style.height = (y - 10) + "px";
+  } else {
+    const pad = 34, cellW = (W - 2 * pad) / cols, cardW = Math.min(250, cellW - 22);
+    const rows = Math.ceil(nodes.length / cols);
+    let top = 44;
+    for (let r = 0; r < rows; r++) {
+      const rowNodes = nodes.slice(r * cols, r * cols + cols);
+      let maxH = 0;
+      rowNodes.forEach((n, k) => {
+        const i = r * cols + k, col = r % 2 ? cols - 1 - k : k;
+        const card = $(".rm-card", n);
+        n.className = "rm-node";
+        card.style.width = cardW + "px";
+        const x = pad + col * cellW + cellW / 2, y = top + (col % 2 ? 14 : 0);
+        n.style.left = (x - cardW / 2) + "px"; n.style.top = (y - 20) + "px"; n.style.width = cardW + "px";
+        pts[i] = { x, y, row: r };
+        maxH = Math.max(maxH, card.offsetHeight);
+      });
+      top += 14 + 30 + maxH + 70;
+    }
+    map.style.height = (top - 40) + "px";
+  }
+  // road through the stations; U-turns swing outside the cards
+  const pathTo = n => {
+    let d = "";
+    pts.slice(0, n).forEach((p, i) => {
+      if (!i) { d = `M${p.x} ${p.y}`; return; }
+      const a = pts[i - 1];
+      if (cols === 1 || a.row === p.row) {
+        if (cols === 1) { d += ` L${p.x} ${p.y}`; return; }
+        const mx = (a.x + p.x) / 2; d += ` C${mx} ${a.y} ${mx} ${p.y} ${p.x} ${p.y}`;
+      } else {
+        const dir = a.x > W / 2 ? 1 : -1, room = dir > 0 ? W - a.x : a.x, k = Math.max(40, room - 16) / 0.75;
+        d += ` C${a.x + dir * k} ${a.y} ${p.x + dir * k} ${p.y} ${p.x} ${p.y}`;
+      }
+    });
+    return d;
+  };
+  const svg = $(".rm-road", map);
+  svg.setAttribute("width", W); svg.setAttribute("height", map.style.height.replace("px", ""));
+  const all = pathTo(pts.length);
+  $(".r-edge", svg).setAttribute("d", all);
+  $(".r-base", svg).setAttribute("d", all);
+  $(".r-dash", svg).setAttribute("d", all);
+  if (cols > 1) nodes.forEach((n, i) => {
+    const sg = $(".rm-sign", n), a = pts[i - 1], b = pts[i];
+    if (!sg || !a || a.row !== b.row) return;
+    const left = parseFloat(n.style.left);
+    sg.style.left = ((a.x + b.x) / 2 - left - sg.offsetWidth / 2) + "px"; sg.style.right = "auto";
+    sg.style.top = (Math.min(a.y, b.y) - 40 - parseFloat(n.style.top)) + "px";
+  });
+  const V = Vin || null;
+  const reached = V ? Math.max(0, Math.min(pts.length, V.cur + 2)) : 0;
+  $(".r-done", svg).setAttribute("d", reached > 1 ? pathTo(reached) : "");
+}
+function renderWeekDetail(V) {
+  const el = $("#rm-detail"); if (!el) return;
+  const w = V.weeks[RM.sel]; if (!w) { el.innerHTML = ""; return; }
+  const row = p => `
+    <div class="row new">
+      <div class="grow"><button class="linkish" data-act="open" data-key="${esc(p.key)}">${esc(p.name)}</button><div class="meta">${trackTag(p)}<span>${esc(p.track === "sd" ? KIND[p.kind] : (p.sub || p.topic) + ", " + p.diff)}</span>${statusPill(p)}</div></div>
+      <a class="btn btn-sm" href="${esc(p.url)}" target="_blank" rel="noopener">${p.track === "sd" ? "Guide" : "LeetCode"} ↗</a>
+      ${quick(p, "")}
+    </div>`;
+  el.innerHTML = `
+    <div class="sec-head"><h2>${w.polish ? "Final week" : "Week " + (w.i + 1)}, ${esc(fmtRange(w.s, w.e))}</h2><span class="hint">${w.items.length ? `${w.done} of ${w.items.length} started` : ""}</span></div>
+    ${w.polish ? `<div class="card empty">Mock interviews and review: redo your Red and Yellow problems against the clock, and talk through two system designs out loud on a worksheet.</div>`
+      : `<div class="card rows">${w.items.map(row).join("") || `<div class="empty">Nothing new this week.</div>`}</div>`}`;
+}
+function saveRoadmap() {
+  if (!guardLoaded()) return;
+  const plan = buildPlan(RM.form);
+  const cur = Object.assign({}, S.docs.get("settings") || {}, { roadmap: plan });
+  const switched = plan.list !== activeList();
+  if (switched) cur.list = plan.list;
+  RM.draft = false; RM.sel = 0; RM.formFor = plan.start + plan.end + plan.list;
+  writeDoc("settings", cur);
+  toast(switched ? `Roadmap saved. Your coding list is now ${LISTS[plan.list].name} to match.` : "Roadmap saved. Week 1 starts today.");
+}
+function removeRoadmap() {
+  confirmModal("Remove your roadmap?", "Your attempts and notes stay as they are. Only the week-by-week plan is removed.", "Remove", async () => {
+    const cur = Object.assign({}, S.docs.get("settings") || {}); delete cur.roadmap;
+    RM.draft = false; RM.form = null; RM.sel = null;
+    await writeDoc("settings", cur); toast("Roadmap removed.");
+  });
 }
 
 /* ----- progress ----- */
@@ -2016,6 +2347,10 @@ document.addEventListener("click", e => {
   if (act === "log") return openDrawer(key, true);
   if (act === "quick") return quickLog(el);
   if (act === "lists") return listMenu(el);
+  if (act === "rm-week") { RM.sel = Number(el.dataset.i); $$(".rm-card[data-i]").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.i === el.dataset.i))); renderWeekDetail(planView(RM.draft || !savedPlan() ? buildPlan(RM.form) : savedPlan())); const d = $("#rm-detail"); if (d && el.classList.contains("st")) d.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }); return; }
+  if (act === "rm-weeks") { RM.form.end = addDays(S.today, Number(el.dataset.n) * 7 - 1); RM.draft = true; return renderRoadmap(); }
+  if (act === "rm-cancel") { RM.draft = false; RM.form = null; return renderRoadmap(); }
+  if (act === "rm-remove") return removeRoadmap();
   if (act === "account") return accountMenu(el);
   if (act === "gh-sync") return syncNow(true);
   if (act === "gh-disconnect") return disconnectGitHub();
@@ -2079,10 +2414,12 @@ document.addEventListener("keydown", e => {
     if (S.open) return closeDrawer();
   }
   if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".prow")) { e.preventDefault(); openDrawer(e.target.dataset.key, false); }
+  if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".rm-card[data-i]")) { e.preventDefault(); e.target.click(); }
 });
 $("#modal-wrap").addEventListener("click", e => { if (e.target.id === "modal-wrap") closeModal(); });
 let rz = 0;
-window.addEventListener("resize", () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { if (S.view === "design") layoutPaths(); }); });
+let rzW = window.innerWidth;
+window.addEventListener("resize", () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { if (S.view === "design") layoutPaths(); if (S.view === "roadmap" && window.innerWidth !== rzW) { rzW = window.innerWidth; renderRoadmap(); } }); });
 window.addEventListener("beforeunload", () => { if (WS.open && WS.ver !== WS.savedVer) saveWorksheet(); });
 
 function route() {
@@ -2097,7 +2434,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) { da
 /* ================= boot ================= */
 S.view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "today";
 render(); syncState();
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (S.view === "design") layoutPaths(); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (S.view === "design") layoutPaths(); if (S.view === "roadmap" && S.mode !== "signedout") renderRoadmap(); });
 connect();
 })();
 </script>

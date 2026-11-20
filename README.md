@@ -2,6 +2,8 @@
 
 Spaced-repetition practice for data structures and algorithms (Blind 75, NeetCode 150, Grind 75) and a system design path. Solve a problem, rate it Red, Yellow or Green, and it comes back when it's due. Every problem has notes, a full attempt history and an Excalidraw worksheet.
 
+The Roadmap tab turns a list and an interview date into a week-by-week plan, drawn as a road map: each week's problems and design topics, where you are, and whether you're on track. Problems you've already started stay in your review queue.
+
 It runs on **Vercel** (the site and a few small functions), stores data in **Neon** (Postgres), and signs you in with **GitHub**. Optionally, it syncs everything to a private GitHub repo.
 
 ## How it works
