@@ -54,9 +54,15 @@
 :root[data-theme="dark"] .st.st-done svg path, :root[data-theme="dark"] .wkdone-badge svg path { stroke: var(--on-bright); }
 .iconbtn { flex: none; width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); display: grid; place-items: center; cursor: pointer; padding: 0; }
 .iconbtn:hover { color: var(--ink); border-color: var(--ink-2); }
-.foot { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 16px; padding: 18px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
-.foot a { color: var(--ink-2); font-weight: 600; }
-.foot a:hover { color: var(--code-ink); }
+.star-btn { flex: none; display: inline-flex; align-items: center; height: 34px; border: 1.5px solid var(--edge); border-radius: 10px; background: var(--surface); color: var(--ink); text-decoration: none; font: 700 13.5px/1 var(--font-body); box-shadow: var(--tactile); overflow: hidden; transition: transform .1s ease, box-shadow .1s ease; }
+.star-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 0 var(--shadow); }
+.star-btn:active { transform: translateY(1px); box-shadow: none; }
+.star-btn .sb-star { margin-left: 10px; fill: var(--yellow); stroke: var(--edge); stroke-width: 1.5; stroke-linejoin: round; transition: transform .2s cubic-bezier(.3,1.6,.5,1); }
+.star-btn:hover .sb-star { transform: rotate(-12deg) scale(1.15); }
+.star-btn .sb-l { padding: 0 10px 0 6px; }
+.star-btn .sb-n { align-self: stretch; display: grid; place-items: center; padding: 0 10px; border-left: 1.5px solid var(--edge); background: var(--yellow-soft); color: var(--yellow-ink); font-variant-numeric: tabular-nums; }
+.star-btn .sb-n[hidden] { display: none; }
+@media (max-width: 1100px) { .star-btn .sb-l { display: none; } .star-btn .sb-star { margin-right: 8px; } }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
 body {
@@ -630,11 +636,11 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 #confetti { position: fixed; inset: 0; z-index: 98; pointer-events: none; }
 
 @media (max-width: 1240px) { .brand-text b { font-size: 15.5px; } }
-@media (max-width: 1340px) { .nav .n { display: none; } }
+@media (max-width: 1700px) { .nav .n { display: none; } }
 .nav .ns { display: none; }
 @media (max-width: 1500px) { .sync span { display: none; } }
-@media (max-width: 1240px) { .nav .nl { display: none; } .nav .ns { display: inline; } .nav a { padding: 7px 9px; } .top-in { gap: 12px; } }
-@media (max-width: 900px) { .brand-text { display: none; } }
+@media (max-width: 1400px) { .nav .nl { display: none; } .nav .ns { display: inline; } .nav a { padding: 7px 9px; } .top-in { gap: 12px; } }
+@media (max-width: 1200px) { .brand-text { display: none; } }
 @media (max-width: 980px) {
   .today-head { grid-template-columns: 1fr; }
   .kpis { grid-template-columns: repeat(4, 1fr); }
@@ -655,15 +661,8 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 }
 @media (max-width: 760px) {
   .top-in { gap: 10px; padding: 0 12px; height: 58px; }
-  .brand-text, .nav, .search kbd { display: none; }
+  .brand-text, .search kbd { display: none; }
   .search { max-width: none; }
-  .tabbar {
-    display: grid; grid-template-columns: repeat(6, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 35;
-    background: var(--glass); border-top: 1px solid var(--line); padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
-  }
-  .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; color: var(--muted); font-size: 11.5px; font-weight: 700; padding: 4px 0; border-radius: 10px; position: relative; }
-  .tabbar a[aria-current="page"] { color: var(--code-ink); background: var(--code-soft); }
-  .tabbar .due { position: absolute; top: 0; left: calc(50% + 6px); font: 700 10.5px/1 var(--font-body); background: var(--red); color: #fff; border-radius: 99px; padding: 2px 5px; }
   main { padding: 18px 14px 96px; }
   .kpis { grid-template-columns: repeat(2, 1fr); }
   .kpi:nth-child(3) { border-left: 0; }
@@ -686,11 +685,30 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
   .node { width: 104px; }
   .node .lbl { font-size: 12.5px; max-width: 100px; }
   .disc { width: 50px; height: 50px; font-size: 17px; }
-  .toast { bottom: 84px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+/* tablets and phones: sections move to a tab bar at the bottom */
+@media (max-width: 960px) {
+  .nav { display: none; }
+  .tabbar {
+    display: grid; grid-template-columns: repeat(6, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 35;
+    background: var(--glass); border-top: 1px solid var(--line); padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  }
+  .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; text-decoration: none; color: var(--muted); font-size: 11.5px; font-weight: 700; padding: 4px 0; border-radius: 10px; position: relative; }
+  .tabbar a[aria-current="page"] { color: var(--code-ink); background: var(--code-soft); }
+  .tabbar .due { position: absolute; top: 0; left: calc(50% + 6px); font: 700 10.5px/1 var(--font-body); background: var(--red); color: #fff; border-radius: 99px; padding: 2px 5px; }
+  main { padding-bottom: 96px; }
+  .toast { bottom: 84px; }
+  .gb { bottom: calc(76px + env(safe-area-inset-bottom)); }
+  .wkp { bottom: calc(64px + env(safe-area-inset-bottom)); }
+}
+/* small phones: keep the header on one line */
+@media (max-width: 480px) { .star-btn .sb-n { display: none; } .star-btn .sb-star { margin: 0 8px; } #theme-btn { display: none; } .search { min-width: 110px; } }
+@media (max-width: 400px) { .top-in { gap: 7px; } .search { min-width: 96px; } .search input[type="search"] { padding-right: 8px; } }
+/* tablets: the tabs live in the bottom bar, so the header has room for the full logo and the Star label */
+@media (min-width: 761px) and (max-width: 960px) { .brand-text { display: flex; } .star-btn .sb-l { display: inline; } .star-btn .sb-star { margin-right: 0; } }
 </style>
 </head>
 <body>
@@ -709,6 +727,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
     </div>
     <div class="sync" id="sync" data-s="loading" role="status" aria-live="polite"><span>Loading</span></div>
     <button class="iconbtn" id="theme-btn" data-act="theme" aria-label="Switch to dark mode"></button>
+    <a class="star-btn" id="star-btn" href="https://github.com/emmanuel-adu/algo-and-architecture" target="_blank" rel="noopener" aria-label="Star Algo and Architecture on GitHub"><svg class="sb-star" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/></svg><span class="sb-l">Star</span><span class="sb-n" hidden></span></a>
     <a class="btn btn-sm signin-btn" id="signin" href="/api/auth/login" hidden>Sign in</a>
     <button class="acct" id="acct" data-act="account" aria-haspopup="menu" aria-expanded="false" aria-label="Account" hidden><img id="acct-img" alt="" width="30" height="30"></button>
   </div>
@@ -716,7 +735,6 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 <main id="main">
   <div id="banners"></div>
   <div id="view"></div>
-  <footer class="foot"><span>Algo and Architecture is open source.</span><a href="https://github.com/emmanuel-adu/algo-and-architecture" target="_blank" rel="noopener">Contribute on GitHub ↗</a><a href="https://github.com/emmanuel-adu/algo-and-architecture/issues/new" target="_blank" rel="noopener">Report a problem ↗</a></footer>
 </main>
 <nav class="tabbar" id="tabbar" aria-label="Sections"></nav>
 <div class="scrim" id="scrim" data-act="close"></div>
@@ -1132,6 +1150,20 @@ const icon = k => `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" s
 const CHECK = `<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M5 12.5 L10 17 L19 7" fill="none" stroke="#1e1a33" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 function getPref(k) { try { return localStorage.getItem("b75." + k); } catch (e) { return null; } }
 function setPref(k, v) { try { if (v === null) localStorage.removeItem("b75." + k); else localStorage.setItem("b75." + k, v); } catch (e) {} }
+/* ----- GitHub stars ----- */
+async function loadStars() {
+  const el = $("#star-btn"), n = $(".sb-n", el); if (!el || !n) return;
+  const show = c => { if (typeof c !== "number" || c < 1) return; n.textContent = c >= 1000 ? (c / 1000).toFixed(c >= 10000 ? 0 : 1).replace(/\.0$/, "") + "k" : String(c); n.hidden = false; el.setAttribute("aria-label", `Star Algo and Architecture on GitHub, ${c} ${c === 1 ? "star" : "stars"}`); };
+  let cached = null; try { cached = JSON.parse(getPref("stars") || "null"); } catch (e) {}
+  if (cached) show(cached.n);
+  if (cached && Date.now() - cached.at < 3600e3) return;
+  try {
+    const r = await fetch("https://api.github.com/repos/emmanuel-adu/algo-and-architecture", { headers: { accept: "application/vnd.github+json" } });
+    if (!r.ok) return;
+    const j = await r.json();
+    if (typeof j.stargazers_count === "number") { setPref("stars", JSON.stringify({ n: j.stargazers_count, at: Date.now() })); show(j.stargazers_count); }
+  } catch (e) {}
+}
 /* ----- light and dark ----- */
 const THEME_MQ = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 const MOON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11z"/></svg>';
@@ -1183,7 +1215,7 @@ function renderNav(list) {
   const cur = v => v === S.view ? ' aria-current="page"' : "";
   const L = LISTS[activeList()];
   $("#brand-mark").textContent = L.short; $("#brand-name").textContent = L.name; document.title = "Algo and Architecture";
-  $("#nav").innerHTML = NAV.map(n => `<a href="#${n.v}"${cur(n.v)}><span class="nl">${n.label}</span>${n.short !== n.label ? `<span class="ns">${n.short}</span>` : ""} ${extra[n.v] || ""}</a>`).join("");
+  $("#nav").innerHTML = NAV.map(n => `<a href="#${n.v}"${cur(n.v)}><span class="nl">${n.label}</span><span class="ns">${n.short}</span> ${extra[n.v] || ""}</a>`).join("");
   $("#tabbar").innerHTML = NAV.map(n => `<a href="#${n.v}"${cur(n.v)}>${icon(n.icon)}${n.short}${n.v === "today" && due ? `<span class="due">${due}</span>` : ""}</a>`).join("");
 }
 function renderBanners() {
@@ -1965,11 +1997,6 @@ function renderConfig() {
             <h3>Backup</h3>
             <p class="prose">Export everything (attempts, notes, worksheets, added problems, intervals) as a JSON file. Restoring a backup replaces what's here now.</p>
             <div class="row-gap" id="backup-actions"></div>
-          </section>
-          <section class="card panel">
-            <h3>Open source</h3>
-            <p class="prose">Algo and Architecture is open source. Ideas, bug reports and pull requests are welcome; the repo's CONTRIBUTING guide shows how to run it on your computer in a minute.</p>
-            <div class="row-gap"><a class="btn" href="https://github.com/emmanuel-adu/algo-and-architecture" target="_blank" rel="noopener">${GH_ICON} Contribute on GitHub ↗</a><a class="btn btn-ghost" href="https://github.com/emmanuel-adu/algo-and-architecture/issues/new" target="_blank" rel="noopener">Report a problem ↗</a></div>
           </section>
         </div>
       </div>
@@ -2864,6 +2891,7 @@ S.view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "toda
 render(); syncState();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (S.view === "design") layoutPaths(); if (S.view === "roadmap" && S.mode !== "loading") renderRoadmap(); });
 applyTheme();
+loadStars();
 connect();
 })();
 </script>
