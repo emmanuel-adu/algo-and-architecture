@@ -318,6 +318,11 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .rm-head .prose { margin-top: 6px; max-width: 70ch; }
 .rm-form { display: grid; grid-template-columns: 170px 190px auto 130px auto 1fr; gap: 14px 18px; align-items: end; padding: 16px 18px; }
 .rm-form .field select, .rm-form .field input { width: 100%; }
+.rm-form .rm-actions { grid-column: 1 / -1; justify-content: flex-start; }
+.rm-actions [data-act=rm-remove] { margin-left: auto; }
+.rm-goal { grid-column: 1 / -1; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.rm-goal-row { display: flex; align-items: center; gap: 8px 16px; flex-wrap: wrap; }
+.rm-goal-row .fine { flex: 1 1 320px; max-width: 76ch; }
 .rm-form .field > span { font-size: 13px; font-weight: 600; color: var(--ink-2); }
 .rm-sd { padding-bottom: 8px; white-space: nowrap; }
 .rm-actions { display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
@@ -354,6 +359,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .rm-node:has(.rm-here) .rm-sign { left: auto; right: -6px; transform: rotate(4deg); }
 .rm-card { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; box-shadow: var(--lift); display: flex; flex-direction: column; gap: 6px; cursor: pointer; text-align: left; }
 .rm-card:hover { border-color: var(--ink-2); }
+.rm-card[aria-pressed="true"] { background: #faf8ff; }
 .rm-card[aria-pressed="true"] { border-color: var(--code); box-shadow: 0 0 0 3px var(--code-soft), var(--lift); }
 .rm-card.rm-current { border-color: var(--code); }
 .rm-card.rm-behind { border-color: color-mix(in srgb, var(--yellow) 70%, var(--line)); }
@@ -365,6 +371,20 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .rm-line { margin: 0; font-size: 13px; color: var(--ink-2); line-height: 1.45; }
 .rm-line b { color: var(--ink); }
 .rm-line .tag { margin-right: 4px; vertical-align: 1px; }
+.rm-dots { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 2px; }
+.rm-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--ink); flex: none; display: inline-block; }
+.rm-dot.d-R { background: var(--red); } .rm-dot.d-Y { background: var(--yellow); } .rm-dot.d-G { background: var(--green); }
+.rm-dot.d-M { background: var(--green-ink); box-shadow: 0 0 0 2px var(--green-soft); }
+.rm-dot.d-N { background: var(--surface); border-color: #c9c5d8; }
+.rm-mcount { margin-left: 4px; font-size: 12px; font-weight: 700; color: var(--green-ink); }
+.st.st-mastered { background: var(--green-ink); }
+.st.st-started { background: var(--green-soft); color: var(--green-ink); }
+.st.st-review { border-style: dashed; }
+.st.st-review.st-current { border-style: solid; }
+.rm-card.rm-review { background: var(--surface-2); box-shadow: none; }
+.st.st-mastered svg path { stroke: #fff; }
+.rm-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 12px 6px 8px; border-top: 1px solid var(--line); margin-top: 8px; font-size: 12.5px; color: var(--ink-2); }
+.rm-lg { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--ink); }
 .rm-behind { margin: 0; font-size: 12.5px; font-weight: 700; color: var(--yellow-ink); }
 .rm-ring { --p: 0%; flex: none; width: 34px; height: 34px; border-radius: 50%; background: conic-gradient(var(--green) var(--p), var(--heat-0) 0); display: grid; place-items: center; }
 .rm-ring i { width: 26px; height: 26px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font: 700 9.5px/1 var(--font-body); font-style: normal; color: var(--ink-2); }
@@ -428,8 +448,68 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .row-gap { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .file-btn { position: relative; overflow: hidden; }
 .file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.set-grid > * { min-width: 0; }
+.fmt { border-top: 1px solid var(--line); padding-top: 10px; }
+.fmt summary { cursor: pointer; font-weight: 700; font-size: 14px; color: var(--ink); list-style-position: inside; }
+.fmt summary:hover { color: var(--code-ink); }
+.fmt[open] summary { margin-bottom: 10px; }
+.fmt-cols { margin: 0 0 12px; display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; font-size: 13.5px; color: var(--ink-2); }
+.fmt-cols dt { font-weight: 700; color: var(--ink); }
+.fmt-cols dd { margin: 0; }
+.fmt-cols code, .fmt p code { font: 600 12.5px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-2); border-radius: 5px; padding: 1px 5px; color: var(--ink); white-space: nowrap; }
+.fmt pre { margin: 0 0 10px; overflow-x: auto; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font: 12.5px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); }
+@media (max-width: 560px) { .fmt-cols { grid-template-columns: 1fr; gap: 2px; } .fmt-cols dd { margin-bottom: 8px; } }
 
 /* ---------- drawer ---------- */
+/* week progress on Today */
+.wkbar { display: flex; flex-direction: column; gap: 10px; padding: 14px 18px 16px; text-decoration: none; color: inherit; }
+.wkbar:hover { border-color: var(--ink-2); }
+.wkbar-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.wkbar-top b { font: 700 16px var(--font-display); color: var(--ink); }
+.wkbar-top span { font-size: 14px; color: var(--ink-2); }
+.wkbar-track { height: 14px; border-radius: 99px; background: var(--surface-2); border: 1.5px solid var(--ink); overflow: hidden; }
+.wkbar-track i { display: block; height: 100%; background: var(--code); border-right: 1.5px solid var(--ink); transition: width .6s cubic-bezier(.3,1.2,.5,1); }
+.wkbar-track i[style*="width:0%"], .wkbar-track i[style="width: 0%;"] { border-right: 0; }
+.wkbar.is-done .wkbar-track i { background: var(--green); border-right: 0; }
+.wkbar.is-done .wkbar-top b { color: var(--green-ink); }
+@media (prefers-reduced-motion: reduce) { .wkbar-track i { transition: none; } }
+/* week done on Today */
+.wkdone { display: flex; gap: 16px; align-items: flex-start; padding: 20px; border: 1.5px solid var(--ink); box-shadow: 0 4px 0 var(--ink); background: linear-gradient(135deg, var(--green-soft), var(--surface) 60%); }
+.wkdone-badge { flex: none; width: 52px; height: 52px; border-radius: 50%; background: var(--green); border: 2px solid var(--ink); box-shadow: 0 3px 0 var(--ink); display: grid; place-items: center; animation: wkdone-pop .5s cubic-bezier(.3,1.6,.5,1); }
+.wkdone-txt { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.wkdone-txt h3 { font: 800 22px/1.15 var(--font-display); }
+.wkdone-txt p { margin: 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; max-width: 60ch; }
+.wkdone-act { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 4px; }
+@keyframes wkdone-pop { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .wkdone-badge { animation: none; } }
+/* week panel on the roadmap */
+.wkp { position: fixed; top: 63px; right: 0; bottom: 0; width: min(440px, 100%); z-index: 38; background: var(--surface); border-left: 1.5px solid var(--ink); box-shadow: -18px 0 40px -24px rgba(30,26,51,.35);
+  transform: translateX(105%); visibility: hidden; transition: transform .24s cubic-bezier(.2,.9,.3,1), visibility 0s linear .24s; display: flex; flex-direction: column; }
+.wkp.open { transform: none; visibility: visible; transition: transform .24s cubic-bezier(.2,.9,.3,1); }
+.wkp-head { position: relative; padding: 14px 18px 14px; border-top: 5px solid var(--code); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; flex: none; }
+.wkp.is-review .wkp-head { border-top-color: #c9c5d8; }
+.wkp.is-polish .wkp-head { border-top-color: var(--yellow); }
+.wkp-tools { position: absolute; top: 10px; right: 12px; display: flex; gap: 4px; }
+.wkp-tools .btn { width: 34px; height: 34px; padding: 0; justify-content: center; font-size: 17px; }
+.wkp-kicker { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13px; font-weight: 700; color: var(--ink-2); padding-right: 120px; }
+.wkp-head h2 { font-size: 24px; line-height: 1.15; }
+.wkp-prog { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.wkp-prog b { color: var(--green-ink); }
+.pill.wk-current { background: var(--code-soft); color: var(--code-ink); }
+.pill.wk-behind { background: var(--yellow-soft); color: var(--yellow-ink); }
+.pill.wk-done, .pill.wk-started { background: var(--green-soft); color: var(--green-ink); }
+.pill.wk-preview { background: var(--yellow-soft); color: var(--yellow-ink); }
+.wkp-body { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+.wk-row { display: flex; flex-direction: column; gap: 8px; padding: 12px 18px; border-bottom: 1px solid var(--line); }
+.wk-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 4px; font-size: 12.5px; color: var(--ink-2); }
+.wk-act { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.wkp-empty { margin: 0; padding: 18px; color: var(--ink-2); font-size: 14px; line-height: 1.5; }
+.rm-hint { font-weight: 700; color: var(--code-ink); margin-right: 6px; }
+@media (max-width: 760px) {
+  .wkp { top: auto; left: 0; right: 0; width: 100%; max-height: 80vh; border-left: 0; border-top: 1.5px solid var(--ink); border-radius: 16px 16px 0 0; transform: translateY(105%); z-index: 39; box-shadow: 0 -18px 40px -24px rgba(30,26,51,.45); }
+}
+@media (prefers-reduced-motion: reduce) { .wkp, .wkp.open { transition: none; } }
+@media (min-width: 1000px) { body.wkp-on main { max-width: none; margin: 0 440px 0 0; } }
 .scrim { position: fixed; inset: 0; background: rgba(30,26,51,.32); z-index: 40; opacity: 0; pointer-events: none; transition: opacity .2s; }
 .scrim.on { opacity: 1; pointer-events: auto; }
 .drawer {
@@ -611,6 +691,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 <nav class="tabbar" id="tabbar" aria-label="Sections"></nav>
 <div class="scrim" id="scrim" data-act="close"></div>
 <aside class="drawer" id="drawer" aria-label="Details" aria-hidden="true"></aside>
+<aside class="wkp" id="rm-panel" role="dialog" aria-modal="false" aria-label="Week" aria-hidden="true"></aside>
 <section class="ws" id="ws" aria-label="Worksheet">
   <div class="ws-bar">
     <div class="ws-title"><b id="ws-name"></b><span id="ws-state">Autosaves as you draw</span></div>
@@ -1041,6 +1122,7 @@ function render() {
   else if (S.view === "progress") renderProgress(list);
   else renderConfig();
   renderDrawer(list);
+  if (S.view !== "roadmap" && RM.open) { RM.open = false; renderWeekPanel(null); }
   S.justLogged = null;
 }
 function renderNav(list) {
@@ -1128,14 +1210,16 @@ function renderToday(list) {
   const due = list.filter(p => p.status === "due").sort(dueSort);
   const soon = list.filter(p => p.status === "scheduled" && p.delta <= 7).sort((a, b) => a.delta - b.delta || a.order - b.order);
   const code = list.filter(p => p.track === "code"), sd = list.filter(p => p.track === "sd");
-  let fresh = null, freshHint = "Next in list order";
-  const rplan = savedPlan();
-  if (rplan) {
-    const RV = planView(rplan);
-    const pending = RV.weeks.filter(w => w.i <= Math.max(0, RV.cur)).flatMap(w => w.items).filter(p => !p.n && p.status !== "paused");
-    if (pending.length) { fresh = pending.slice(0, 5); freshHint = `From your roadmap, week ${Math.min(Math.max(0, RV.cur), RV.W - 1) + 1}`; }
+  let fresh = null, freshHint = "Next in list order", celebrate = "";
+  const listOrder = code.filter(p => p.status === "new").slice(0, 3).concat(sd.filter(p => p.status === "new").slice(0, 2));
+  const rn = roadmapNext(), wkbar = weekBar(rn);
+  if (rn && rn.kind === "items") { fresh = rn.items; freshHint = rn.hint; }
+  else if (rn && rn.kind === "done") {
+    rn.hasList = listOrder.length > 0;
+    if (rn.listOk && !rn.next && listOrder.length) fresh = listOrder;
+    else { fresh = []; freshHint = "Your roadmap"; celebrate = weekDoneCard(rn); }
   }
-  if (!fresh) fresh = code.filter(p => p.status === "new").slice(0, 3).concat(sd.filter(p => p.status === "new").slice(0, 2));
+  if (!fresh) fresh = listOrder;
   const anyStarted = list.some(p => p.n), n = due.length, iv = settings().code.intervals;
   const tp = parts(S.today);
   const head = !S.loaded ? "Loading your reviews…" : n ? plural(n, "review") + " due today" : "You're all caught up";
@@ -1160,6 +1244,7 @@ function renderToday(list) {
       <div class="kpi"><b>${sd.filter(p => p.n).length}/${sd.length}</b><span>design started</span></div>
     </div>
   </section>
+  ${wkbar}
   ${showHow ? `<section class="card howto" aria-label="How it works">
     <h2>How it works</h2>
     <div class="step"><i>1</i><div><b>Solve it</b>Open the problem on LeetCode, or read the design guide.</div></div>
@@ -1191,14 +1276,15 @@ function renderToday(list) {
   <div class="two">
     <section class="sec" aria-labelledby="h-new">
       <div class="sec-head"><h2 id="h-new">Start something new</h2><a class="hint" href="#roadmap">${esc(freshHint)}</a></div>
-      <div class="card rows">
+      ${celebrate}
+      ${celebrate ? "" : `<div class="card rows">
         ${fresh.map(p => `
           <div class="row new">
             <div class="grow"><button class="linkish" data-act="open" data-key="${esc(p.key)}">${esc(p.name)}</button><div class="meta">${trackTag(p)}<span>${esc(p.track === "sd" ? KIND[p.kind] : p.topic + ", " + p.diff)}</span></div></div>
             <a class="btn btn-sm" href="${esc(p.url)}" target="_blank" rel="noopener">${p.track === "sd" ? "Guide" : "LeetCode"} ↗</a>
             ${quick(p, "")}
           </div>`).join("") || `<div class="empty">Everything has been started.</div>`}
-      </div>
+      </div>`}
     </section>
     <section class="sec" aria-labelledby="h-soon">
       <div class="sec-head"><h2 id="h-soon">Coming back this week</h2></div>
@@ -1212,6 +1298,8 @@ function renderToday(list) {
     </section>
   </div>`;
   S.shellFor = "today";
+  const fill = $(".wkbar-track i");
+  if (fill && fill.style.width !== fill.dataset.pct + "%") requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = fill.dataset.pct + "%"; }));
 }
 
 /* ----- coding ----- */
@@ -1349,17 +1437,20 @@ function layoutPaths() {
 
 /* ================= roadmap ================= */
 const PHASES = ["Foundations", "Core patterns", "Advanced"];
-const RM = { draft: false, form: null, sel: null };
+const RM = { draft: false, form: null, sel: null, open: false, back: null };
 function savedPlan() { const d = S.docs.get("settings"); const r = d && d.roadmap; return r && r.v === 1 && Array.isArray(r.weeks) && LISTS[r.list] ? r : null; }
 function planForm(plan) {
-  return plan ? { list: plan.list, end: plan.end, days: plan.days || 5, sd: plan.sd !== false }
-    : { list: activeList(), end: addDays(S.today, 8 * 7 - 1), days: 5, sd: true };
+  return plan ? { list: plan.list, end: plan.end, days: plan.days || 5, sd: plan.sd !== false, goal: plan.goal === "master" ? "master" : "finish" }
+    : { list: activeList(), end: addDays(S.today, 8 * 7 - 1), days: 5, sd: true, goal: "finish" };
 }
 function buildPlan(f) {
   const st = settings();
   const end = f.end > S.today ? f.end : addDays(S.today, 6);
   const W = Math.max(1, Math.ceil((diffDays(S.today, end) + 1) / 7));
-  const reserve = W >= 4 ? 1 : 0, L = W - reserve;
+  // Mastery takes a few spaced reviews (usually 3 to 5 weeks after first solving), so a mastery
+  // plan stops new problems early and keeps review weeks before the final week.
+  const master = f.goal === "master";
+  const reserve = W < 4 ? 0 : master ? Math.min(3, Math.max(1, Math.floor(W / 2) - 1)) : 1, L = W - reserve;
   const code = CATS[f.list].map(c => derive(Object.assign({}, c, { doc: S.docs.get(c.key) || null }), st));
   const todo = code.filter(p => !p.n);
   const sdAll = sdItems(st), sdTodo = f.sd ? sdAll.filter(p => !p.n) : [];
@@ -1367,34 +1458,88 @@ function buildPlan(f) {
   const weeks = [];
   for (let i = 0; i < W; i++) {
     const s = addDays(S.today, i * 7), e = i === W - 1 ? end : addDays(S.today, i * 7 + 6);
-    weeks.push(i < L ? { s, e, dsa: part(todo, i), sd: part(sdTodo, i) } : { s, e, dsa: [], sd: [], polish: true });
+    weeks.push(i < L ? { s, e, dsa: part(todo, i), sd: part(sdTodo, i) } : i < W - 1 ? { s, e, dsa: [], sd: [], review: true } : { s, e, dsa: [], sd: [], polish: true });
   }
-  return { v: 1, list: f.list, start: S.today, end, days: Number(f.days) || 5, sd: !!f.sd, weeks, already: (code.length - todo.length) + (f.sd ? sdAll.length - sdTodo.length : 0) };
+  return { v: 1, list: f.list, goal: master ? "master" : "finish", start: S.today, end, days: Number(f.days) || 5, sd: !!f.sd, weeks, already: (code.length - todo.length) + (f.sd ? sdAll.length - sdTodo.length : 0) };
 }
 // Everything the map needs to draw a plan, with live progress.
 function planView(plan) {
   const st = settings(), byK = new Map();
   for (const c of CATS[plan.list]) byK.set(c.key, derive(Object.assign({}, c, { doc: S.docs.get(c.key) || null }), st));
   for (const p of sdItems(st)) byK.set(p.key, p);
-  const W = plan.weeks.length, since = diffDays(plan.start, S.today);
+  const W = plan.weeks.length, since = diffDays(plan.start, S.today), master = plan.goal === "master";
   const cur = since < 0 ? -1 : Math.min(W, Math.floor(since / 7));
   const totalDsa = plan.weeks.reduce((s, w) => s + w.dsa.length, 0);
   let seen = 0, lastPhase = -1;
   const weeks = plan.weeks.map((w, i) => {
     const dsa = w.dsa.map(k => byK.get(k)).filter(Boolean), sd = w.sd.map(k => byK.get(k)).filter(Boolean);
-    const items = dsa.concat(sd), done = items.filter(p => p.n > 0).length;
-    let phase = w.polish ? "Interview polish" : PHASES[Math.min(2, Math.floor(3 * (totalDsa ? seen / totalDsa : i / Math.max(1, W - 1))))];
+    const items = dsa.concat(sd), done = items.filter(p => p.n > 0).length, mastered = items.filter(p => p.status === "mastered").length;
+    let phase = w.polish ? "Interview polish" : w.review ? "Review" : PHASES[Math.min(2, Math.floor(3 * (totalDsa ? seen / totalDsa : i / Math.max(1, W - 1))))];
     seen += w.dsa.length;
     const sign = phase !== lastPhase ? phase : null; lastPhase = phase;
-    const status = w.polish ? (i < cur ? "done" : i === cur ? "current" : "upcoming")
-      : items.length && done === items.length ? "done" : i === cur ? "current" : i < cur ? "behind" : "upcoming";
+    const allStarted = items.length && done === items.length, allMastered = items.length && mastered === items.length;
+    const status = w.polish || w.review ? (i < cur ? "done" : i === cur ? "current" : "upcoming")
+      : !master ? (allStarted ? "done" : i === cur ? "current" : i < cur ? "behind" : "upcoming")
+      : allMastered ? "done" : i === cur ? "current" : i < cur ? (allStarted ? "started" : "behind") : "upcoming";
     const groups = [];
     for (const p of dsa) { const t = p.sub || p.topic, g = groups[groups.length - 1]; if (g && g.t === t) g.n++; else groups.push({ t, n: 1 }); }
-    return { i, s: w.s, e: w.e, polish: !!w.polish, dsa, sd, items, done, status, groups, sign };
+    return { i, s: w.s, e: w.e, polish: !!w.polish, review: !!w.review, dsa, sd, items, done, mastered, status, groups, sign };
   });
   const left = weeks.filter(w => w.i < cur).reduce((s, w) => s + w.items.length - w.done, 0);
   const todo = weeks.flatMap(w => w.items).filter(p => !p.n);
-  return { plan, weeks, cur, left, todo, W };
+  const all = weeks.flatMap(w => w.items);
+  return { plan, master, weeks, cur, left, todo, W, total: all.length, started: all.filter(p => p.n > 0).length, mastered: all.filter(p => p.status === "mastered").length };
+}
+// What Today suggests from the roadmap. Once every new problem up to this week (or a week the
+// person chose to start early) is started, it reports the finished week instead.
+function roadmapNext() {
+  const plan = savedPlan(); if (!plan) return null;
+  const V = planView(plan), cur = Math.max(0, Math.min(V.cur, V.W - 1));
+  const key = plan.start + plan.list + plan.end, saved = (getPref("rmAhead") || "").split("|");
+  const ahead = saved[0] === key ? Number(saved[1]) : -1, listOk = saved[0] === key && saved[1] === "list";
+  const open = w => w.items.filter(p => !p.n && p.status !== "paused");
+  const upto = Math.max(cur, ahead);
+  const pending = V.weeks.filter(w => w.i <= upto).flatMap(open);
+  if (pending.length) return { kind: "items", V, cur, focus: upto, earlier: V.weeks.filter(w => w.i < upto).flatMap(open).length, items: pending.slice(0, 5), count: pending.length, hint: ahead > cur ? `From your roadmap, week ${ahead + 1}, started early` : `From your roadmap, week ${cur + 1}` };
+  const learn = V.weeks.filter(w => !w.polish && !w.review && w.items.length);
+  const done = [...learn].reverse().find(w => w.i <= upto) || null, next = learn.find(w => w.i > upto && open(w).length) || null;
+  return { kind: "done", V, cur, focus: done ? done.i : cur, done, next, nextCount: next ? open(next).length : 0, early: !!done && done.i > cur, listOk, key };
+}
+// Today's progress bar for the week in focus. Shown only with a roadmap, which gives the week a finish line.
+let lastWkPct = null;
+function weekBar(rn) {
+  if (!rn || !rn.V || rn.V.cur >= rn.V.W) return "";
+  const V = rn.V, w = V.weeks[rn.focus]; if (!w) return "";
+  const label = w.polish ? "Final week" : `Week ${w.i + 1} of ${V.W}`;
+  if (!w.items.length) return `<a class="card wkbar" href="#roadmap"><div class="wkbar-top"><b>${label}</b><span>${w.polish ? "Mock interviews and review." : "A review week: no new problems. Clear your review queue."}</span></div></a>`;
+  const total = w.items.length, done = w.done, pct = Math.round(100 * done / total), daysLeft = diffDays(S.today, w.e) + 1;
+  const early = rn.focus > rn.cur, full = done === total;
+  const bits = full ? [`All ${total} started. Nice work.`]
+    : [`${done} of ${total} started`, `${total - done} to go`, early ? "started early" : plural(daysLeft, "day") + " left"];
+  if (w.mastered) bits.push(`${w.mastered} mastered`);
+  if (rn.earlier) bits.push(`plus ${rn.earlier} from earlier weeks`);
+  const from = lastWkPct === null ? pct : lastWkPct; lastWkPct = pct;
+  return `<a class="card wkbar${full ? " is-done" : ""}" href="#roadmap" aria-label="${esc(label + ": " + bits.join(", "))}. Open the roadmap.">
+    <div class="wkbar-top"><b>${label}${full ? " done" : ""}</b><span>${esc(bits.join(", "))}</span></div>
+    <div class="wkbar-track" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${done}" aria-label="${esc(label)} problems started"><i style="width:${from}%" data-pct="${pct}"></i></div>
+  </a>`;
+}
+function startWeekEarly(i) { const r = roadmapNext(); if (r && r.key) setPref("rmAhead", r.key + "|" + i); render(); }
+function continueListOrder() { const r = roadmapNext(); if (r && r.key) setPref("rmAhead", r.key + "|list"); render(); }
+function weekDoneCard(r) {
+  const w = r.done, n = w ? w.items.length : 0, spare = w && !r.early ? diffDays(S.today, w.e) : 0;
+  const what = w ? (w.sd.length && w.dsa.length ? `all ${n} problems and topics` : w.sd.length ? `all ${plural(n, "topic")}` : `all ${plural(n, "problem")}`) : "";
+  const title = !w ? "Roadmap started" : r.next ? `Week ${w.i + 1} done${r.early ? ", ahead of schedule" : ""}` : "Every new problem is started";
+  const body = !w ? "" : r.next
+    ? `You've started ${what} for week ${w.i + 1}${spare > 0 ? `, with ${plural(spare, "day")} to spare` : ""}. Nice work.${r.V.master ? " Reviews over the next few weeks take them to mastery." : ""}`
+    : `That's the whole roadmap: every new problem${r.V.plan.sd ? " and topic" : ""} has its first attempt. ${r.V.master ? "From here, reviews take them to mastery before your date." : "From here it's reviews and the final week."}`;
+  const action = r.next
+    ? `<button class="btn btn-primary" data-act="rm-ahead" data-i="${r.next.i}">Start week ${r.next.i + 1} early</button><span class="fine">${plural(r.nextCount, "new problem")}${r.next.sd.length ? " and topic" + (r.next.sd.length === 1 ? "" : "s") : ""}, planned for ${esc(fmtRange(r.next.s, r.next.e))}</span>`
+    : r.hasList ? `<button class="btn" data-act="rm-listorder">Keep going in list order</button>` : "";
+  return `<div class="card wkdone" role="status">
+    <span class="wkdone-badge" aria-hidden="true">${CHECK}</span>
+    <div class="wkdone-txt"><h3>${title}</h3>${body ? `<p>${body}</p>` : ""}${action ? `<div class="wkdone-act">${action}</div>` : ""}</div>
+  </div>`;
 }
 function estimate(dsaCount, sdList, weeks) {
   const hours = dsaCount * 1.25 + sdList.reduce((s, p) => s + (p.kind === "design" ? 1.5 : 1), 0);
@@ -1406,22 +1551,26 @@ const TROPHY = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stro
 
 function renderRoadmap() {
   const saved = savedPlan();
-  if (!RM.form || (!RM.draft && saved && RM.formFor !== saved.start + saved.end + saved.list)) { RM.form = planForm(saved); RM.formFor = saved ? saved.start + saved.end + saved.list : ""; }
+  const planKey = p => p ? p.start + p.end + p.list + (p.goal || "finish") : "";
+  if (!RM.form || (!RM.draft && saved && RM.formFor !== planKey(saved))) { RM.form = planForm(saved); RM.formFor = planKey(saved); }
+  if (!saved && !RM.draft && RM.form.list !== activeList()) RM.form.list = activeList();
   const draft = !saved || RM.draft;
   const plan = draft ? buildPlan(RM.form) : saved;
   const V = planView(plan);
-  const learn = plan.weeks.filter(w => !w.polish).length || 1;
+  const learn = plan.weeks.filter(w => !w.polish && !w.review).length || 1;
+  const reviewN = plan.weeks.filter(w => w.review).length, lastNew = [...plan.weeks].reverse().find(w => !w.polish && !w.review);
   const dsaN = plan.weeks.reduce((s, w) => s + w.dsa.length, 0), sdKeys = plan.weeks.flatMap(w => w.sd);
   const sdList = sdKeys.map(k => SD.find(x => x.key === k)).filter(Boolean);
   const perWeek = estimate(dsaN, sdList, learn);
   const f = RM.form;
   if (RM.sel === null || RM.sel >= V.W) RM.sel = Math.max(0, Math.min(V.W - 1, V.cur));
+  if (RM.sel >= V.W) RM.open = false;
   const fast = dsaN / learn > 20;
   $("#view").innerHTML = `
   <section class="rm-head">
     <div>
       <h2>Roadmap</h2>
-      <p class="prose">A week-by-week route through ${esc(LISTS[plan.list].name)}${plan.sd ? " and the system design path" : ""}, finishing ${esc(fmtFull(plan.end))}. Problems you've already started stay in your review queue; the map spreads out everything else.</p>
+      <p class="prose">A week-by-week route through ${esc(LISTS[plan.list].name)}${plan.sd ? " and the system design path" : ""}, finishing ${esc(fmtFull(plan.end))}.${V.master && reviewN && lastNew ? ` New problems end ${esc(fmtShort(lastNew.e))}, leaving ${plural(reviewN, "review week")} and a final week so they have time to reach mastery.` : ""} Problems you've already started stay in your review queue; the map spreads out everything else.</p>
     </div>
     <div class="kpis rm-kpis">
       <div class="kpi"><b>${plan.weeks.length}</b><span>${plan.weeks.length === 1 ? "week" : "weeks"}</span></div>
@@ -1431,6 +1580,10 @@ function renderRoadmap() {
     </div>
   </section>
   <form class="card rm-form" id="rm-form" autocomplete="off">
+    <div class="field rm-goal"><span id="rm-goal-l">Plan for</span>
+      <div class="rm-goal-row"><div class="datechips" role="group" aria-labelledby="rm-goal-l">${[["finish", "Finishing the list"], ["master", "Mastery"]].map(([g, t]) => `<button type="button" class="chip" data-act="rm-goal" data-g="${g}" aria-pressed="${f.goal === g}">${t}</button>`).join("")}</div>
+      <p class="fine">${f.goal === "master" ? "Mastery takes a few spaced reviews, usually 3 to 5 weeks after you first solve a problem. New problems finish early, the last weeks are for reviews, and progress counts what you've mastered." : "New problems are spread across every week, so you've solved everything by your date. Progress counts what you've started."}</p></div>
+    </div>
     <label class="field">Coding list<select id="rm-list">${LIST_IDS.map(id => `<option value="${id}" ${id === f.list ? "selected" : ""}>${esc(LISTS[id].name)}</option>`).join("")}</select></label>
     <label class="field">Interview or finish date<input type="date" id="rm-end" min="${addDays(S.today, 6)}" value="${esc(f.end)}"></label>
     <div class="field"><span>Quick pick</span><div class="datechips">${[4, 8, 12, 16].map(n => `<button type="button" class="chip" data-act="rm-weeks" data-n="${n}" aria-pressed="${f.end === addDays(S.today, n * 7 - 1)}">${n} weeks</button>`).join("")}</div></div>
@@ -1438,19 +1591,20 @@ function renderRoadmap() {
     <label class="check rm-sd"><input type="checkbox" id="rm-sd" ${f.sd ? "checked" : ""}> Include system design</label>
     <div class="rm-actions">
       ${draft ? `<button type="submit" class="btn btn-primary">${saved ? "Save new plan" : "Start this roadmap"}</button>${saved ? `<button type="button" class="btn btn-ghost" data-act="rm-cancel">Cancel</button>` : ""}`
-        : `<span class="rm-state">${V.cur >= V.W ? "Finished." : V.left ? `<b>${V.left}</b> left from earlier weeks.` : "On track."}</span><button type="button" class="btn btn-ghost btn-sm btn-danger" data-act="rm-remove">Remove roadmap</button>`}
+        : `<span class="rm-state">${V.cur >= V.W ? "Finished." : V.left ? `<b>${V.left}</b> left from earlier weeks.` : "On track."} ${V.started} of ${V.total} started, <b>${V.mastered}</b> mastered.</span><button type="button" class="btn btn-ghost btn-sm btn-danger" data-act="rm-remove">Remove roadmap</button>`}
     </div>
-    ${draft ? `<p class="fine rm-note">${saved ? "Previewing changes. Saving rebuilds the plan from today with what you haven't started yet." : "This is a preview. Start it to save the plan and track your progress on the map."}${fast ? " That's more than 20 new problems a week; a later date or skipping system design gives you more breathing room." : ""} About ${Math.max(10, Math.round(perWeek * 60 / (Number(f.days) || 5) / 5) * 5)} minutes a study day.</p>` : ""}
+    ${draft ? `<p class="fine rm-note">${saved ? "Previewing changes. Saving rebuilds the plan from today with what you haven't started yet." : "This is a preview. Start it to save the plan and track your progress on the map."}${fast ? " That's more than 20 new problems a week; a later date or skipping system design gives you more breathing room." : ""} About ${Math.max(10, Math.round(perWeek * 60 / (Number(f.days) || 5) / 5) * 5)} minutes a study day.</p>`
+      : saved.list !== activeList() ? `<p class="fine rm-note">This roadmap follows ${esc(LISTS[saved.list].name)}, but your coding list is ${esc(LISTS[activeList()].name)}. <button type="button" class="linkish" data-act="rm-rebuild">Rebuild it for ${esc(LISTS[activeList()].name)}</button></p>` : ""}
   </form>
   <section class="card rm-mapcard ${draft ? "is-draft" : ""}" aria-label="Roadmap map">
     <div class="rm-map" id="rm-map">
       <svg class="rm-road" aria-hidden="true"><path class="r-edge"/><path class="r-base"/><path class="r-done"/><path class="r-dash"/></svg>
       ${rmNode("start", `<div class="rm-card rm-endcap"><b>Start</b><span class="rm-dates">${esc(fmtShort(plan.start))}</span></div>`, `<span class="st st-start">${FLAG}</span>`)}
-      ${V.weeks.map(w => rmNode("w" + w.i, rmCard(w), rmStation(w, V), w.sign)).join("")}
+      ${V.weeks.map(w => rmNode("w" + w.i, rmCard(w, V), rmStation(w, V), w.sign)).join("")}
       ${rmNode("finish", `<div class="rm-card rm-endcap"><b>Interview ready</b><span class="rm-dates">${esc(fmtShort(plan.end))}</span></div>`, `<span class="st st-finish">${TROPHY}</span>`)}
     </div>
-  </section>
-  <section class="sec" id="rm-detail"></section>`;
+    <div class="rm-legend"><span class="rm-hint">Select a week to see its problems.</span><span>Each dot is a problem or topic, by its latest rating:</span>${RM_LEVELS.map(([k, t]) => `<span class="rm-lg"><i class="rm-dot d-${k}"></i>${t}</span>`).join("")}<span>The ring counts what you've ${V.master ? "mastered" : "started"}.</span></div>
+  </section>`;
   S.shellFor = "roadmap";
   $("#rm-form").addEventListener("input", e => {
     const t = e.target;
@@ -1463,7 +1617,7 @@ function renderRoadmap() {
   });
   $("#rm-form").addEventListener("submit", e => { e.preventDefault(); saveRoadmap(); });
   layoutRoadmap(V);
-  renderWeekDetail(V);
+  renderWeekPanel(V); markSelectedWeek();
 }
 function rmNode(id, card, station, sign) {
   return `<div class="rm-node" data-node="${id}">${sign ? `<span class="rm-sign">${esc(sign)}</span>` : ""}${station}${card}</div>`;
@@ -1471,18 +1625,29 @@ function rmNode(id, card, station, sign) {
 function rmStation(w, V) {
   const here = w.i === V.cur ? `<span class="rm-here">You are here</span>` : "";
   const inner = w.status === "done" ? CHECK.replace('width="24" height="24"', 'width="18" height="18"') : w.polish ? "★" : String(w.i + 1);
-  return `${here}<button type="button" class="st st-${w.status}${w.polish ? " st-polish" : ""}" data-act="rm-week" data-i="${w.i}" aria-label="Week ${w.i + 1}, ${w.status}">${inner}</button>`;
+  const label = w.polish ? "Final week" : w.review ? `Week ${w.i + 1}, review` : `Week ${w.i + 1}`;
+  const all = w.items.length && w.mastered === w.items.length;
+  return `${here}<button type="button" class="st st-${w.status}${w.polish ? " st-polish" : ""}${w.review ? " st-review" : ""}${all ? " st-mastered" : ""}" data-act="rm-week" data-i="${w.i}" aria-label="${label}, ${all ? "all mastered" : w.status === "started" ? "all started, mastery in progress" : w.status}">${inner}</button>`;
 }
-function rmCard(w) {
-  const pct = w.items.length ? Math.round(100 * w.done / w.items.length) : 0;
-  const ring = w.items.length ? `<span class="rm-ring" style="--p:${pct}%" title="${w.done} of ${w.items.length} started"><i>${w.done}/${w.items.length}</i></span>` : "";
+const RM_LEVELS = [["M", "Mastered"], ["G", "Green"], ["Y", "Yellow"], ["R", "Red"], ["N", "Not started"]];
+function rmLevel(p) { return p.status === "mastered" ? "M" : p.n ? p.atts[p.n - 1].r[0] : "N"; }
+function rmDots(w) {
+  const lv = w.items.map(rmLevel), count = k => lv.filter(x => x === k).length;
+  const label = RM_LEVELS.filter(([k]) => count(k)).map(([k, t]) => `${count(k)} ${t.toLowerCase()}`).join(", ");
+  return `<div class="rm-dots" role="img" aria-label="Latest ratings: ${label}">${w.items.map((p, i) => `<i class="rm-dot d-${lv[i]}" data-tip="${esc(p.name + ": " + RM_LEVELS.find(([k]) => k === lv[i])[1])}"></i>`).join("")}${w.mastered ? `<span class="rm-mcount">${w.mastered} mastered</span>` : ""}</div>`;
+}
+function rmCard(w, V) {
+  const got = V && V.master ? w.mastered : w.done, pct = w.items.length ? Math.round(100 * got / w.items.length) : 0;
+  const ring = w.items.length ? `<span class="rm-ring" style="--p:${pct}%" title="${got} of ${w.items.length} ${V && V.master ? "mastered" : "started"}"><i>${got}/${w.items.length}</i></span>` : "";
   const topics = w.groups.length ? w.groups.map(g => `${esc(g.t)} <b>${g.n}</b>`).join(", ") : "";
   const sdNames = w.sd.slice(0, 2).map(p => esc(p.name)).join(", ") + (w.sd.length > 2 ? `, +${w.sd.length - 2} more` : "");
-  return `<div class="rm-card rm-${w.status}" data-act="rm-week" data-i="${w.i}" role="button" tabindex="0" aria-pressed="${RM.sel === w.i}">
+  return `<div class="rm-card rm-${w.status}${w.review ? " rm-review" : ""}" data-act="rm-week" data-i="${w.i}" role="button" tabindex="0" aria-pressed="${RM.open && RM.sel === w.i}" aria-haspopup="dialog">
     <div class="rm-card-h"><div><b>${w.polish ? "Final week" : "Week " + (w.i + 1)}</b><span class="rm-dates">${esc(fmtRange(w.s, w.e))}</span></div>${ring}</div>
     ${w.polish ? `<p class="rm-line">Mock interviews and review. Redo your Red and Yellow problems against the clock and talk through two designs out loud.</p>` : ""}
+    ${w.review ? `<p class="rm-line">No new problems. Clear your review queue on Today so earlier weeks reach mastery.</p>` : ""}
     ${topics ? `<p class="rm-line"><span class="tag code">DSA</span> ${topics}</p>` : ""}
     ${w.sd.length ? `<p class="rm-line"><span class="tag sd">Design</span> ${sdNames}</p>` : ""}
+    ${w.items.length ? rmDots(w) : ""}
     ${w.status === "behind" ? `<p class="rm-behind">${w.items.length - w.done} still to start</p>` : ""}
   </div>`;
 }
@@ -1557,29 +1722,80 @@ function layoutRoadmap(Vin) {
   const reached = V ? Math.max(0, Math.min(pts.length, V.cur + 2)) : 0;
   $(".r-done", svg).setAttribute("d", reached > 1 ? pathTo(reached) : "");
 }
-function renderWeekDetail(V) {
-  const el = $("#rm-detail"); if (!el) return;
-  const w = V.weeks[RM.sel]; if (!w) { el.innerHTML = ""; return; }
-  const row = p => `
-    <div class="row new">
-      <div class="grow"><button class="linkish" data-act="open" data-key="${esc(p.key)}">${esc(p.name)}</button><div class="meta">${trackTag(p)}<span>${esc(p.track === "sd" ? KIND[p.kind] : (p.sub || p.topic) + ", " + p.diff)}</span>${statusPill(p)}</div></div>
-      <a class="btn btn-sm" href="${esc(p.url)}" target="_blank" rel="noopener">${p.track === "sd" ? "Guide" : "LeetCode"} ↗</a>
-      ${quick(p, "")}
-    </div>`;
-  el.innerHTML = `
-    <div class="sec-head"><h2>${w.polish ? "Final week" : "Week " + (w.i + 1)}, ${esc(fmtRange(w.s, w.e))}</h2><span class="hint">${w.items.length ? `${w.done} of ${w.items.length} started` : ""}</span></div>
-    ${w.polish ? `<div class="card empty">Mock interviews and review: redo your Red and Yellow problems against the clock, and talk through two system designs out loud on a worksheet.</div>`
-      : `<div class="card rows">${w.items.map(row).join("") || `<div class="empty">Nothing new this week.</div>`}</div>`}`;
+// The week panel: opens beside the map (a sheet from the bottom on phones) when you pick a week.
+function currentPlanView() { const saved = savedPlan(); return planView(RM.draft || !saved ? buildPlan(RM.form) : saved); }
+function markSelectedWeek() { $$(".rm-card[data-i]").forEach(c => c.setAttribute("aria-pressed", String(RM.open && Number(c.dataset.i) === RM.sel))); }
+function openWeek(i, focus) {
+  if (!RM.open) RM.back = document.activeElement;
+  RM.sel = i; RM.open = true;
+  const V = currentPlanView(); RM.sel = Math.max(0, Math.min(V.W - 1, RM.sel));
+  renderWeekPanel(V, focus); markSelectedWeek();
+  const card = $(`.rm-card[data-i="${RM.sel}"]`);
+  if (card && !focus) card.scrollIntoView({ block: "nearest", behavior: reduceMotion ? "auto" : "smooth" });
 }
-function saveRoadmap() {
+function closeWeek() {
+  RM.open = false; renderWeekPanel(null); markSelectedWeek();
+  const card = $(`.rm-card[data-i="${RM.sel}"]`) || RM.back;
+  if (card && document.contains(card)) card.focus({ preventScroll: true });
+}
+const WEEK_STATUS = { current: "This week", behind: "Behind", upcoming: "Coming up", started: "Mastery in progress" };
+// On wide screens the open panel takes its own column, so the map re-flows beside it instead of under it.
+function setPanelSpace(on, V) {
+  const was = document.body.classList.contains("wkp-on");
+  document.body.classList.toggle("wkp-on", on);
+  if (was === on || window.innerWidth < 1000 || S.view !== "roadmap") return;
+  layoutRoadmap(V || currentPlanView());
+  if (on) { const card = $(`.rm-card[data-i="${RM.sel}"]`); if (card) card.scrollIntoView({ block: "center", behavior: "auto" }); }
+}
+function renderWeekPanel(V, focus) {
+  const el = $("#rm-panel"); if (!el) return;
+  const w = RM.open && V && S.view === "roadmap" ? V.weeks[RM.sel] : null;
+  if (!w) { el.classList.remove("open"); el.setAttribute("aria-hidden", "true"); setPanelSpace(false, V); return; }
+  const draft = RM.draft || !savedPlan();
+  const status = w.status === "done" ? (w.polish || w.review ? "Done" : V.master ? "Mastered" : "All started") : WEEK_STATUS[w.status];
+  const topics = w.groups.map(g => `${esc(g.t)} <b>${g.n}</b>`).join(", ");
+  const row = p => `
+    <div class="wk-row">
+      <div><button class="linkish" data-act="open" data-key="${esc(p.key)}">${esc(p.name)}</button>
+        <div class="wk-meta">${trackTag(p)}<span>${esc(p.track === "sd" ? KIND[p.kind] : (p.sub || p.topic) + ", " + p.diff)}</span>${statusPill(p)}${p.n ? beads(p, 8) : ""}</div></div>
+      <div class="wk-act"><a class="btn btn-sm" href="${esc(p.url)}" target="_blank" rel="noopener">${p.track === "sd" ? "Guide" : "LeetCode"} ↗</a>${quick(p, "")}</div>
+    </div>`;
+  const prev = $(".wkp-body", el), keep = prev && el.dataset.week === String(w.i) + (draft ? "d" : "") ? prev.scrollTop : 0;
+  el.dataset.week = String(w.i) + (draft ? "d" : "");
+  el.className = "wkp open" + (w.polish ? " is-polish" : w.review ? " is-review" : "");
+  el.setAttribute("aria-hidden", "false");
+  el.setAttribute("aria-label", (w.polish ? "Final week" : "Week " + (w.i + 1)) + ", " + fmtRange(w.s, w.e));
+  el.innerHTML = `
+    <div class="wkp-head">
+      <div class="wkp-tools">
+        <button class="btn" data-act="wk-step" data-d="-1" aria-label="Previous week" ${w.i === 0 ? "disabled" : ""}>‹</button>
+        <button class="btn" data-act="wk-step" data-d="1" aria-label="Next week" ${w.i === V.W - 1 ? "disabled" : ""}>›</button>
+        <button class="btn wkp-close" data-act="wk-close" aria-label="Close week">✕</button>
+      </div>
+      <div class="wkp-kicker"><span>${w.polish ? "Final week" : `Week ${w.i + 1} of ${V.W}${w.review ? ", review" : ""}`}</span>${status ? `<span class="pill wk-${w.status}">${status}</span>` : ""}${draft ? `<span class="pill wk-preview">Preview</span>` : ""}</div>
+      <h2>${esc(fmtRange(w.s, w.e))}</h2>
+      ${topics ? `<p class="rm-line"><span class="tag code">DSA</span> ${topics}</p>` : ""}
+      ${w.sd.length ? `<p class="rm-line"><span class="tag sd">Design</span> ${plural(w.sd.length, "topic")}</p>` : ""}
+      ${w.items.length ? `<div class="wkp-prog"><span>${w.done} of ${w.items.length} started${w.mastered ? `, <b>${w.mastered}</b> mastered` : ""}</span>${rmDots(w)}</div>` : ""}
+    </div>
+    <div class="wkp-body">
+      ${w.review ? `<p class="wkp-empty">No new problems this week. Work through your review queue on <a href="#today">Today</a>: problems from earlier weeks come back on schedule, and each clean Green moves them toward mastery.</p>`
+        : w.polish ? `<p class="wkp-empty">Mock interviews and review: redo your Red and Yellow problems against the clock, and talk through two system designs out loud on a worksheet.</p>`
+        : w.items.map(row).join("") || `<p class="wkp-empty">Nothing new this week.</p>`}
+    </div>`;
+  if (keep) $(".wkp-body", el).scrollTop = keep;
+  setPanelSpace(true, V);
+  if (focus) setTimeout(() => { const c = $(".wkp-close", el); if (c) c.focus({ preventScroll: true }); }, 60);
+}
+function saveRoadmap(msg) {
   if (!guardLoaded()) return;
   const plan = buildPlan(RM.form);
   const cur = Object.assign({}, S.docs.get("settings") || {}, { roadmap: plan });
   const switched = plan.list !== activeList();
   if (switched) cur.list = plan.list;
-  RM.draft = false; RM.sel = 0; RM.formFor = plan.start + plan.end + plan.list;
+  RM.draft = false; RM.sel = 0; RM.formFor = plan.start + plan.end + plan.list + plan.goal;
   writeDoc("settings", cur);
-  toast(switched ? `Roadmap saved. Your coding list is now ${LISTS[plan.list].name} to match.` : "Roadmap saved. Week 1 starts today.");
+  toast(msg || (switched ? `Roadmap saved. Your coding list is now ${LISTS[plan.list].name} to match.` : "Roadmap saved. Week 1 starts today."));
 }
 function removeRoadmap() {
   confirmModal("Remove your roadmap?", "Your attempts and notes stay as they are. Only the week-by-week plan is removed.", "Remove", async () => {
@@ -1674,9 +1890,21 @@ function renderConfig() {
         <div class="sec" style="gap:22px">
           <section class="card panel" id="gh-card"></section>
           <section class="card panel">
-            <h3>Import from your Google Sheet</h3>
-            <p class="prose">In the sheet, open the Tracker tab and choose File, Download, Comma-separated values (.csv). Then pick that file here. Attempts already in the tracker are skipped, so importing twice is safe.</p>
-            <div class="row-gap"><label class="btn file-btn">Choose CSV file<input type="file" id="csv-file" accept=".csv,text/csv,text/plain"></label></div>
+            <h3>Import from a spreadsheet</h3>
+            <p class="prose">Bring in attempts you logged in Google Sheets or Excel. Save the tab with your attempts as a CSV file (in Google Sheets: File, Download, Comma-separated values), then pick it here. Attempts already in the tracker are skipped, so importing twice is safe.</p>
+            <div class="row-gap"><label class="btn file-btn">Choose CSV file<input type="file" id="csv-file" accept=".csv,text/csv,text/plain"></label>${DL ? `<button class="btn btn-ghost" type="button" data-act="csv-sample">Download a sample file</button>` : ""}</div>
+            <details class="fmt">
+              <summary>What the file should look like</summary>
+              <dl class="fmt-cols">
+                <dt>Problem</dt><dd>Required. The problem's name, for example <code>Two Sum</code>. It's matched to Blind 75, NeetCode 150 and Grind 75 ignoring case and punctuation. Names that don't match are added as your own problems.</dd>
+                <dt>Attempts</dt><dd>Two columns per attempt, numbered: <code>Att 1 Date</code> and <code>Att 1 Rating</code>, then <code>Att 2 Date</code> and <code>Att 2 Rating</code>, and so on, as many as you have. <code>Attempt 1 Date</code> works too.</dd>
+                <dt>Dates</dt><dd><code>2026-11-20</code> or <code>11/20/2026</code> (month first).</dd>
+                <dt>Ratings</dt><dd><code>Red</code>, <code>Yellow</code> or <code>Green</code>. An attempt without one, or dated in the future, is skipped.</dd>
+                <dt>Optional</dt><dd><code>Notes</code> is added to the problem's notes. <code>Topic</code> and <code>Difficulty</code> are used only for problems that aren't in the lists.</dd>
+              </dl>
+              <p class="prose" style="margin-bottom:8px">Columns can be in any order. Rows above the header row, like a title, are ignored. For example:</p>
+              <pre>${esc(CSV_SAMPLE)}</pre>
+            </details>
           </section>
           <section class="card panel">
             <h3>Backup</h3>
@@ -1867,9 +2095,14 @@ function logAttempt(key, r, extra = {}) {
   const a = Object.assign({ id: uid(), d: S.today, r }, extra);
   doc.attempts.push(a);
   S.justLogged = key;
+  const rBefore = roadmapNext();
   writeDoc(key, doc);
+  const rAfter = rBefore && rBefore.kind === "items" ? roadmapNext() : null;
+  const weekDone = rAfter && rAfter.kind === "done" && rAfter.done;
+  if (weekDone) setTimeout(() => confetti(window.innerWidth / 2, 140, 160), 200);
   const p = byKey(allItems(), key);
-  const msg = p.status === "mastered" ? `${p.name} is mastered.` : `Logged ${r} for ${p.name}. Back ${fmtDay(p.next)}.`;
+  const msg = weekDone ? (rAfter.next ? `Week ${rAfter.done.i + 1} done! Every problem is started.` : "Every new problem on your roadmap is started!")
+    : p.status === "mastered" ? `${p.name} is mastered.` : `Logged ${r} for ${p.name}. Back ${fmtDay(p.next)}.`;
   toast(msg, { label: "Undo", fn: () => undoAttempt(key, a.id, prevSched) });
   return { a, p, msg };
 }
@@ -2111,7 +2344,19 @@ function switchList(id) {
   if (id === activeList() || !guardLoaded()) return;
   S.filter.topic = ""; S.shellFor = null;
   writeDoc("settings", Object.assign({}, S.docs.get("settings") || {}, { list: id }));
-  toast("Switched to " + LISTS[id].name + ".");
+  const plan = savedPlan();
+  if (!plan || plan.list === id) { toast("Switched to " + LISTS[id].name + "."); return; }
+  openModal(`<h2>Rebuild your roadmap for ${esc(LISTS[id].name)}?</h2>
+    <p class="prose">Your roadmap follows ${esc(LISTS[plan.list].name)}. Rebuilding plans ${esc(LISTS[id].name)} from today, keeping your date (${esc(fmtShort(plan.end))}), study days and goal. Problems you've already started stay in your review queue.</p>
+    <div class="actions"><button class="btn btn-ghost" id="rb-keep">Keep current roadmap</button><button class="btn btn-primary" id="rb-go">Rebuild roadmap</button></div>`);
+  $("#rb-go").focus();
+  $("#rb-go").addEventListener("click", () => { closeModal(); rebuildRoadmapFor(id); });
+  $("#rb-keep").addEventListener("click", () => { closeModal(); toast(`Switched to ${LISTS[id].name}. Your roadmap still follows ${LISTS[plan.list].name}.`); });
+}
+function rebuildRoadmapFor(id) {
+  const saved = savedPlan(); if (!saved) return;
+  RM.form = Object.assign(planForm(saved), { list: id }); RM.draft = true; RM.open = false;
+  saveRoadmap(`Roadmap rebuilt for ${LISTS[id].name}.`);
 }
 
 /* ----- popover menu ----- */
@@ -2275,6 +2520,18 @@ async function closeWorksheet() {
 
 /* ================= export / import ================= */
 function backupText() { const docs = {}; for (const [k, v] of S.docs) docs[k] = v; return JSON.stringify({ app: "blind75-tracker", version: 2, exportedAt: new Date().toISOString(), docs }); }
+const CSV_SAMPLE = `Problem,Topic,Difficulty,Att 1 Date,Att 1 Rating,Att 2 Date,Att 2 Rating,Notes
+Two Sum,Arrays & Hashing,Easy,10/22/2026,Yellow,11/03/2026,Green,Hash map of value to index
+Valid Anagram,Arrays & Hashing,Easy,11/18/2026,Red,,,
+Container With Most Water,Two Pointers,Medium,2026-11-19,Green,,,"Move the shorter side inward"`;
+function csvSampleDownload() {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([CSV_SAMPLE + "\n"], { type: "text/csv" }));
+  a.download = "algo-and-architecture-import-sample.csv";
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  toast("Sample downloaded. Fill it in, then choose it with Choose CSV file.");
+}
 function exportDownload() {
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([backupText()], { type: "application/json" }));
@@ -2444,8 +2701,14 @@ document.addEventListener("click", e => {
   if (act === "log") return openDrawer(key, true);
   if (act === "quick") return quickLog(el);
   if (act === "lists") return listMenu(el);
-  if (act === "rm-week") { RM.sel = Number(el.dataset.i); $$(".rm-card[data-i]").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.i === el.dataset.i))); renderWeekDetail(planView(RM.draft || !savedPlan() ? buildPlan(RM.form) : savedPlan())); const d = $("#rm-detail"); if (d && el.classList.contains("st")) d.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }); return; }
+  if (act === "rm-week") { const i = Number(el.dataset.i); if (RM.open && RM.sel === i) return closeWeek(); return openWeek(i, true); }
+  if (act === "wk-step") return openWeek(RM.sel + Number(el.dataset.d), false);
+  if (act === "wk-close") return closeWeek();
   if (act === "rm-weeks") { RM.form.end = addDays(S.today, Number(el.dataset.n) * 7 - 1); RM.draft = true; return renderRoadmap(); }
+  if (act === "rm-rebuild") return rebuildRoadmapFor(activeList());
+  if (act === "rm-ahead") return startWeekEarly(Number(el.dataset.i));
+  if (act === "rm-listorder") return continueListOrder();
+  if (act === "rm-goal") { RM.form.goal = el.dataset.g; RM.draft = true; return renderRoadmap(); }
   if (act === "rm-cancel") { RM.draft = false; RM.form = null; return renderRoadmap(); }
   if (act === "rm-remove") return removeRoadmap();
   if (act === "account") return accountMenu(el);
@@ -2483,6 +2746,7 @@ document.addEventListener("click", e => {
   if (act === "modal-close") return closeModal();
   if (act === "iv-reset") { for (const t of ["code", "sd"]) { for (const r of RATINGS) $(`#iv-${t}-${r}`).value = DEFAULTS[t].intervals[r]; $(`#iv-${t}-m`).value = DEFAULTS[t].mastered; } return; }
   if (act === "export-dl") return exportDownload();
+  if (act === "csv-sample") return csvSampleDownload();
   if (act === "export-copy") return exportCopy();
 });
 const gs = $("#gs");
@@ -2510,6 +2774,7 @@ document.addEventListener("keydown", e => {
     if ($("#modal-wrap").classList.contains("on")) return closeModal();
     if (S.editing) { S.editing = null; S.editDraft = null; return render(); }
     if (S.open) return closeDrawer();
+    if (RM.open) return closeWeek();
     if (getPref("guestBubble") === "open" && $("#guest-bubble").contains(document.activeElement)) { setPref("guestBubble", "closed"); return renderGuestBubble(true); }
   }
   if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".prow")) { e.preventDefault(); openDrawer(e.target.dataset.key, false); }
