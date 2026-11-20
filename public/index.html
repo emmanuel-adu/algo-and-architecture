@@ -4,10 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Algo and Architecture</title>
+<meta name="description" content="Spaced-repetition practice for coding interviews and system design: Blind 75, NeetCode 150, Grind 75 and a system design path, with a week-by-week roadmap. Free, no account needed.">
+<link rel="canonical" href="https://algo-and-architecture.vercel.app/">
+<meta name="theme-color" content="#f5f4fa">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Algo &amp; Arch">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Algo and Architecture">
+<meta property="og:title" content="Algo and Architecture">
+<meta property="og:description" content="Spaced-repetition practice for coding interviews and system design: Blind 75, NeetCode 150, Grind 75 and a system design path, with a week-by-week roadmap. Free, no account needed.">
+<meta property="og:url" content="https://algo-and-architecture.vercel.app/">
+<meta property="og:image" content="https://algo-and-architecture.vercel.app/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Algo and Architecture: a winding roadmap with weekly stops, beside the lists Blind 75, NeetCode 150, Grind 75 and System design.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Algo and Architecture">
+<meta name="twitter:description" content="Spaced-repetition practice for coding interviews and system design: Blind 75, NeetCode 150, Grind 75 and a system design path, with a week-by-week roadmap. Free, no account needed.">
+<meta name="twitter:image" content="https://algo-and-architecture.vercel.app/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>try{var t=localStorage.getItem("b75.theme");document.documentElement.dataset.theme=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light"}catch(e){}</script>
+<script>try{var t=localStorage.getItem("b75.theme");var d=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.dataset.theme=d?"dark":"light";var m=document.querySelector('meta[name="theme-color"]');if(m)m.content=d?"#12101f":"#f5f4fa"}catch(e){}</script>
 <style>
 :root {
   /* Layout: action first. Today = what to review now, rated in one click; Coding and System design hold the full lists; any item opens a side drawer. */
@@ -1178,6 +1200,7 @@ function isDark() { const m = themeMode(); return m === "dark" || (m === "system
 function applyTheme() {
   const dark = isDark();
   document.documentElement.dataset.theme = dark ? "dark" : "light";
+  const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = dark ? "#12101f" : "#f5f4fa";
   const b = $("#theme-btn");
   if (b) { b.innerHTML = dark ? SUN : MOON; b.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode"); b.dataset.tip = dark ? "Light mode" : "Dark mode"; }
   renderAppearance();
