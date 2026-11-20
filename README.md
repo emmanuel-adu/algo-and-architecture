@@ -1,6 +1,6 @@
 # Algo and Architecture
 
-Spaced-repetition practice for data structures and algorithms (Blind 75, NeetCode 150, Grind 75) and a system design path. Solve a problem, rate it Red, Yellow or Green, and it comes back when it's due. Every problem has notes, a full attempt history and an Excalidraw worksheet.
+Spaced-repetition practice for data structures and algorithms (Blind 75, NeetCode 150, Grind 75) and a system design path. Solve a problem, rate it Red, Yellow or Green, and it comes back when it's due. Every problem has notes, a full attempt history and an Excalidraw worksheet. It comes in light and dark, following your device until you pick one.
 
 The Roadmap tab turns a list and an interview date into a week-by-week plan, drawn as a road map: each week's problems and design topics, where you are, and whether you're on track. Problems you've already started stay in your review queue.
 
@@ -160,3 +160,11 @@ npm run dev                # serves on http://localhost:3000
 ```
 
 Add the other variables from `.env.example` to `.env.local`, add `http://localhost:3000/api/auth/callback` as an extra callback URL in the OAuth app, and set `PUBLIC_URL=http://localhost:3000`. `npm run build` runs the same checks Vercel runs on deploy.
+
+## Contributing
+
+Bug reports, ideas and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) to run it locally in a minute (no setup needed for most changes), and [open an issue](https://github.com/emmanuel-adu/algo-and-architecture/issues/new) to report a problem.
+
+## License
+
+[MIT](LICENSE). Contributions are accepted under the same license.
