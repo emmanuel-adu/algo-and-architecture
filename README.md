@@ -4,6 +4,46 @@ Spaced-repetition practice for data structures and algorithms (Blind 75, NeetCod
 
 It runs on **Vercel** (the site and a few small functions), stores data in **Neon** (Postgres), and signs you in with **GitHub**. Optionally, it syncs everything to a private GitHub repo.
 
+## How it works
+
+```mermaid
+flowchart TB
+  App["Browser<br/>public/index.html, served by Vercel"]
+  CDN["CDNs<br/>React, Excalidraw, fonts"]
+
+  subgraph Vercel["Vercel functions"]
+    direction LR
+    Auth["Sign-in<br/>api/auth/*, api/me"]
+    Docs["Tracker data<br/>api/docs"]
+    Sync["GitHub sync<br/>api/github/*"]
+  end
+
+  Neon[("Neon Postgres<br/>users, docs, github_sync")]
+
+  subgraph GitHub["GitHub"]
+    direction LR
+    OAuth["OAuth<br/>sign-in: profile only<br/>sync: repo access, opt-in"]
+    API["REST API"]
+    Repo[("Private repo<br/>algo-and-architecture-data")]
+  end
+
+  App -->|"fetch /api/* with a signed session cookie"| Vercel
+  App -.->|"worksheet and font files"| CDN
+  App -->|"Sign in with GitHub"| OAuth
+  OAuth -->|"redirect back with a code"| Auth
+  Auth -->|"exchange code, read profile"| API
+  Auth --> Neon
+  Docs --> Neon
+  Sync -->|"encrypted token, last sync"| Neon
+  Sync -->|"one commit per snapshot"| API
+  API --> Repo
+```
+
+- **Sign-in:** the app sends you to GitHub, which only shares your public profile. GitHub redirects back to `api/auth/callback`, which stores your user in Neon and sets a signed session cookie. The GitHub token from sign-in is not kept.
+- **Your data:** the page reads and saves your attempts, notes, worksheets and settings through `api/docs`, which only touches your own rows in Neon. Other devices pick up changes within a minute.
+- **GitHub sync (optional):** connecting asks GitHub for repository access in a separate step. The token is stored encrypted in Neon, and each sync writes a full snapshot to your private `algo-and-architecture-data` repo as one commit, skipping the commit when nothing changed.
+- **Worksheets:** the Excalidraw editor and fonts load from public CDNs when you open a worksheet.
+
 ## What's in here
 
 ```
