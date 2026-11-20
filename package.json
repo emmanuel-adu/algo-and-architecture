@@ -1,0 +1,12 @@
+{
+  "name": "algo-and-architecture",
+  "private": true,
+  "type": "module",
+  "description": "Algo and Architecture: spaced-repetition practice for data structures and algorithms (Blind 75, NeetCode 150, Grind 75) and system design. Vercel + Neon, GitHub sign-in.",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "1.2.0"
+  }
+}
