@@ -4,9 +4,17 @@
   "type": "module",
   "description": "Algo and Architecture: spaced-repetition practice for data structures and algorithms (Blind 75, NeetCode 150, Grind 75) and system design. Vercel + Neon, GitHub sign-in.",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/check.mjs",
+    "dev": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/dev.mjs",
+    "db:migrate": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/migrate.mjs"
   },
   "dependencies": {
-    "@neondatabase/serverless": "1.2.0"
+    "@neon/config": "^1.14.5",
+    "@neon/env": "^2.1.8",
+    "@vercel/functions": "^3.11.3",
+    "pg": "^8.23.1"
   }
 }

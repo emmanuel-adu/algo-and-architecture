@@ -85,6 +85,33 @@ main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 80px; display: flex
 #banners { display: flex; flex-direction: column; gap: 10px; }
 #banners:empty { display: none; }
 .banner { border: 1px solid color-mix(in srgb, var(--yellow) 50%, transparent); border-radius: 12px; padding: 10px 14px; background: var(--yellow-soft); color: var(--yellow-ink); font-weight: 600; }
+.banner.info { background: var(--surface); color: var(--ink-2); border-color: var(--line); box-shadow: var(--lift); }
+.banner.has-act { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; }
+.banner.has-act > span { flex: 1 1 320px; }
+.banner .b-act { display: flex; gap: 8px; flex-wrap: wrap; }
+.signin-btn { flex: none; }
+.signin-btn[hidden] { display: none; }
+/* floating note for people using the app without an account */
+.gb { position: fixed; right: 18px; bottom: 18px; z-index: 33; display: flex; flex-direction: column; align-items: flex-end; }
+.gb[hidden] { display: none; }
+.gb-pill { display: inline-flex; align-items: center; gap: 8px; font: 600 13px/1 var(--font-body); color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 9px 14px 9px 11px; box-shadow: var(--lift); cursor: pointer; }
+.gb-pill:hover { border-color: var(--ink-2); color: var(--ink); }
+.gb-pill svg, .gb-top svg { width: 18px; height: 18px; color: var(--code); flex: none; }
+.gb-card { width: min(340px, calc(100vw - 24px)); background: var(--surface); border: 1.5px solid var(--ink); border-radius: 14px; box-shadow: 0 4px 0 var(--ink); padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; transform-origin: bottom right; animation: gb-in .16s ease-out; }
+.gb-top { display: flex; align-items: center; gap: 8px; width: 100%; }
+.gb-top b { flex: 1; font: 700 15.5px/1.2 var(--font-display); color: var(--ink); }
+.gb-card p { margin: 0; font-size: 14px; color: var(--ink-2); line-height: 1.45; }
+.gb-x { flex: none; width: 30px; height: 30px; margin: -4px -6px -4px 0; border: 0; background: none; border-radius: 8px; color: var(--muted); cursor: pointer; display: grid; place-items: center; }
+.gb-x:hover { background: var(--surface-2); color: var(--ink); }
+@keyframes gb-in { from { opacity: 0; transform: translateY(6px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .gb-card { animation: none; } }
+@media (max-width: 760px) {
+  .gb { right: 12px; bottom: calc(76px + env(safe-area-inset-bottom)); }
+  .gb-pill { padding: 10px; }
+  .gb-pill span { display: none; }
+}
+@media (max-width: 480px) { .sync span { display: none; } }
+.signin-btn svg { width: 16px; height: 16px; }
 .banner.err { background: var(--red-soft); color: var(--red-ink); border-color: color-mix(in srgb, var(--red) 40%, transparent); }
 
 /* ---------- buttons, tags ---------- */
@@ -135,24 +162,12 @@ main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 80px; display: flex
 .badge { font-size: 11px; font-weight: 700; color: var(--muted); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; vertical-align: 1px; }
 
 /* signed out, account */
-body.signed-out .nav, body.signed-out .search, body.signed-out .tabbar, body.signed-out #sync, body.signed-out #acct, body.signed-out #brand { visibility: hidden; }
-.signin { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px 40px; padding: 36px; align-items: center; margin-top: 4vh; }
-.si-main { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
-.si-main .mark { width: 48px; height: 48px; font-size: 16px; border-radius: 12px; }
-.si-main h1 { font-size: clamp(32px, 4.4vw, 46px); line-height: 1.04; font-weight: 800; }
-.si-main .lede { margin: 0; color: var(--ink-2); font-size: 17px; max-width: 46ch; }
-.si-btn { font-size: 16px; padding: 10px 18px; }
 .fine { font-size: 13px; color: var(--ink-2); max-width: 52ch; margin: 0; }
-.si-points { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
-.si-points li { display: flex; flex-direction: column; gap: 2px; padding-left: 16px; border-left: 3px solid var(--code-soft); }
-.si-points b { font: 700 16px var(--font-display); }
-.si-points span { color: var(--ink-2); font-size: 14px; }
 .acct { flex: none; width: 34px; height: 34px; border-radius: 50%; padding: 0; border: 1.5px solid var(--line); background: var(--surface-2); cursor: pointer; overflow: hidden; }
 .acct img { width: 100%; height: 100%; display: block; }
 .acct:hover, .acct[aria-expanded="true"] { border-color: var(--ink); }
 .check { display: flex; gap: 8px; align-items: center; font-size: 14px; font-weight: 600; cursor: pointer; }
 .check input { width: 16px; height: 16px; accent-color: var(--code); }
-@media (max-width: 760px) { .signin { grid-template-columns: 1fr; padding: 22px; } }
 
 /* popover menu (list switcher, snooze) */
 .menu { position: fixed; z-index: 96; min-width: 220px; max-width: min(380px, calc(100vw - 16px)); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--lift), 0 12px 32px -12px rgba(30,26,51,.3); padding: 6px; display: flex; flex-direction: column; }
@@ -585,6 +600,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
       <ul class="gs-list" id="gs-list" role="listbox" hidden></ul>
     </div>
     <div class="sync" id="sync" data-s="loading" role="status" aria-live="polite"><span>Loading</span></div>
+    <a class="btn btn-sm signin-btn" id="signin" href="/api/auth/login" hidden>Sign in</a>
     <button class="acct" id="acct" data-act="account" aria-haspopup="menu" aria-expanded="false" aria-label="Account" hidden><img id="acct-img" alt="" width="30" height="30"></button>
   </div>
 </header>
@@ -602,6 +618,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
   </div>
   <div class="ws-body" id="ws-body"><div class="ws-loading" id="ws-loading">Loading the drawing tools…</div><div id="ws-root" style="position:absolute;inset:0"></div></div>
 </section>
+<div class="gb" id="guest-bubble" hidden></div>
 <div class="modal-wrap" id="modal-wrap"><div class="modal" id="modal" role="dialog" aria-modal="true"></div></div>
 <div class="menu" id="menu" role="menu" hidden></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -795,19 +812,43 @@ function topicList(list) {
 const byKey = (list, key) => list.find(p => p.key === key) || null;
 
 /* ================= storage ================= */
+// Without an account, records live in this browser's localStorage, one key per record.
+const GUEST = "aa.doc.";
+const guestStore = {
+  usable() { try { localStorage.setItem("aa.t", "1"); localStorage.removeItem("aa.t"); return true; } catch (e) { return false; } },
+  load() {
+    const m = new Map();
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith(GUEST)) { try { const v = JSON.parse(localStorage.getItem(k)); if (v && typeof v === "object") m.set(k.slice(GUEST.length), v); } catch (e) {} }
+      }
+    } catch (e) {}
+    return m;
+  },
+  clear() { try { for (const k of [...this.load().keys()]) localStorage.removeItem(GUEST + k); } catch (e) {} }
+};
+const guestCollection = () => ({ doc: id => ({
+  set: async data => {
+    try { localStorage.setItem(GUEST + id, JSON.stringify(data)); }
+    catch (e) { throw new ApiError("quota_exceeded", "This browser's storage is full.", 413); }
+  },
+  delete: async () => { try { localStorage.removeItem(GUEST + id); } catch (e) {} }
+}) });
+const persists = () => S.mode === "db" || S.mode === "guest";
 const pending = new Map(), inflight = new Map();
 function writeDoc(id, data, opts = {}) {
   if (S.readOnly) { toast("This view can't save changes."); return Promise.resolve(); }
   const wasEmpty = !S.docs.size;
   if (data === null) S.docs.delete(id); else S.docs.set(id, data);
   if (wasEmpty !== !S.docs.size) renderBanners();
-  if (S.mode === "db") {
+  if (persists()) {
     pending.set(id, data);
     if (!inflight.has(id)) inflight.set(id, flush(id));
     syncState();
   }
   if (!opts.quiet) render(); else renderDrawerWs();
-  return S.mode === "db" ? inflight.get(id) : Promise.resolve();
+  return persists() ? inflight.get(id) : Promise.resolve();
 }
 async function flush(id) {
   try {
@@ -829,21 +870,23 @@ async function retryOnce(fn) {
 }
 function onWriteError(e) {
   const code = e && e.code;
-  if (code === "unauthenticated") { showSignedOut("Your session ended, so the last change wasn't saved. Sign in again."); return; }
-  if (code === "quota_exceeded") S.writeError = "That item is too big to save (over 300 KB). Trim its worksheet or notes, then try again.";
+  if (code === "unauthenticated") { goGuest("Your session ended, so the last change wasn't saved. Sign in with GitHub again to keep saving to your account."); return; }
+  if (code === "quota_exceeded" && S.mode === "guest") S.writeError = "This browser's storage is full, so the last change wasn't saved. Sign in with GitHub to keep saving, or delete a worksheet you don't need.";
+  else if (code === "quota_exceeded") S.writeError = "That item is too big to save (over 300 KB). Trim its worksheet or notes, then try again.";
   else if (code === "invalid_argument") S.writeError = e.message || "The server rejected the last change.";
   else S.writeError = "A change couldn't be saved. Check your connection, then try again.";
   renderBanners(); wsStatus();
 }
 function syncState() {
   const el = $("#sync"); let s, t;
-  if (S.mode === "signedout") { s = "loading"; t = ""; }
-  else if (S.mode === "loading" || (S.mode === "db" && !S.loaded)) { s = "loading"; t = "Loading"; }
+  if (S.mode === "loading" || (S.mode === "db" && !S.loaded)) { s = "loading"; t = "Loading"; }
   else if (S.mode === "local") { s = "local"; t = "Not saving"; }
   else if (S.writeError) { s = "error"; t = "Not saved"; }
   else if (pending.size || inflight.size) { s = "saving"; t = "Saving…"; }
+  else if (S.mode === "guest") { s = "saved"; t = "Saved locally"; }
   else { s = "saved"; t = "Saved"; }
-  el.dataset.s = s; el.firstElementChild.textContent = t; el.title = t;
+  el.dataset.s = s; el.firstElementChild.textContent = t;
+  el.title = S.mode === "guest" ? "Saved in this browser only. Sign in with GitHub to keep it across devices." : t;
   wsStatus();
 }
 let lastSig = "";
@@ -880,14 +923,17 @@ async function connect() {
   let me;
   try { me = await api("GET", "/api/me"); }
   catch (e) {
-    if (e.code === "unauthenticated") return showSignedOut();
+    if (e.code === "unauthenticated") return goGuest();
+    if (S.mode === "loading" && guestStore.load().size) return goGuest();
     S.mode = "db"; S.stale = true; syncState(); renderBanners();
     return setTimeout(connect, 5000);
   }
-  S.user = me.user; S.mode = "db"; COL = apiCollection();
+  if (!me.user) return goGuest();
+  S.user = me.user; S.mode = "db"; COL = apiCollection(); setPref("hadAccount", "1"); S.authMsg = "";
   syncState(); renderBanners(); renderAccount();
   loadTimer = setTimeout(() => { if (!S.loaded) { S.stale = true; renderBanners(); } }, 10000);
   await poll();
+  if (S.loaded) offerGuestMove();
   clearInterval(pollTimer);
   pollTimer = setInterval(() => { if (!document.hidden) poll(); }, 60000);
   loadGitHubStatus();
@@ -901,16 +947,57 @@ async function poll() {
     S.stale = false;
     onSnapshot({ docs: j.docs.map(d => ({ id: d.id, exists: true, data: () => d.data })), metadata: { fromCache: false } });
   } catch (e) {
-    if (e.code === "unauthenticated") showSignedOut("Your session ended. Sign in again to keep saving.");
+    if (e.code === "unauthenticated") goGuest("Your session ended. Sign in with GitHub again to get back to your account's progress.");
     else { S.stale = true; renderBanners(); syncState(); }
   } finally { polling = false; }
 }
-function showSignedOut(msg) {
-  S.mode = "signedout"; S.loaded = false; S.user = null; S.docs = new Map(); S.open = null;
+// No account: everything works, saved in this browser. Signing in with GitHub keeps it across devices.
+function goGuest(msg) {
+  clearInterval(pollTimer);
+  S.mode = guestStore.usable() ? "guest" : "local"; S.user = null; S.gh = null; S.open = null;
+  COL = guestCollection();
   if (msg) S.authMsg = msg;
-  clearInterval(pollTimer); syncState(); renderBanners(); render();
+  S.docs = guestStore.load(); S.loaded = true; S.stale = false; S.writeError = "";
+  clearTimeout(loadTimer); lastSig = "";
+  syncState(); renderBanners(); renderAccount(); render();
 }
-function goLocal() { S.mode = "local"; S.loaded = true; syncState(); renderBanners(); render(); }
+// Other tabs without an account pick up each other's changes.
+window.addEventListener("storage", e => {
+  if (S.mode !== "guest" || !e.key || !e.key.startsWith(GUEST)) return;
+  onSnapshot({ docs: [...guestStore.load()].map(([id, data]) => ({ id, exists: true, data: () => data })), metadata: { fromCache: false } });
+});
+// After signing in, offer to bring over what was logged in this browser without an account.
+function mergeDoc(id, local, remote) {
+  if (!remote) return local;
+  if (id === "settings") return Object.assign({}, local, remote);
+  if (id.startsWith("w_")) return Array.isArray(remote.elements) && remote.elements.length ? remote : local;
+  const seen = new Set(), attempts = [];
+  for (const a of [...(remote.attempts || []), ...(local.attempts || [])]) {
+    const k = a && (a.id || [a.d, a.r, a.min, a.note].join("|"));
+    if (!a || seen.has(k)) continue; seen.add(k); attempts.push(a);
+  }
+  const rn = String(remote.notes || "").trim(), ln = String(local.notes || "").trim();
+  const notes = !ln || ln === rn ? remote.notes || "" : !rn ? local.notes : rn + "\n\n" + ln;
+  return Object.assign({}, local, remote, { attempts, notes });
+}
+function offerGuestMove() {
+  const local = guestStore.load(); if (!local.size) return;
+  const nAtt = [...local.values()].reduce((n, v) => n + (Array.isArray(v.attempts) ? v.attempts.filter(validAtt).length : 0), 0);
+  const nWs = [...local.keys()].filter(k => k.startsWith("w_")).length;
+  const what = [nAtt ? plural(nAtt, "attempt") : "", nWs ? plural(nWs, "worksheet") : ""].filter(Boolean).join(" and ") || "your settings";
+  const move = async () => {
+    const jobs = [...local].map(([id, v]) => writeDoc(id, mergeDoc(id, v, S.docs.get(id) || null), { quiet: true }));
+    await Promise.all(jobs); render();
+    if (!S.writeError) { guestStore.clear(); toast("Moved " + what + " from this browser into your account."); }
+  };
+  if (!S.docs.size) return move();
+  openModal(`<h2>Add this browser's progress to your account?</h2>
+    <p class="prose">Before you signed in, you saved ${esc(what)} in this browser. Add them to your account? Nothing in your account is removed: attempts are combined, and where both have notes, both are kept.</p>
+    <div class="actions"><button class="btn btn-ghost" id="gm-drop">Discard them</button><button class="btn btn-primary" id="gm-add">Add to my account</button></div>`);
+  $("#gm-add").focus();
+  $("#gm-add").addEventListener("click", () => { closeModal(); move(); });
+  $("#gm-drop").addEventListener("click", () => { closeModal(); guestStore.clear(); toast("Discarded what was saved in this browser."); });
+}
 function handleReturnParams() {
   const qs = new URLSearchParams(location.search);
   if (![...qs.keys()].length) return;
@@ -945,8 +1032,6 @@ const NAV = [
 
 /* ================= rendering ================= */
 function render() {
-  document.body.classList.toggle("signed-out", S.mode === "signedout");
-  if (S.mode === "signedout") { renderSignIn(); renderDrawer([]); return; }
   const list = allItems();
   renderNav(list);
   if (S.view === "today") renderToday(list);
@@ -971,13 +1056,35 @@ function renderNav(list) {
 }
 function renderBanners() {
   const b = [];
-  if (S.mode === "signedout") { $("#banners").innerHTML = ""; return; }
-  if (S.mode === "local") b.push(["err", "Your progress can't be saved right now, so anything you log is lost on reload."]);
+  const signIn = `<a class="btn btn-sm btn-primary" href="/api/auth/login">${GH_ICON} Sign in with GitHub</a>`;
+  if (S.authMsg) b.push(["err", S.authMsg, signIn]);
+  if (S.mode === "local") b.push(["err", "This browser isn't letting the site save anything, so what you log is lost on reload. Sign in with GitHub to save to your account.", signIn]);
+  renderGuestBubble();
   if (S.mode === "db" && S.loaded && !S.docs.size) b.push(["", "Welcome! Moving from the Claude version of the tracker? Download a backup there (Settings, Download backup) and restore it here under Settings."]);
   if (S.mode === "db" && S.stale && !S.loaded) b.push(["", "Your saved attempts haven't loaded yet. Check your connection; the page fills in as soon as they arrive. Logging is paused until then."]);
   if (S.mode === "db" && S.stale && S.loaded) b.push(["", "Couldn't reach the server just now. What you see may be out of date; it refreshes when the connection is back."]);
   if (S.writeError) b.push(["err", S.writeError]);
-  $("#banners").innerHTML = b.map(([c, t]) => `<div class="banner ${c}">${esc(t)}</div>`).join("");
+  $("#banners").innerHTML = b.map(([c, t, act]) => act ? `<div class="banner ${c} has-act"><span>${esc(t)}</span><div class="b-act">${act}</div></div>` : `<div class="banner ${c}">${esc(t)}</div>`).join("");
+}
+// A small floating note while using the app without an account: collapsed to a pill, click to open.
+const CLOUD_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 2 20 20"/><path d="M5.78 5.78A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.31-.19"/><path d="M21.53 16.5A4.5 4.5 0 0 0 17.5 10h-1.79A7 7 0 0 0 10 5.07"/></svg>';
+function renderGuestBubble(focus) {
+  const el = $("#guest-bubble"); if (!el) return;
+  el.hidden = S.mode !== "guest" || !!S.authMsg;
+  if (el.hidden) { el.innerHTML = ""; return; }
+  const open = getPref("guestBubble") === "open", back = getPref("hadAccount") === "1";
+  const head = back ? "You're signed out" : "Saved in this browser only";
+  const body = back
+    ? "Changes are saved in this browser only. Sign in with GitHub to get back to your account's progress."
+    : "No account needed: your progress is saved in this browser. To keep it across devices, sign in with GitHub. You can then also sync all your work to a GitHub repo.";
+  el.innerHTML = open
+    ? `<div class="gb-card" role="region" aria-labelledby="gb-h">
+        <div class="gb-top">${CLOUD_OFF}<b id="gb-h">${head}</b><button class="gb-x" data-act="gb-toggle" aria-expanded="true" aria-label="Collapse this note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div>
+        <p>${body}</p>
+        <a class="btn btn-sm btn-primary" href="/api/auth/login">${GH_ICON} Sign in with GitHub</a>
+      </div>`
+    : `<button class="gb-pill" data-act="gb-toggle" aria-expanded="false" aria-label="${head}. Show how to keep your progress across devices.">${CLOUD_OFF}<span>${head}</span></button>`;
+  if (focus) { const t = $("[data-act=gb-toggle]", el); if (t) t.focus(); }
 }
 function beads(p, max = 14, fresh = false) {
   if (!p.n) return `<span class="beads-none">–</span>`;
@@ -1016,26 +1123,6 @@ const bumpTag = p => p.sched ? `<span class="tag bump">${esc(p.sched.paused ? "P
 
 /* ----- signed out ----- */
 const GH_ICON = '<svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
-function renderSignIn() {
-  $("#view").innerHTML = `
-  <section class="card signin" aria-labelledby="si-h">
-    <div class="si-main">
-      <span class="mark" aria-hidden="true">A&amp;A</span>
-      <h1 id="si-h">Algo and Architecture</h1>
-      <p class="lede">Spaced-repetition practice for data structures, algorithms and system design. Solve a problem, rate how it went, and it comes back exactly when it's due.</p>
-      ${S.authMsg ? `<div class="banner err">${esc(S.authMsg)}</div>` : ""}
-      <a class="btn btn-primary si-btn" href="/api/auth/login">${GH_ICON} Sign in with GitHub</a>
-      <p class="fine">Signing in shares only your public GitHub profile. It doesn't give this app access to your repositories. Syncing your data to a GitHub repo is optional, and GitHub asks you separately if you turn it on.</p>
-    </div>
-    <ul class="si-points">
-      <li><b>Review queue</b><span>What's due today, rated Red, Yellow or Green in one click.</span></li>
-      <li><b>Three problem lists</b><span>Blind 75, NeetCode 150 and Grind 75, with progress shared between them.</span></li>
-      <li><b>System design path</b><span>41 topics in 7 units, each with a free guide.</span></li>
-      <li><b>Worksheets</b><span>An Excalidraw canvas for every problem and design.</span></li>
-    </ul>
-  </section>`;
-}
-
 /* ----- today ----- */
 function renderToday(list) {
   const due = list.filter(p => p.status === "due").sort(dueSort);
@@ -1925,11 +2012,13 @@ function reschedModal(key) {
 function renderAccount() {
   const b = $("#acct"); if (!b) return;
   b.hidden = !S.user;
+  const si = $("#signin");
+  if (si) { si.hidden = !!S.user || S.mode === "loading"; if (!si.dataset.ready) { si.innerHTML = GH_ICON + " Sign in"; si.dataset.ready = "1"; } }
   if (S.user) { const img = $("#acct-img"); if (S.user.avatar_url) img.src = S.user.avatar_url + (S.user.avatar_url.includes("?") ? "&" : "?") + "s=60"; b.title = "@" + S.user.login; }
 }
 function accountMenu(btn) {
   openMenu(btn, [{ head: "Signed in as @" + (S.user ? S.user.login : "") },
-    { label: "Settings and GitHub sync", fn: () => { location.hash = "config"; } },
+    { label: "Sync to a GitHub repo", fn: () => { location.hash = "config"; setTimeout(() => { const c = $("#gh-card"); if (c) c.scrollIntoView({ block: "center" }); }, 60); } },
     { label: "Sign out", fn: signOut }]);
 }
 async function signOut() {
@@ -1982,12 +2071,20 @@ function ago(iso) {
 }
 function renderGitHubCard() {
   const el = $("#gh-card"); if (!el) return;
+  if (S.mode !== "db") {
+    el.innerHTML = `<h3>Save across devices</h3>
+      <p class="prose">You're using the tracker without an account, so everything is saved in this browser only. Another device, another browser, or clearing this browser's data starts you fresh.</p>
+      <p class="prose">Sign in with GitHub to keep your progress in your account, on every device. What you've saved here moves over when you sign in. You can then also sync all your work (attempts, notes, worksheets and your roadmap) to a private GitHub repo.</p>
+      <div class="row-gap"><a class="btn btn-primary" href="/api/auth/login">${GH_ICON} Sign in with GitHub</a></div>
+      <p class="prose fine">Signing in shares only your public GitHub profile. Syncing to a repo is a separate step, and GitHub asks you for access only then.</p>`;
+    return;
+  }
   const g = S.gh, n = S.ghNotice;
   const notice = n && n.err ? `<div class="banner err">${esc(n.text)}</div>` : "";
   if (!g) { el.innerHTML = `<h3>Sync to GitHub</h3><p class="prose">Checking…</p>`; return; }
   if (!g.connected) {
     el.innerHTML = `<h3>Sync to GitHub</h3>${notice}
-      <p class="prose">Keep a copy of everything in a private repo on your GitHub: a readable page per problem with its attempts and notes, your worksheets as Excalidraw files, and the raw data. Each sync is one commit, so you also get history.</p>
+      <p class="prose">Keep a copy of all your work in a private repo on your GitHub: a readable page per problem with its attempts and notes, your worksheets as Excalidraw files, your roadmap, and the raw data. Each sync is one commit, so you also get history.</p>
       <p class="prose fine">GitHub will ask to let this app access your repositories, which it needs to create the private repo and commit to it. You can turn sync off here at any time, which also revokes that access.</p>
       <div class="row-gap"><a class="btn btn-primary" href="/api/github/connect">${GH_ICON} Connect GitHub</a></div>`;
     return;
@@ -2352,6 +2449,7 @@ document.addEventListener("click", e => {
   if (act === "rm-cancel") { RM.draft = false; RM.form = null; return renderRoadmap(); }
   if (act === "rm-remove") return removeRoadmap();
   if (act === "account") return accountMenu(el);
+  if (act === "gb-toggle") { setPref("guestBubble", getPref("guestBubble") === "open" ? "closed" : "open"); return renderGuestBubble(true); }
   if (act === "gh-sync") return syncNow(true);
   if (act === "gh-disconnect") return disconnectGitHub();
   if (act === "snooze") return snoozeMenu(el);
@@ -2412,6 +2510,7 @@ document.addEventListener("keydown", e => {
     if ($("#modal-wrap").classList.contains("on")) return closeModal();
     if (S.editing) { S.editing = null; S.editDraft = null; return render(); }
     if (S.open) return closeDrawer();
+    if (getPref("guestBubble") === "open" && $("#guest-bubble").contains(document.activeElement)) { setPref("guestBubble", "closed"); return renderGuestBubble(true); }
   }
   if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".prow")) { e.preventDefault(); openDrawer(e.target.dataset.key, false); }
   if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".rm-card[data-i]")) { e.preventDefault(); e.target.click(); }
@@ -2434,7 +2533,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) { da
 /* ================= boot ================= */
 S.view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "today";
 render(); syncState();
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (S.view === "design") layoutPaths(); if (S.view === "roadmap" && S.mode !== "signedout") renderRoadmap(); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (S.view === "design") layoutPaths(); if (S.view === "roadmap" && S.mode !== "loading") renderRoadmap(); });
 connect();
 })();
 </script>

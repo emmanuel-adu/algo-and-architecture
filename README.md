@@ -4,7 +4,9 @@ Spaced-repetition practice for data structures and algorithms (Blind 75, NeetCod
 
 The Roadmap tab turns a list and an interview date into a week-by-week plan, drawn as a road map: each week's problems and design topics, where you are, and whether you're on track. Problems you've already started stay in your review queue.
 
-It runs on **Vercel** (the site and a few small functions), stores data in **Neon** (Postgres), and signs you in with **GitHub**. Optionally, it syncs everything to a private GitHub repo.
+You don't need an account: without one, your progress is saved in your browser. Sign in with **GitHub** to keep it across devices (what you saved in the browser moves into your account), and optionally sync all your work to a private GitHub repo.
+
+It runs on **Vercel** (the site and a few small functions) and stores signed-in users' data in **Neon** (Postgres).
 
 ## How it works
 
@@ -41,9 +43,10 @@ flowchart TB
   API --> Repo
 ```
 
-- **Sign-in:** the app sends you to GitHub, which only shares your public profile. GitHub redirects back to `api/auth/callback`, which stores your user in Neon and sets a signed session cookie. The GitHub token from sign-in is not kept.
+- **No account:** everything works, and records are saved in the browser's local storage. Nothing is sent to the server.
+- **Sign-in:** the app sends you to GitHub, which only shares your public profile. GitHub redirects back to `api/auth/callback`, which stores your user in Neon and sets a signed session cookie. The GitHub token from sign-in is not kept. If you saved anything before signing in, the app offers to add it to your account: attempts are combined and nothing in the account is removed.
 - **Your data:** the page reads and saves your attempts, notes, worksheets and settings through `api/docs`, which only touches your own rows in Neon. Other devices pick up changes within a minute.
-- **GitHub sync (optional):** connecting asks GitHub for repository access in a separate step. The token is stored encrypted in Neon, and each sync writes a full snapshot to your private `algo-and-architecture-data` repo as one commit, skipping the commit when nothing changed.
+- **GitHub sync (optional):** connecting asks GitHub for repository access in a separate step. The token is stored encrypted in Neon, and each sync writes a full snapshot to your private `algo-and-architecture-data` repo as one commit, skipping the commit when nothing changed. That's a page per problem with attempts and notes, your worksheets, your roadmap as a checklist (`ROADMAP.md`), and the raw records.
 - **Worksheets:** the Excalidraw editor and fonts load from public CDNs when you open a worksheet.
 
 ## What's in here
@@ -60,9 +63,13 @@ api/github/status.js     Sync status, and turning auto-sync on or off
 api/github/sync.js       Writes a snapshot of your data to the repo as one commit
 api/github/disconnect.js Turns sync off and revokes the repo access
 lib/                     Shared code: database, cookies and encryption, GitHub
+scripts/check.mjs        `npm run build`: checks every function loads and the page's script parses
+scripts/migrate.mjs      `npm run db:migrate`: creates the tables over Neon's direct connection
+scripts/dev.mjs          `npm run dev`: runs the site and functions locally
+neon.ts                  Neon project config, used by the `neon` CLI
 ```
 
-The database tables are created automatically the first time the app talks to Neon. There's nothing to run by hand.
+The app talks to Neon with `node-postgres` through Neon's pooled connection string (`DATABASE_URL`), using one small pool per function instance that Vercel Fluid compute closes when idle. `npm run db:migrate` creates the tables; each function instance also checks they exist before its first query, so a fresh database works even if you skip it.
 
 ## Set it up (about 15 minutes)
 
@@ -78,10 +85,22 @@ Create a new repository called `algo-and-architecture` (public or private both w
 2. Framework Preset: **Other**. Leave the build and output settings as they are, then **Deploy**.
 3. Note your site's address, for example `https://algo-and-architecture.vercel.app`. The first deploy will load, but sign-in won't work until the steps below are done.
 
-### 3. Add the Neon database
+### 3. Connect the Neon database
 
-1. In your Vercel project, open the **Storage** tab, choose **Neon** (Postgres), and create a database on the **Free** plan.
-2. Connect it to this project. Vercel adds `DATABASE_URL` to the project's environment variables for you.
+The repo is set up for the Neon CLI (`neon.ts`). From the project folder:
+
+```
+npm install
+npm i -g neon@latest
+neon login                 # opens a browser to sign in to Neon
+neon init -y --org-id <your org id> --project-id <your project id> --branch production --services postgres
+neon deploy                # applies neon.ts and writes DATABASE_URL and DATABASE_URL_UNPOOLED to .env.local
+npm run db:migrate         # creates the tables
+```
+
+Then copy the value of `DATABASE_URL` from `.env.local` (the pooled one, with `-pooler` in the host) into Vercel under **Settings → Environment Variables**. `.env.local` is ignored by git.
+
+Alternatively, open your Vercel project's **Storage** tab, choose **Neon**, and connect a database there. Vercel then adds `DATABASE_URL` for you.
 
 ### 4. Create the GitHub OAuth app
 
@@ -117,6 +136,7 @@ In **Settings → Sync to GitHub**, click **Connect GitHub**. GitHub asks you to
 - `worksheets/.../*.excalidraw`: your drawings, which open at excalidraw.com
 - `data/*.json`: the raw records
 - `README.md`: a summary table
+- `ROADMAP.md`: your Roadmap tab's plan as a weekly checklist, if you've made one
 
 Each sync is a single commit, and nothing is committed when nothing changed. With auto-sync on, it syncs 30 seconds after you stop making changes. **Turn off sync** stops it and revokes the repo access; the repo itself stays yours.
 
@@ -130,12 +150,13 @@ Each sync is a single commit, and nothing is committed when nothing changed. Wit
 
 ## Run it locally (optional)
 
+Needs Node.js 22 or newer.
+
 ```
 npm install
-npm i -g vercel
-vercel link            # connect to your Vercel project
-vercel env pull .env.local
-vercel dev             # serves on http://localhost:3000
+neon env pull              # or `neon deploy`; writes DATABASE_URL to .env.local
+npm run db:migrate
+npm run dev                # serves on http://localhost:3000
 ```
 
-Add `http://localhost:3000/api/auth/callback` as an extra callback URL in the OAuth app, and set `PUBLIC_URL=http://localhost:3000` in `.env.local`.
+Add the other variables from `.env.example` to `.env.local`, add `http://localhost:3000/api/auth/callback` as an extra callback URL in the OAuth app, and set `PUBLIC_URL=http://localhost:3000`. `npm run build` runs the same checks Vercel runs on deploy.
