@@ -4,8 +4,8 @@
   "description": "Spaced-repetition practice for coding interviews and system design, with a week-by-week roadmap.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f5f4fa",
-  "theme_color": "#f5f4fa",
+  "background_color": "#f6f6f8",
+  "theme_color": "#f6f6f8",
   "icons": [
     { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" },
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
