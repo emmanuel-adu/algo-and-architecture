@@ -2832,9 +2832,9 @@ function renderConfig() {
       <div class="set-grid">
         <form class="card panel" id="iv-form">
           <h3>Review intervals</h3>
-          <p class="prose">After each attempt, the next review lands this many days later, based on its rating. Changes apply to everything right away.</p>
+          <p class="prose">After each attempt, the next review lands this many days later, based on its rating. Changes save as you make them and apply to everything you've rated.</p>
           <div class="iv"><h4><span class="tag code">Coding</span></h4>${ivRows("code", GUIDE.code)}<h4><span class="tag sd">System design</span></h4>${ivRows("sd", GUIDE.design)}<h4><span class="tag bh">Behavioral</span></h4>${ivRows("bh", GUIDE.bh)}</div>
-          <div class="row-gap"><button class="btn btn-primary" type="submit">Save intervals</button><button class="btn btn-ghost" type="button" data-act="iv-reset">Reset to defaults</button></div>
+          <div class="row-gap"><button class="btn btn-ghost" type="button" data-act="iv-reset">Reset to defaults</button></div>
         </form>
         <div class="sec" style="gap:22px">
           <section class="card panel" id="gh-card"></section>
@@ -2870,6 +2870,7 @@ function renderConfig() {
     </section>`;
     S.shellFor = "config";
     $("#iv-form").addEventListener("submit", e => { e.preventDefault(); saveIntervals(); });
+    $("#iv-form").addEventListener("change", e => { if (e.target.matches("input")) saveIntervals(); });
     $("#csv-file").addEventListener("change", e => { const f = e.target.files[0]; e.target.value = ""; if (f) f.text().then(importCSV); });
     renderConfigActions();
     renderGitHubCard();
@@ -3260,19 +3261,31 @@ function deleteAttempt(attId) {
   doc.attempts = (doc.attempts || []).filter(a => a.id !== attId);
   S.confirmDel = null; writeDoc(S.open, doc); toast("Attempt deleted.");
 }
+// Interval and mastery settings save as soon as a field changes, so a change can't be lost by
+// leaving the page. Mastery is worked out from your ratings with the current setting, so a new
+// setting re-checks everything; the message says what that did, with an undo.
+const TRACK_NOUN = { code: "problem", sd: "topic", bh: "question" };
 function saveIntervals() {
   if (!guardLoaded()) return;
-  const out = {};
+  const cur = settings(), out = {};
   for (const t of ["code", "sd", "bh"]) {
     const iv = {};
-    for (const r of RATINGS) { const n = parseInt($(`#iv-${t}-${r}`).value, 10); if (!(n >= 0 && n <= 365)) { toast(r + " needs a number of days from 0 to 365."); return; } iv[r] = n; }
-    const m = parseInt($(`#iv-${t}-m`).value, 10); if (!(m >= 2 && m <= 10)) { toast("Mastered needs a number of Greens from 2 to 10."); return; }
-    out[t] = { iv, m };
+    for (const r of RATINGS) { const n = Number($(`#iv-${t}-${r}`).value); if (!(Number.isInteger(n) && n >= 0 && n <= 365)) { toast(r + " needs a whole number of days from 0 to 365."); fillIntervals(cur, true); return; } iv[r] = n; }
+    const m = Number($(`#iv-${t}-m`).value); if (!(Number.isInteger(m) && m >= 2 && m <= 10)) { toast("Mastered needs a number of Greens from 2 to 10."); fillIntervals(cur, true); return; }
+    out[t] = { intervals: iv, greens: m };
   }
-  const doc = Object.assign({}, S.docs.get("settings") || {}, { intervals: out.code.iv, masterGreens: out.code.m, sdIntervals: out.sd.iv, sdMasterGreens: out.sd.m, bhIntervals: out.bh.iv, bhMasterGreens: out.bh.m });
+  if (JSON.stringify(out) === JSON.stringify(cur)) return;
+  const prev = S.docs.get("settings") || {};
+  const doc = Object.assign({}, prev, { intervals: out.code.intervals, masterGreens: out.code.greens, sdIntervals: out.sd.intervals, sdMasterGreens: out.sd.greens, bhIntervals: out.bh.intervals, bhMasterGreens: out.bh.greens });
   delete doc.mastered; delete doc.sdMastered; delete doc.bhMastered;
+  const was = new Set(allItems().filter(p => p.status === "mastered").map(p => p.key));
   writeDoc("settings", doc);
-  toast("Intervals saved.");
+  const now = allItems(), lost = now.filter(p => was.has(p.key) && p.status !== "mastered"), gained = now.filter(p => !was.has(p.key) && p.status === "mastered");
+  const count = ps => joinWords(["code", "sd", "bh"].map(t => ps.filter(p => p.track === t).length && plural(ps.filter(p => p.track === t).length, TRACK_NOUN[t])).filter(Boolean));
+  const msg = ["Saved."];
+  if (lost.length) msg.push(`${count(lost)} ${lost.length === 1 ? "is" : "are"} no longer mastered, so ${lost.length === 1 ? "it's" : "they're"} back in your reviews.`);
+  if (gained.length) msg.push(`${count(gained)} ${gained.length === 1 ? "is" : "are"} now mastered.`);
+  toast(msg.join(" "), { label: "Undo", fn: () => { writeDoc("settings", prev); fillIntervals(settings(), true); toast("Settings put back."); } });
 }
 
 
@@ -3899,7 +3912,7 @@ document.addEventListener("click", e => {
     return confirmModal("Delete " + p.name + "?", `This removes the problem and its ${plural(p.n, "attempt")}. It can't be undone unless you have a backup.`, "Delete", async () => { S.open = null; await writeDoc(p.key, null); await writeDoc("w_" + p.key, null); toast("Deleted."); });
   }
   if (act === "modal-close") return closeModal();
-  if (act === "iv-reset") { for (const t of ["code", "sd", "bh"]) { for (const r of RATINGS) $(`#iv-${t}-${r}`).value = DEFAULTS[t].intervals[r]; $(`#iv-${t}-m`).value = DEFAULTS[t].greens; } return; }
+  if (act === "iv-reset") { for (const t of ["code", "sd", "bh"]) { for (const r of RATINGS) $(`#iv-${t}-${r}`).value = DEFAULTS[t].intervals[r]; $(`#iv-${t}-m`).value = DEFAULTS[t].greens; } return saveIntervals(); }
   if (act === "export-dl") return exportDownload();
   if (act === "csv-sample") return csvSampleDownload();
   if (act === "export-copy") return exportCopy();
