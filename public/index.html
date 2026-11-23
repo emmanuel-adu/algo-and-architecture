@@ -42,8 +42,8 @@
   --ink-2: #5a5a66;
   --muted: #6e6e79;
   --line: #e4e4e9;
-  --code: #6246ea; --code-soft: #f0eeff; --code-ink: #4b31c9;
-  --sd: #1c8ce0; --sd-soft: #e8f3fd; --sd-ink: #0f68ab;
+  --code: #6246ea; --code-soft: #f0eeff; --code-ink: #4b31c9; --code-btn: #6246ea;
+  --sd: #1c8ce0; --sd-soft: #e8f3fd; --sd-ink: #0f68ab; --sd-btn: #1773b8; --sd-on: #fff;
   --bh: #c0328a; --bh-soft: #fbe9f3; --bh-ink: #95266b;
   --red: #f05454; --red-soft: #fdecec; --red-ink: #b02525;
   --yellow: #f5b623; --yellow-soft: #fff5db; --yellow-ink: #855900;
@@ -65,8 +65,8 @@
   --ink: #ededf0; --ink-2: #a8a8b3; --muted: #8b8b96;
   --line: rgba(255,255,255,.12); --line-strong: rgba(255,255,255,.2);
   --edge: rgba(255,255,255,.22); --shadow: rgba(0,0,0,.6);
-  --code: #7c6cf2; --code-soft: #282540; --code-ink: #b6abff;
-  --sd: #4ea8f0; --sd-soft: #1f2d3c; --sd-ink: #93cbf8;
+  --code: #7c6cf2; --code-soft: #282540; --code-ink: #b6abff; --code-btn: #6f5ee8;
+  --sd: #4ea8f0; --sd-soft: #1f2d3c; --sd-ink: #93cbf8; --sd-btn: #4ea8f0; --sd-on: #18181b;
   --bh: #b8458b; --bh-soft: #3a2131; --bh-ink: #f2a7d3;
   --red: #eb5a5a; --red-soft: #372125; --red-ink: #f5a0a0;
   --yellow: #f2b631; --yellow-soft: #362d1f; --yellow-ink: #f3cd70;
@@ -79,7 +79,7 @@
   color-scheme: dark;
 }
 /* text on bright fills stays dark in both themes */
-:root[data-theme="dark"] .st.st-done, :root[data-theme="dark"] .st.st-behind, :root[data-theme="dark"] .node.st-scheduled .disc, :root[data-theme="dark"] .node.st-mastered .disc { color: var(--on-bright); }
+:root[data-theme="dark"] .st.st-done, :root[data-theme="dark"] .st.st-behind { color: var(--on-bright); }
 :root[data-theme="dark"] .st.st-done svg path, :root[data-theme="dark"] .wkdone-badge svg path { stroke: var(--on-bright); }
 .iconbtn { flex: none; width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: var(--control); color: var(--ink-2); display: grid; place-items: center; cursor: pointer; padding: 0; }
 .iconbtn:hover { color: var(--ink); border-color: var(--ink-2); }
@@ -193,8 +193,8 @@ main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 80px; display: flex
 .btn:hover { transform: translateY(-1px); box-shadow: 0 3px 0 var(--shadow); }
 .btn:active { transform: translateY(2px); box-shadow: 0 0 0 var(--shadow); }
 .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: var(--tactile); }
-.btn-primary { background: var(--code); color: #fff; border-color: color-mix(in srgb, var(--code) 78%, #000); }
-.btn-sd { background: var(--sd); color: #fff; border-color: color-mix(in srgb, var(--sd) 78%, #000); }
+.btn-primary { background: var(--code-btn); color: #fff; border-color: color-mix(in srgb, var(--code-btn) 78%, #000); }
+.btn-sd { background: var(--sd-btn); color: var(--sd-on); border-color: color-mix(in srgb, var(--sd-btn) 78%, #000); }
 .btn-bh { background: var(--bh); color: #fff; border-color: color-mix(in srgb, var(--bh) 78%, #000); }
 .btn-sm { padding: 4px 10px; font-size: 13px; border-radius: 9px; }
 .btn-ghost { background: transparent; border-color: transparent; box-shadow: none; color: var(--ink-2); }
@@ -354,35 +354,6 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .p-date.none { color: var(--muted); }
 .p-status { justify-self: start; }
 .p-m { display: none; }
-
-/* ---------- design path ---------- */
-.sd-intro { display: grid; grid-template-columns: 1fr auto; gap: 14px 24px; align-items: center; padding: 18px 20px; }
-.sd-intro p { margin: 4px 0 0; color: var(--ink-2); max-width: 70ch; }
-.unit-chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
-.units { display: flex; flex-direction: column; gap: 20px; }
-.unit { padding: 16px 20px 4px; scroll-margin-top: 80px; }
-.unit-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.unit-badge { font: 700 13px/1 var(--font-body); border-radius: 7px; padding: 5px 8px; background: var(--sd-soft); color: var(--sd-ink); }
-.unit-head h3 { font-size: 19px; }
-.unit-head p { margin: 0; color: var(--ink-2); font-size: 14px; flex-basis: 100%; }
-.unit-head .uprog { margin-left: auto; font-weight: 700; color: var(--ink-2); font-size: 14px; }
-.path { position: relative; margin-top: -6px; }
-.path svg.trail { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
-.node { position: absolute; width: 128px; display: flex; flex-direction: column; align-items: center; gap: 7px; background: none; border: 0; padding: 0; cursor: pointer; color: var(--ink); }
-.disc { width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid var(--edge); background: var(--surface); box-shadow: 0 3px 0 var(--shadow); display: grid; place-items: center; font: 700 18px/1 var(--font-display); position: relative; transition: transform .1s ease, box-shadow .1s ease; }
-.node:hover .disc { transform: translateY(-2px); box-shadow: 0 5px 0 var(--shadow); }
-.node:active .disc { transform: translateY(2px); box-shadow: 0 1px 0 var(--shadow); }
-.node .lbl { font-size: 13px; font-weight: 700; line-height: 1.2; text-align: center; max-width: 124px; }
-.node .kind { font-size: 11.5px; font-weight: 600; color: var(--ink-2); margin-top: -5px; }
-.node.st-scheduled .disc { background: var(--rc, var(--yellow-soft)); }
-.node.st-due .disc { background: var(--red); color: #fff; }
-.node.st-mastered .disc { background: var(--green); }
-.node.st-paused .disc { background: var(--surface-2); color: var(--muted); border-style: dashed; box-shadow: none; }
-.node.next .disc { border-color: var(--sd); box-shadow: 0 3px 0 var(--sd-ink), 0 0 0 5px var(--sd-soft); }
-.node .flag { position: absolute; top: -26px; font-size: 11.5px; font-weight: 800; color: #fff; background: var(--sd); border-radius: 6px; padding: 2px 7px; }
-.node .flag::after { content: ""; position: absolute; left: 50%; bottom: -4px; margin-left: -4px; border: 4px solid transparent; border-bottom: 0; border-top-color: var(--sd); }
-.node.st-due .flag { background: var(--red); } .node.st-due .flag::after { border-top-color: var(--red); }
-
 
 /* ---------- roadmap ---------- */
 .rm-head { display: grid; grid-template-columns: 1fr auto; gap: 14px 28px; align-items: end; }
@@ -730,11 +701,6 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
   .qcard .quick > span { flex-basis: 100%; margin-bottom: 2px; }
   .rate-row { grid-template-columns: 1fr; }
   .dr-head, .dr-sec { padding-left: 16px; padding-right: 16px; }
-  .sd-intro { grid-template-columns: 1fr; }
-  .unit { padding: 14px 12px 4px; }
-  .node { width: 104px; }
-  .node .lbl { font-size: 12.5px; max-width: 100px; }
-  .disc { width: 50px; height: 50px; font-size: 17px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -784,7 +750,7 @@ html.sess-on { overflow: hidden; }
 .sess-name { font: 800 clamp(26px, 3.8vw, 40px)/1.08 var(--font-display); letter-spacing: -0.02em; outline: none; text-wrap: balance; }
 .sess-last { margin: 0; color: var(--ink-2); font-size: 14.5px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
 .sess-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-.sess-card.sd .sess-links .btn-primary { background: var(--sd); border-color: color-mix(in srgb, var(--sd) 78%, #000); }
+.sess-card.sd .sess-links .btn-primary { background: var(--sd-btn); color: var(--sd-on); border-color: color-mix(in srgb, var(--sd-btn) 78%, #000); }
 .sess-notes { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
 .sess-notes summary { cursor: pointer; font-weight: 700; font-size: 14px; }
 .sess-notes p { margin: 8px 0 2px; white-space: pre-wrap; color: var(--ink-2); font-size: 14px; line-height: 1.55; }
@@ -866,72 +832,100 @@ html.sess-on { overflow: hidden; }
   .modal .actions > * { flex: 1 1 auto; justify-content: center; text-align: center; }
 }
 
-/* behavioral studio: questions on the left, the selected one on the right */
-.bh-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; }
-.bh-top h2 { font-size: clamp(28px, 3.6vw, 38px); font-weight: 800; }
-.bh-top .prose { margin: 6px 0 0; max-width: 70ch; }
-.bh-top-act { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-.bh-top-act .fine { max-width: none; }
+/* studio pages (System design, Behavioral): every item in a rail on the left, the selected one on the right.
+   --acc is the track's color. It marks the selection, the hero and nothing else. */
+.stu.sd { --acc: var(--sd); --acc-soft: var(--sd-soft); --acc-ink: var(--sd-ink); }
+.stu.bh { --acc: var(--bh); --acc-soft: var(--bh-soft); --acc-ink: var(--bh-ink); }
+.stu-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; }
+.stu-top h2 { font-size: clamp(28px, 3.6vw, 38px); font-weight: 800; }
+.stu-top .prose { margin: 6px 0 0; max-width: 70ch; }
+.stu-top-act { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.stu-top-act:empty { display: none; }
+.stu-top-act .fine { max-width: none; }
 .bh-setup-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .bh-setup-sum { display: flex; align-items: center; gap: 8px 16px; flex-wrap: wrap; padding: 12px 14px 12px 18px; font-size: 14.5px; color: var(--ink-2); }
 .bh-setup-sum b { color: var(--ink); font-weight: 600; }
 .bh-setup-sum .btn { margin-left: auto; }
-.bh-studio { display: grid; grid-template-columns: minmax(260px, 330px) minmax(0, 1fr); gap: 24px; align-items: start; }
-.bh-rail { position: sticky; top: 80px; padding: 6px; overflow: hidden; }
-.bh-rail-list { max-height: calc(100vh - 104px); overflow-y: auto; overscroll-behavior: contain; padding: 2px; }
-.bh-skill + .bh-skill { margin-top: 4px; }
-.bh-skill h3 { margin: 0; }
-.bh-skill-h { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 10px 10px 4px; font: 700 12.5px/1.3 var(--font-body); color: var(--ink-2); cursor: default; }
-.bh-skill-h small { font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
-.bh-skill ul { list-style: none; margin: 0; padding: 0; }
-.bh-item { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 9px; cursor: pointer; font-size: 14px; line-height: 1.35; color: var(--ink); position: relative; }
-.bh-item:hover { background: var(--surface-2); }
-.bh-item:focus-visible { outline: 2px solid var(--bh); outline-offset: -2px; }
-.bh-item.is-sel { background: var(--bh-soft); color: var(--bh-ink); font-weight: 600; }
-.bh-item.is-sel::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: var(--bh); }
-.bh-item-q { flex: 1; min-width: 0; text-wrap: pretty; }
-.bh-dot { flex: none; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; border: 1.5px solid var(--edge); background: transparent; display: grid; place-items: center; font-style: normal; }
-.bh-dot.r-Red { background: var(--red); border-color: transparent; } .bh-dot.r-Yellow { background: var(--yellow); border-color: transparent; } .bh-dot.r-Green { background: var(--green); border-color: transparent; }
-.bh-dot.is-m { width: 14px; height: 14px; margin-top: 2px; background: var(--mastered); border-color: transparent; color: var(--on-mastered); }
-.bh-dot.is-m svg { width: 9px; height: 9px; }
-.bh-due { flex: none; font-size: 11.5px; font-weight: 700; color: var(--red-ink); background: var(--red-soft); border-radius: 6px; padding: 1px 6px; }
-.bh-has { flex: none; color: var(--muted); margin-top: 1px; }
-.bh-detail { display: flex; flex-direction: column; gap: 20px; min-width: 0; scroll-margin-top: 76px; }
-.bh-hero { border-radius: 18px; padding: 22px 24px 22px; background: linear-gradient(160deg, var(--bh-soft), var(--surface) 70%); border: 1px solid color-mix(in srgb, var(--bh) 22%, var(--line)); display: flex; flex-direction: column; gap: 14px; }
-.bh-hero-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.bh-kicker { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
-.bh-step { display: flex; gap: 6px; }
-.bh-step .btn { padding: 4px 11px; font-size: 16px; line-height: 1.2; }
-.bh-hero h2 { font: 800 clamp(24px, 3vw, 34px)/1.15 var(--font-display); letter-spacing: -0.02em; text-wrap: balance; outline: none; max-width: 30ch; }
-.bh-status { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 13.5px; color: var(--ink-2); }
-.bh-hist { font-size: 13.5px; }
-.bh-hero-act { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 2px; }
-.bh-hero-act .btn { padding: 10px 18px; font-size: 15px; border-radius: 12px; }
-.bh-hero-act .fine { max-width: 40ch; }
-.bh-guide { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; padding: 0 4px; }
-.bh-guide h3, .bh-rate-sec h3, .bh-story h3 { font-size: 15px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-.bh-guide p { margin: 6px 0 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.55; }
-.bh-story { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
-.bh-story textarea { min-height: 150px; resize: vertical; font-size: 14.5px; line-height: 1.55; }
-.bh-rate-sec { display: flex; flex-direction: column; gap: 10px; }
-.bh-rate-sec .rate[data-r="Red"]:hover { background: var(--red-soft); } .bh-rate-sec .rate[data-r="Yellow"]:hover { background: var(--yellow-soft); } .bh-rate-sec .rate[data-r="Green"]:hover { background: var(--green-soft); }
+.stu { display: grid; grid-template-columns: minmax(260px, 330px) minmax(0, 1fr); gap: 24px; align-items: start; }
+.stu-rail { position: sticky; top: 80px; padding: 6px; overflow: hidden; }
+/* no overscroll containment: at the end of the list the page scrolls on, so the rail's last rows come into view */
+.stu-rail-list { max-height: calc(100vh - 104px); overflow-y: auto; padding: 2px; }
+.stu-group + .stu-group { margin-top: 4px; }
+.stu-group h3 { margin: 0; }
+.stu-group-h { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 10px 10px 4px; font: 700 12.5px/1.3 var(--font-body); color: var(--ink-2); cursor: default; }
+.stu-group-h em { font-style: normal; color: var(--muted); font-variant-numeric: tabular-nums; margin-right: 7px; }
+.stu-group-h small { font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stu-group ul { list-style: none; margin: 0; padding: 0; }
+.stu-item { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 9px; cursor: pointer; font-size: 14px; line-height: 1.35; color: var(--ink); position: relative; }
+.stu-item:hover { background: var(--surface-2); }
+.stu-item:focus-visible { outline: 2px solid var(--acc); outline-offset: -2px; }
+.stu-item.is-sel { background: var(--acc-soft); color: var(--acc-ink); font-weight: 600; }
+.stu-item.is-sel::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: var(--acc); }
+.stu-item-q { flex: 1; min-width: 0; text-wrap: pretty; }
+.stu-dot { flex: none; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; border: 1.5px solid var(--edge); background: transparent; display: grid; place-items: center; font-style: normal; }
+.stu-dot.r-Red { background: var(--red); border-color: transparent; } .stu-dot.r-Yellow { background: var(--yellow); border-color: transparent; } .stu-dot.r-Green { background: var(--green); border-color: transparent; }
+.stu-dot.is-m { width: 14px; height: 14px; margin-top: 2px; background: var(--mastered); border-color: transparent; color: var(--on-mastered); }
+.stu-dot.is-m svg { width: 9px; height: 9px; }
+.stu-due { flex: none; font-size: 11.5px; font-weight: 700; color: var(--red-ink); background: var(--red-soft); border-radius: 6px; padding: 1px 6px; }
+.stu-has { flex: none; color: var(--muted); margin-top: 1px; }
+.stu-detail { display: flex; flex-direction: column; gap: 20px; min-width: 0; scroll-margin-top: 76px; }
+.stu-hero { border-radius: 18px; padding: 22px 24px 22px; background: linear-gradient(160deg, var(--acc-soft), var(--surface) 70%); border: 1px solid color-mix(in srgb, var(--acc) 22%, var(--line)); display: flex; flex-direction: column; gap: 14px; }
+.stu-hero-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.stu-kicker { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.stu-step { display: flex; gap: 6px; flex: none; }
+.stu-step .btn { padding: 4px 11px; font-size: 16px; line-height: 1.2; }
+.stu-hero h2 { font: 800 clamp(24px, 3vw, 34px)/1.15 var(--font-display); letter-spacing: -0.02em; text-wrap: balance; outline: none; max-width: 30ch; }
+.stu-status { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 13.5px; color: var(--ink-2); }
+.stu-hist { font-size: 13.5px; }
+.stu-hero-act { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 2px; }
+.stu-hero-act .btn { padding: 10px 18px; font-size: 15px; border-radius: 12px; }
+.stu-hero-act .fine { max-width: 40ch; margin-left: 4px; }
+.stu-guide { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; padding: 0 4px; }
+.stu-guide h3, .stu-rate h3, .stu-note h3 { font-size: 15px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.stu-guide p { margin: 6px 0 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.55; }
+.stu-steps { margin: 8px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; }
+.stu-steps li::marker { color: var(--muted); font-weight: 700; font-variant-numeric: tabular-nums; }
+.stu-steps li, .sd-run li, .sd-ready li, .stu-guide p { text-wrap: pretty; }
+.stu-note { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.stu-note textarea { min-height: 150px; resize: vertical; font-size: 14.5px; line-height: 1.55; }
+.stu-rate { display: flex; flex-direction: column; gap: 10px; }
+.stu-rate .rate[data-r="Red"]:hover { background: var(--red-soft); } .stu-rate .rate[data-r="Yellow"]:hover { background: var(--yellow-soft); } .stu-rate .rate[data-r="Green"]:hover { background: var(--green-soft); }
+/* system design: what to be able to explain, or the interview run as minutes on a bar */
+.sd-ready { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.sd-ready li { position: relative; padding-left: 18px; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; }
+.sd-ready li::before { content: ""; position: absolute; left: 2px; top: .58em; width: 7px; height: 7px; border-radius: 2px; background: var(--sd); }
+.sd-run-bar { display: flex; gap: 2px; height: 8px; margin: 10px 0 12px; }
+.sd-run-bar i { min-width: 4px; border-radius: 3px; background: var(--sd); }
+.sd-run-bar i.opt { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--sd) 55%, transparent) 0 2px, transparent 2px 5px); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sd) 55%, transparent); }
+.sd-run { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.sd-run li { display: grid; grid-template-columns: 48px 1fr; gap: 10px; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+.sd-run li b { display: block; color: var(--ink); font-weight: 600; }
+.sd-run .min { font-weight: 700; color: var(--sd-ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sd-run-src { margin: 10px 0 0; }
+/* a design's guide runs full width: the run in two columns, the practice steps side by side */
+.stu-guide.is-run { grid-template-columns: 1fr; gap: 22px; }
+.stu-guide.is-run .sd-run { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; }
+.stu-guide.is-run .stu-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 36px; }
+@media (max-width: 1100px) { .stu-guide.is-run .stu-steps { grid-template-columns: 1fr; } }
 @media (max-width: 900px) {
-  .bh-studio { grid-template-columns: 1fr; }
-  .bh-rail { position: static; }
-  .bh-rail-list { max-height: none; }
-  .bh-skill-h { cursor: pointer; padding: 10px; font-size: 13.5px; }
-  .bh-skill-h::after { content: "›"; font-size: 16px; color: var(--muted); transform: rotate(90deg); transition: transform .15s; margin-left: 6px; }
-  .bh-skill.is-open .bh-skill-h::after { transform: rotate(-90deg); }
-  .bh-skill:not(.is-open) ul { display: none; }
-  .bh-skill-h small { margin-left: auto; }
+  .stu { grid-template-columns: 1fr; }
+  .stu-rail { position: static; }
+  .stu-rail-list { max-height: none; }
+  .stu-group-h { cursor: pointer; padding: 10px; font-size: 13.5px; }
+  .stu-group-h::after { content: "›"; font-size: 16px; color: var(--muted); transform: rotate(90deg); transition: transform .15s; margin-left: 6px; }
+  .stu-group.is-open .stu-group-h::after { transform: rotate(-90deg); }
+  .stu-group:not(.is-open) ul { display: none; }
+  .stu-group-h small { margin-left: auto; }
 }
 @media (max-width: 640px) {
-  .bh-top-act { align-items: flex-start; }
-  .bh-guide { grid-template-columns: 1fr; }
-  .bh-hero { padding: 18px; }
-  .bh-of { display: none; }
-  .bh-hero-act .btn { width: 100%; justify-content: center; text-align: center; white-space: normal; }
-  .bh-rate-sec .rate-row { grid-template-columns: 1fr; }
+  .stu-top-act { align-items: flex-start; }
+  .stu-guide { grid-template-columns: 1fr; }
+  .stu-guide.is-run .sd-run { grid-template-columns: 1fr; }
+  .stu-hero { padding: 18px; }
+  .stu-of { display: none; }
+  .stu-hero-act .btn { width: 100%; justify-content: center; text-align: center; white-space: normal; }
+  .stu-hero-act .fine { margin-left: 0; }
+  .stu-rate .rate-row { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -1758,68 +1752,207 @@ function renderProblemList(list) {
   $("#plist").innerHTML = `<div class="phead"><span>#</span><span>Problem</span><span class="c-diff">Level</span><span class="c-hist">Attempts</span><span class="c-last">Last</span><span class="c-next">Next</span><span>Status</span><span class="c-q"></span></div>` + body;
 }
 
-/* ----- system design path ----- */
-function renderDesign(list) {
-  const nextNew = list.find(p => p.status === "new");
-  const dueSd = list.filter(p => p.status === "due").sort(dueSort)[0];
-  const done = list.filter(p => p.status === "mastered").length, started = list.filter(p => p.n).length;
-  const rc = { Red: "var(--red-soft)", Yellow: "var(--yellow-soft)", Green: "var(--green-soft)" };
-  const cta = dueSd ? `<button class="btn btn-sd" data-act="open" data-key="${esc(dueSd.key)}">Review due: ${esc(dueSd.name)}</button>`
-    : nextNew ? `<button class="btn btn-sd" data-act="open" data-key="${esc(nextNew.key)}">Continue with ${esc(nextNew.name)}</button>` : "";
-  $("#view").innerHTML = `
-  <section class="card sd-intro">
-    <div><h2>System design path</h2><p>${list.length} topics in ${SD_UNITS.length} units, from interview basics to hard designs. Read each free Hello Interview guide or draw the design on its worksheet, then rate yourself. ${started} started, ${done} mastered.</p></div>
-    ${cta}
-    <div class="unit-chips">${SD_UNITS.map((u, ui) => { const its = list.filter(p => p.unit === ui); return `<button class="chip" data-act="jump" data-u="${ui}">${ui + 1}. ${esc(u.name)} <b>${its.filter(p => p.n).length}/${its.length}</b></button>`; }).join("")}</div>
-  </section>
-  <div class="units">
-    ${SD_UNITS.map((u, ui) => {
-      const its = list.filter(p => p.unit === ui), us = its.filter(p => p.n).length;
-      return `<section class="card unit" id="unit-${ui}" aria-labelledby="unit-h-${ui}">
-        <div class="unit-head"><span class="unit-badge">Unit ${ui + 1}</span><h3 id="unit-h-${ui}">${esc(u.name)}</h3><span class="uprog">${us} of ${its.length} started</span><p>${esc(u.blurb)}</p></div>
-        <div class="path" data-unit="${ui}">
-          <svg class="trail" aria-hidden="true" style="color:var(--ink)"><path d="" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="0.1 9" opacity=".3"/></svg>
-          ${its.map(p => `
-            <button class="node st-${p.status} ${nextNew && p.key === nextNew.key ? "next" : ""}" data-act="open" data-key="${esc(p.key)}" style="${p.last && p.status === "scheduled" && !p.sched ? "--rc:" + rc[p.last.r] : ""}" aria-label="${esc(p.name)}, ${p.status === "new" ? "not started" : p.status}">
-              ${p.status === "due" ? `<span class="flag">Due</span>` : nextNew && p.key === nextNew.key ? `<span class="flag">Next</span>` : ""}
-              <span class="disc">${p.status === "mastered" ? CHECK : p.num}</span>
-              <span class="lbl">${esc(p.name)}</span>
-              <span class="kind">${p.kind === "design" ? p.diff : KIND[p.kind]}${p.n ? ", " + plural(p.n, "try", "tries") : ""}</span>
-            </button>`).join("")}
-        </div>
-      </section>`;
-    }).join("")}
-  </div>`;
-  S.shellFor = "design";
-  layoutPaths();
+/* ----- system design ----- */
+// What a solid answer covers for each kind of topic. Designs get the interview run instead.
+const SD_READY = {
+  concept: ["What it is, in a sentence or two", "The problem it solves, and when you'd reach for it", "What it costs: the trade-offs and how it fails", "Where it shows up in a design you know"],
+  tech: ["What it's built for, and what it's bad at", "How it stores data and scales out", "Rough numbers: throughput, latency, limits", "What you'd pick instead, and when"],
+  pattern: ["The problem that calls for it", "Two or three ways to solve it, simplest first", "The trade-off between them", "A design where you'd use it"]
+};
+// Hello Interview's delivery framework, in minutes. Data flow only matters for pipelines.
+const SD_RUN = [
+  [5, "Requirements", "Top features, plus a few non-functional needs with numbers."],
+  [2, "Core entities", "The main things the system stores and passes around."],
+  [5, "API", "The endpoints users call. REST unless there's a reason not to."],
+  [5, "Data flow", "Optional. The steps from input to output, for pipelines.", true],
+  [15, "High-level design", "Boxes and arrows that serve each endpoint, one at a time."],
+  [10, "Deep dives", "Meet the non-functional needs: scale, bottlenecks, edge cases."]
+];
+const sdWsLine = p => p.wsCount ? `Worksheet: ${plural(p.wsCount, "shape")}${p.wsAt ? ", edited " + fmtShort(localISO(new Date(p.wsAt))) : ""}` : "Worksheet is blank";
+function sdActions(p) {
+  const read = cls => `<a class="${cls}" href="${esc(p.url)}" target="_blank" rel="noopener">${p.kind === "design" ? "Read the breakdown" : "Read the guide"} ↗</a>`;
+  const draw = cls => `<button type="button" class="${cls}" data-act="ws-open" data-key="${esc(p.key)}">${p.wsCount ? "Open worksheet" : p.kind === "design" ? "Design it on the worksheet" : "Sketch it"}</button>`;
+  // designs: attempt first, then read; everything else: read first, then explain it back
+  return (p.kind === "design" ? draw("btn btn-sd") + read("btn") : read("btn btn-sd") + draw("btn")) + `<span class="fine" id="sd-ws">${sdWsLine(p)}</span>`;
 }
-function layoutPaths() {
-  for (const path of $$(".path")) {
-    const nodes = $$(".node", path);
-    const W = path.clientWidth; if (!W) continue;
-    const small = W < 560, cellMin = small ? 112 : 150, rowH = small ? 138 : 146, baseY = small ? 64 : 66;
-    const maxCols = Math.max(2, Math.floor(W / cellMin));
-    const cols = Math.max(2, Math.ceil(nodes.length / Math.ceil(nodes.length / maxCols)));
-    const cw = W / cols, disc = small ? 50 : 56, nodeW = small ? 104 : 128;
-    const pts = nodes.map((n, i) => {
-      const row = Math.floor(i / cols); let col = i % cols; if (row % 2) col = cols - 1 - col;
-      const x = cw * col + cw / 2, y = row * rowH + baseY + (col % 2 ? 10 : 0);
-      n.style.left = (x - nodeW / 2) + "px"; n.style.top = (y - disc / 2) + "px";
-      return { x, y, row };
-    });
-    const rows = Math.ceil(nodes.length / cols);
-    const H = (rows - 1) * rowH + baseY + 10 + disc / 2 + 64;
-    path.style.height = H + "px";
-    let d = "";
-    pts.forEach((p, i) => {
-      if (!i) { d = `M${p.x} ${p.y}`; return; }
-      const a = pts[i - 1];
-      if (a.row === p.row) { const mx = (a.x + p.x) / 2; d += ` C${mx} ${a.y} ${mx} ${p.y} ${p.x} ${p.y}`; }
-      else { const dir = a.x > W / 2 ? 1 : -1, k = cw * 0.6; d += ` C${a.x + dir * k} ${a.y} ${p.x + dir * k} ${p.y} ${p.x} ${p.y}`; }
-    });
-    const svg = $("svg.trail", path); svg.setAttribute("width", W); svg.setAttribute("height", H);
-    $("path", svg).setAttribute("d", d);
+function sdGuide(p) {
+  const total = SD_RUN.reduce((t, r) => t + r[0], 0);
+  const left = p.kind === "design"
+    ? `<section><h3>Run it like the interview</h3>
+        <div class="sd-run-bar" aria-hidden="true">${SD_RUN.map(r => `<i class="${r[3] ? "opt" : ""}" style="flex:${r[0]}"></i>`).join("")}</div>
+        <ol class="sd-run">${SD_RUN.map(r => `<li><span class="min">${r[0]} min</span><span><b>${r[1]}</b>${esc(r[2])}</span></li>`).join("")}</ol>
+        <p class="fine sd-run-src">About ${total - 5} to ${total} minutes, from the <button type="button" class="linkish" data-act="stu-sel" data-track="sd" data-key="s_delivery">Delivery framework</button> topic.</p></section>`
+    : `<section><h3>Be ready to explain</h3><ul class="sd-ready">${SD_READY[p.kind].map(t => `<li>${esc(t)}</li>`).join("")}</ul></section>`;
+  const steps = p.kind === "design"
+    ? ["Set a timer and design it on the worksheet before reading anything.", "Read the breakdown and compare. Note what you missed.", "Rate the run. It comes back when it's due, so you can redo it."]
+    : ["Read the guide. Skim what you already know.", "Close it and explain the topic out loud, or sketch it on the worksheet.", "Check what you missed, then rate how well you explained it."];
+  return `<div class="stu-guide${p.kind === "design" ? " is-run" : ""}">${left}<section><h3>How to practice</h3><ol class="stu-steps">${steps.map(t => `<li>${esc(t)}</li>`).join("")}</ol></section></div>`;
+}
+function sdSummary(list, started, mastered, due) {
+  return `${list.length} topics in ${SD_UNITS.length} units, from interview basics to hard designs. ${started ? `${started} started, ${mastered} mastered${due ? `, <b>${due} due</b>` : ""}.` : "Read a guide or draw a design, then rate yourself."}`;
+}
+function sdTopAct(list, sel) {
+  const due = list.filter(p => p.status === "due").sort(dueSort), next = list.find(p => p.status === "new");
+  if (due.length) return `<button class="btn btn-sd" data-act="sd-review">Review ${due.length} due</button><span class="fine">One at a time, rated as you go</span>`;
+  if (next && next.key !== sel) return `<button class="btn btn-sd" data-act="stu-sel" data-track="sd" data-key="${esc(next.key)}">Continue with ${esc(next.name)}</button><span class="fine">Next topic you haven't started</span>`;
+  return "";
+}
+function renderDesign(list) {
+  const sel = stuSelected("sd", list), p = byKey(list, sel), u = SD_UNITS[p.unit];
+  const started = list.filter(x => x.n).length, mastered = list.filter(x => x.status === "mastered").length, due = list.filter(x => x.status === "due").length;
+  if (S.shellFor === "design" && STU.sd.shown === sel) {
+    stuPatch("sd", list, p);
+    $("#stu-sum").innerHTML = sdSummary(list, started, mastered, due);
+    $("#stu-top-act").innerHTML = sdTopAct(list, sel);
+    $("#sd-ws").textContent = sdWsLine(p);
+    const w = $(".stu-hero [data-act=ws-open]"); if (w) w.textContent = p.wsCount ? "Open worksheet" : p.kind === "design" ? "Design it on the worksheet" : "Sketch it";
+    return;
   }
+  const railTop = stuBefore("sd", sel);
+  $("#view").innerHTML = `
+  <section class="stu-top">
+    <div>
+      <h2>System design</h2>
+      <p class="prose" id="stu-sum">${sdSummary(list, started, mastered, due)}</p>
+    </div>
+    <div class="stu-top-act" id="stu-top-act">${sdTopAct(list, sel)}</div>
+  </section>
+  ${stuShell("sd", list, p, {
+    railLabel: "System design topics", noun: "Topic",
+    kicker: `<span class="tag sd">Unit ${p.unit + 1}: ${esc(u.name)}</span><span class="tag">${esc(p.kind === "design" ? p.diff + " design" : KIND[p.kind])}</span>`,
+    actions: sdActions(p),
+    body: sdGuide(p),
+    noteLabel: "Your notes",
+    notePh: p.kind === "design" ? "Your design: the components, the data model, the deep dive you'd pick, and what you missed. Saved as you type." : "Key ideas, numbers, and the trade-offs you'd call out. Saved as you type.",
+    rateLabel: p.kind === "design" ? "Rate your run" : "Rate how well you explained it"
+  })}`;
+  stuWire("sd", railTop);
+}
+
+/* ================= studio pages ================= */
+// System design and Behavioral share one layout: every item in a rail on the left, grouped by unit,
+// and the selected one on the right. The shell renders once per item; saves only patch the parts
+// that change, so a half-typed note is never redrawn.
+const STU = { sd: { key: null, shown: "" }, bh: { key: null, shown: "", setup: false }, noteTimer: 0, noteDirty: false };
+const STU_UNITS = { sd: SD_UNITS, bh: BH_UNITS };
+const STU_PREF = { sd: "sdSel", bh: "bhSel" };
+const SHAPES = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="8" height="7" rx="1.5"/><circle cx="17" cy="17" r="4"/><path d="M11 8h3a3 3 0 0 1 3 3v2"/></svg>`;
+function stuSelected(track, list) {
+  const st = STU[track], pick = getPref(STU_PREF[track]), has = k => list.some(p => p.key === k);
+  if (st.key && has(st.key)) return st.key;
+  if (pick && has(pick)) return (st.key = pick);
+  // until saved data loads, suggest without locking it in, so a due item can take over
+  const due = list.filter(p => p.status === "due").sort(dueSort)[0], fresh = list.find(p => p.status === "new");
+  const k = (due || fresh || list[0]).key;
+  if (S.loaded) st.key = k;
+  return k;
+}
+// Scroll the rail itself, never the page: on phones the rail is not a scroll box.
+function stuReveal(row) {
+  const l = $("#stu-rail-list"); if (!l || !row || l.scrollHeight <= l.clientHeight + 1) return;
+  const r = row.getBoundingClientRect(), b = l.getBoundingClientRect();
+  if (r.top < b.top || r.bottom > b.bottom) l.scrollTop += r.top - b.top - (b.height - r.height) / 2;
+}
+function stuSelect(track, key, focus) {
+  STU[track].key = key; setPref(STU_PREF[track], key);
+  if (STU.noteDirty) stuSaveNote();
+  (track === "sd" ? renderDesign : renderBehavioral)(allItems().filter(p => p.track === track));
+  const h = $("#stu-q"); if (h && focus) h.focus({ preventScroll: true });
+  stuReveal($(`.stu-item[data-key="${key}"]`));
+  if (window.innerWidth <= 900) { const d = $("#stu-detail"); if (d) d.scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" }); }
+}
+function stuStep(track, d) {
+  const l = allItems().filter(p => p.track === track), i = l.findIndex(p => p.key === STU[track].key) + d;
+  if (l[i]) stuSelect(track, l[i].key, true);
+}
+function stuSaveNote() {
+  clearTimeout(STU.noteTimer);
+  const ta = $("#stu-note"); if (!ta || !STU.noteDirty) return;
+  if (!S.loaded) { STU.noteTimer = setTimeout(stuSaveNote, 1500); return; }
+  const key = ta.dataset.key, doc = itemDoc(key), val = ta.value.slice(0, 20000);
+  STU.noteDirty = false;
+  if ((doc.notes || "") === val) { const st = $("#stu-note-state"); if (st) st.textContent = ""; return; }
+  doc.notes = val;
+  writeDoc(key, doc).then(() => { const st = $("#stu-note-state"); if (st && !STU.noteDirty) st.textContent = S.writeError ? "Not saved" : "Saved"; });
+}
+const stuDot = p => p.status === "mastered" ? `<i class="stu-dot is-m" aria-hidden="true">${CHECK_SM}</i>` : p.last ? `<i class="stu-dot r-${p.last.r}" aria-hidden="true"></i>` : `<i class="stu-dot" aria-hidden="true"></i>`;
+const stuMark = p => p.status === "due" ? `<span class="stu-due">Due</span>`
+  : p.wsCount ? `<span class="stu-has" data-tip="Worksheet drawn">${SHAPES}</span>`
+  : p.notes.trim() ? `<span class="stu-has" data-tip="${p.track === "bh" ? "Story drafted" : "Notes written"}">${PEN}</span>` : "";
+function stuRail(track, list, sel) {
+  return STU_UNITS[track].map((u, ui) => {
+    const its = list.filter(p => p.unit === ui), done = its.filter(p => p.n).length, open = its.some(p => p.key === sel);
+    return `<section class="stu-group${open ? " is-open" : ""}">
+      <h3><button type="button" class="stu-group-h" data-act="stu-group" aria-expanded="${open}"><span>${track === "sd" ? `<em>${ui + 1}</em>` : ""}${esc(u.name)}</span><small>${done}/${its.length}</small></button></h3>
+      <ul>${its.map(p => `<li><button type="button" class="stu-item${p.key === sel ? " is-sel" : ""}" data-act="stu-sel" data-track="${track}" data-key="${esc(p.key)}" aria-current="${p.key === sel ? "true" : "false"}">
+        ${stuDot(p)}<span class="stu-item-q">${esc(p.name)}</span>${stuMark(p)}</button></li>`).join("")}</ul>
+    </section>`;
+  }).join("");
+}
+function stuStatus(p) {
+  return `${statusPill(p)}${p.last ? `<span>Last <span class="rtag r-${p.last.r}">${p.last.r}</span> on ${fmtShort(p.last.d)}</span>${beads(p, 12)}` : ""}${p.n ? `<button type="button" class="linkish stu-hist" data-act="open" data-key="${esc(p.key)}">History and edits</button>` : ""}`;
+}
+function stuRates(p) {
+  const g = guideFor(p);
+  return RATINGS.map(r => `<button type="button" class="rate" data-act="quick" data-r="${r}" data-key="${esc(p.key)}"><b>${r}<em>${ivText(p, r, true)}</em></b><span>${g[r]}</span></button>`).join("");
+}
+// The rail and the selected item; the track fills in the kicker, hero actions and guide.
+function stuShell(track, list, p, o) {
+  const idx = list.indexOf(p), noun = o.noun.toLowerCase();
+  return `<div class="stu ${track}">
+    <nav class="card stu-rail" aria-label="${o.railLabel}"><div class="stu-rail-list" id="stu-rail-list">${stuRail(track, list, p.key)}</div></nav>
+    <article class="stu-detail" id="stu-detail" aria-labelledby="stu-q">
+      <header class="stu-hero">
+        <div class="stu-hero-top">
+          <span class="stu-kicker">${o.kicker}<span class="stu-of">${o.noun} ${idx + 1} of ${list.length}</span></span>
+          <span class="stu-step"><button type="button" class="btn" data-act="stu-step" data-track="${track}" data-d="-1" aria-label="Previous ${noun}" ${idx === 0 ? "disabled" : ""}>‹</button><button type="button" class="btn" data-act="stu-step" data-track="${track}" data-d="1" aria-label="Next ${noun}" ${idx === list.length - 1 ? "disabled" : ""}>›</button></span>
+        </div>
+        <h2 id="stu-q" tabindex="-1">${esc(p.name)}</h2>
+        <div class="stu-status" id="stu-status">${stuStatus(p)}</div>
+        <div class="stu-hero-act">${o.actions}</div>
+      </header>
+      ${o.body}
+      <section class="card stu-note">
+        <h3><label for="stu-note">${o.noteLabel}</label><span class="note-state" id="stu-note-state"></span></h3>
+        <textarea id="stu-note" data-key="${esc(p.key)}" placeholder="${esc(o.notePh)}">${esc(p.notes)}</textarea>
+      </section>
+      <section class="stu-rate" aria-labelledby="stu-rate-h">
+        <h3 id="stu-rate-h">${o.rateLabel}</h3>
+        <div class="rate-row" id="stu-rates">${stuRates(p)}</div>
+      </section>
+    </article>
+  </div>`;
+}
+// Before a full redraw: save a pending note and remember where the rail was scrolled.
+function stuBefore(track, sel) {
+  const l = $("#stu-rail-list"), top = l && S.shellFor === (track === "sd" ? "design" : "behavioral") ? l.scrollTop : null;
+  if (STU.noteDirty) stuSaveNote();
+  STU[track].shown = sel;
+  return top;
+}
+function stuWire(track, railTop) {
+  S.shellFor = track === "sd" ? "design" : "behavioral";
+  if (railTop !== null) $("#stu-rail-list").scrollTop = railTop;
+  else stuReveal($(".stu-item.is-sel"));
+  const ta = $("#stu-note");
+  ta.addEventListener("input", () => { STU.noteDirty = true; $("#stu-note-state").textContent = "Editing…"; clearTimeout(STU.noteTimer); STU.noteTimer = setTimeout(stuSaveNote, 900); });
+  ta.addEventListener("blur", () => { if (STU.noteDirty) stuSaveNote(); });
+}
+// Same item after a save: refresh what a save can change, keep focus where it was, leave the note alone.
+function stuPatch(track, list, p) {
+  const ae = document.activeElement, inRail = ae && ae.closest && ae.closest("#stu-rail-list"), inRates = ae && ae.closest && ae.closest("#stu-rates");
+  const rail = $("#stu-rail-list"), top = rail ? rail.scrollTop : 0;
+  if (rail) {
+    const open = new Set($$(".stu-group.is-open", rail).map(g => $$(".stu-group", rail).indexOf(g)));
+    rail.innerHTML = stuRail(track, list, p.key); rail.scrollTop = top;
+    // keep groups someone opened by hand on a phone
+    $$(".stu-group", rail).forEach((g, i) => { if (open.has(i)) { g.classList.add("is-open"); $(".stu-group-h", g).setAttribute("aria-expanded", "true"); } });
+  }
+  $("#stu-status").innerHTML = stuStatus(p);
+  $("#stu-rates").innerHTML = stuRates(p);
+  if (inRail && ae.dataset.key) { const b = $(`#stu-rail-list [data-key="${ae.dataset.key}"]`); if (b) b.focus({ preventScroll: true }); }
+  if (inRates && ae.dataset.r) { const b = $(`#stu-rates [data-r="${ae.dataset.r}"]`); if (b) b.focus({ preventScroll: true }); }
+  const ta = $("#stu-note"); if (ta && document.activeElement !== ta && !STU.noteDirty && ta.value !== p.notes) ta.value = p.notes;
 }
 
 /* ================= behavioral ================= */
@@ -1993,85 +2126,27 @@ function resumeModal(text, name) {
     saveProfile({ resume: v, resumeName: v ? (name || (text === undefined && pf.resume ? pf.resumeName : "") || "") : "", resumeAt: v ? S.today : "" }, v ? "Resume saved." : "Resume removed.");
   });
 }
-// The Behavioral page is a practice studio: every question in a list on the left, grouped by skill,
-// and the selected one on the right with what a strong answer shows, how to shape it, your story notes,
-// the practice launch and the rating. The shell renders once per question; saves only patch the parts
-// that change, so a half-typed story is never redrawn.
-const BHV = { key: null, shown: "", noteTimer: 0, noteDirty: false, setup: false };
-function bhSelected(list) {
-  const pick = getPref("bhSel"), has = k => list.some(p => p.key === k);
-  if (BHV.key && has(BHV.key)) return BHV.key;
-  if (pick && has(pick)) return (BHV.key = pick);
-  // until saved data loads, suggest without locking it in, so a due question can take over
-  const due = list.filter(p => p.status === "due").sort(dueSort)[0], fresh = list.find(p => p.status === "new");
-  const k = (due || fresh || list[0]).key;
-  if (S.loaded) BHV.key = k;
-  return k;
-}
-function bhSelect(key, focus) {
-  BHV.key = key; setPref("bhSel", key);
-  if (BHV.noteDirty) bhSaveNote();
-  renderBehavioral(allItems().filter(p => p.track === "bh"));
-  const h = $("#bh-q"); if (h && focus) h.focus({ preventScroll: true });
-  const row = $(`.bh-rail [data-key="${key}"]`); if (row) row.scrollIntoView({ block: "nearest" });
-  if (window.innerWidth <= 900) { const d = $("#bh-detail"); if (d) d.scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" }); }
-}
-function bhSaveNote() {
-  clearTimeout(BHV.noteTimer);
-  const ta = $("#bh-note"); if (!ta || !BHV.noteDirty) return;
-  if (!S.loaded) { BHV.noteTimer = setTimeout(bhSaveNote, 1500); return; }
-  const key = ta.dataset.key, doc = itemDoc(key), val = ta.value.slice(0, 20000);
-  BHV.noteDirty = false;
-  if ((doc.notes || "") === val) { const st = $("#bh-note-state"); if (st) st.textContent = ""; return; }
-  doc.notes = val;
-  writeDoc(key, doc).then(() => { const st = $("#bh-note-state"); if (st && !BHV.noteDirty) st.textContent = S.writeError ? "Not saved" : "Saved"; });
-}
-const bhDot = p => p.status === "mastered" ? `<i class="bh-dot is-m" aria-hidden="true">${CHECK_SM}</i>` : p.last ? `<i class="bh-dot r-${p.last.r}" aria-hidden="true"></i>` : `<i class="bh-dot" aria-hidden="true"></i>`;
-function bhRail(list, sel) {
-  return BH_UNITS.map((u, ui) => {
-    const its = list.filter(p => p.unit === ui), done = its.filter(p => p.n).length, open = its.some(p => p.key === sel);
-    return `<section class="bh-skill${open ? " is-open" : ""}">
-      <h3><button type="button" class="bh-skill-h" data-act="bh-skill" data-u="${ui}" aria-expanded="${open}"><span>${esc(u.name)}</span><small>${done}/${its.length}</small></button></h3>
-      <ul>${its.map(p => `<li><button type="button" class="bh-item${p.key === sel ? " is-sel" : ""}" data-act="bh-sel" data-key="${esc(p.key)}" aria-current="${p.key === sel ? "true" : "false"}">
-        ${bhDot(p)}<span class="bh-item-q">${esc(p.name)}</span>${p.status === "due" ? `<span class="bh-due">Due</span>` : p.notes.trim() ? `<span class="bh-has" data-tip="Story drafted">${PEN}</span>` : ""}</button></li>`).join("")}</ul>
-    </section>`;
-  }).join("");
-}
-function bhStatus(p) {
-  return `${statusPill(p)}${p.last ? `<span>Last <span class="rtag r-${p.last.r}">${p.last.r}</span> on ${fmtShort(p.last.d)}</span>${beads(p, 12)}` : ""}${p.n ? `<button type="button" class="linkish bh-hist" data-act="open" data-key="${esc(p.key)}">History and edits</button>` : ""}`;
-}
-function bhRates(p) {
-  const g = GUIDE.bh;
-  return RATINGS.map(r => `<button type="button" class="rate" data-act="quick" data-r="${r}" data-key="${esc(p.key)}"><b>${r}<em>${ivText(p, r, true)}</em></b><span>${g[r]}</span></button>`).join("");
-}
 function renderBehavioral(list) {
-  const pf = profile(), A = pf.ai ? AI[pf.ai] : null, sel = bhSelected(list), p = byKey(list, sel);
-  const ui = p.unit, u = BH_UNITS[ui], idx = list.indexOf(p);
+  const pf = profile(), A = pf.ai ? AI[pf.ai] : null, sel = stuSelected("bh", list), p = byKey(list, sel);
+  const u = BH_UNITS[p.unit];
   const started = list.filter(x => x.n).length, mastered = list.filter(x => x.status === "mastered").length, due = list.filter(x => x.status === "due").length;
   const words = pf.resume ? pf.resume.trim().split(/\s+/).length : 0;
-  const setupOpen = !A || BHV.setup;
+  const setupOpen = !A || STU.bh.setup;
   const shell = [sel, A ? pf.ai : "", setupOpen, pf.role, words, pf.resumeName].join("|");
-  if (S.shellFor === "behavioral" && BHV.shown === shell) {
-    // same question and setup: patch what a save can change, and leave the story box alone
-    const rail = $("#bh-rail-list"), top = rail ? rail.scrollTop : 0;
-    if (rail) { rail.innerHTML = bhRail(list, sel); rail.scrollTop = top; }
-    $("#bh-sum").innerHTML = bhSummary(list, started, mastered, due);
-    $("#bh-status").innerHTML = bhStatus(p);
-    $("#bh-rates").innerHTML = bhRates(p);
-    const ta = $("#bh-note"); if (ta && document.activeElement !== ta && !BHV.noteDirty && ta.value !== p.notes) ta.value = p.notes;
+  if (S.shellFor === "behavioral" && STU.bh.shown === shell) {
+    stuPatch("bh", list, p);
+    $("#stu-sum").innerHTML = bhSummary(list, started, mastered, due);
     return;
   }
   const ae = document.activeElement, keepRole = ae && ae.id === "bh-role" ? { v: ae.value, a: ae.selectionStart, b: ae.selectionEnd } : null;
-  const railTop = $("#bh-rail-list") ? $("#bh-rail-list").scrollTop : null;
-  if (BHV.noteDirty) bhSaveNote();
-  BHV.shown = shell;
+  const railTop = stuBefore("bh", shell);
   $("#view").innerHTML = `
-  <section class="bh-top">
+  <section class="stu-top">
     <div>
       <h2>Behavioral interviews</h2>
-      <p class="prose" id="bh-sum">${bhSummary(list, started, mastered, due)}</p>
+      <p class="prose" id="stu-sum">${bhSummary(list, started, mastered, due)}</p>
     </div>
-    <div class="bh-top-act">
+    <div class="stu-top-act">
       <button class="btn btn-bh" data-act="bh-round">Start a mock round</button>
       <span class="fine">4 questions across skills, about 20 minutes</span>
     </div>
@@ -2093,38 +2168,19 @@ function renderBehavioral(list) {
     <span>Practicing with <b>${A.name}</b>${pf.role ? ` for <b>${esc(pf.role)}</b>` : ""}${pf.resume ? `, using your resume` : `. No resume added yet, so follow-ups stay general`}.</span>
     <button type="button" class="btn btn-sm" data-act="bh-setup" aria-expanded="false">Edit</button>
   </section>`}
-  <div class="bh-studio">
-    <nav class="card bh-rail" aria-label="Behavioral questions"><div class="bh-rail-list" id="bh-rail-list">${bhRail(list, sel)}</div></nav>
-    <article class="bh-detail" id="bh-detail" aria-labelledby="bh-q">
-      <header class="bh-hero">
-        <div class="bh-hero-top">
-          <span class="bh-kicker"><span class="tag bh">${esc(u.name)}</span><span class="bh-of">Question ${idx + 1} of ${list.length}</span></span>
-          <span class="bh-step"><button type="button" class="btn" data-act="bh-step" data-d="-1" aria-label="Previous question" ${idx === 0 ? "disabled" : ""}>‹</button><button type="button" class="btn" data-act="bh-step" data-d="1" aria-label="Next question" ${idx === list.length - 1 ? "disabled" : ""}>›</button></span>
-        </div>
-        <h2 id="bh-q" tabindex="-1">${esc(p.name)}</h2>
-        <div class="bh-status" id="bh-status">${bhStatus(p)}</div>
-        <div class="bh-hero-act">${linkBtns(p, "btn btn-bh")}<span class="fine">${A ? `${A.name} asks it out loud, follows up, and rates you.` : "Pick Claude or ChatGPT above first."}</span></div>
-      </header>
-      <div class="bh-guide">
+  ${stuShell("bh", list, p, {
+    railLabel: "Behavioral questions", noun: "Question",
+    kicker: `<span class="tag bh">${esc(u.name)}</span>`,
+    actions: `${linkBtns(p, "btn btn-bh")}<span class="fine">${A ? `${A.name} asks it out loud, follows up, and rates you.` : "Pick Claude or ChatGPT above first."}</span>`,
+    body: `<div class="stu-guide">
         <section><h3>What a strong answer shows</h3><p>${esc(p.signal)}</p></section>
         <section><h3>How to shape it</h3><p>${esc(u.frame)}</p></section>
-      </div>
-      <section class="card bh-story">
-        <h3><label for="bh-note">Your story</label><span class="note-state" id="bh-note-state"></span></h3>
-        <textarea id="bh-note" data-key="${esc(p.key)}" placeholder="Draft the story you'll tell: the situation, what you did, the result with numbers, what you learned. Saved as you type.">${esc(p.notes)}</textarea>
-      </section>
-      <section class="bh-rate-sec" aria-labelledby="bh-rate-h">
-        <h3 id="bh-rate-h">After practicing, log the rating you got</h3>
-        <div class="rate-row" id="bh-rates">${bhRates(p)}</div>
-      </section>
-    </article>
-  </div>`;
-  S.shellFor = "behavioral";
-  if (railTop !== null) $("#bh-rail-list").scrollTop = railTop;
-  else { const r = $(".bh-item.is-sel"); if (r) r.scrollIntoView({ block: "nearest" }); }
-  const ta = $("#bh-note");
-  ta.addEventListener("input", () => { BHV.noteDirty = true; $("#bh-note-state").textContent = "Editing…"; clearTimeout(BHV.noteTimer); BHV.noteTimer = setTimeout(bhSaveNote, 900); });
-  ta.addEventListener("blur", () => { if (BHV.noteDirty) bhSaveNote(); });
+      </div>`,
+    noteLabel: "Your story",
+    notePh: "Draft the story you'll tell: the situation, what you did, the result with numbers, what you learned. Saved as you type.",
+    rateLabel: "After practicing, log the rating you got"
+  })}`;
+  stuWire("bh", railTop);
   const role = $("#bh-role");
   if (role) {
     if (keepRole) { role.value = keepRole.v; role.focus({ preventScroll: true }); role.setSelectionRange(keepRole.a, keepRole.b); }
@@ -3381,7 +3437,7 @@ function problemModal(existing) {
 function nextOrder(list, topic) { const o = list.filter(p => p.topic === topic).map(p => p.order); return (o.length ? Math.max(...o) : 0) + 1; }
 
 /* ================= worksheet (Excalidraw) ================= */
-const WS = { open: false, key: null, api: null, root: null, ver: -1, savedVer: -1, timer: null, saving: false, tooBig: false };
+const WS = { open: false, key: null, api: null, root: null, ver: -1, savedVer: -1, timer: null, saving: false, tooBig: false, from: null };
 let excPromise = null;
 const EXC_BASE = "https://unpkg.com/@excalidraw/excalidraw@0.17.6/dist/";
 function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => rej(new Error("load " + src)); document.head.appendChild(s); }); }
@@ -3396,10 +3452,10 @@ function loadExcalidraw() {
   })().catch(e => { excPromise = null; throw e; });
   return excPromise;
 }
-async function openWorksheet() {
-  const p = byKey(allItems(), S.open); if (!p) return;
+async function openWorksheet(key) {
+  const p = byKey(allItems(), key); if (!p) return;
   if (!guardLoaded()) return;
-  Object.assign(WS, { open: true, key: p.key, ver: -1, savedVer: -1, tooBig: false });
+  Object.assign(WS, { open: true, key: p.key, ver: -1, savedVer: -1, tooBig: false, from: document.activeElement });
   $("#ws-name").textContent = p.name;
   $("#ws").classList.add("on"); document.body.style.overflow = "hidden";
   $("#ws-loading").hidden = false; $("#ws-loading").textContent = "Unpacking the markers…";
@@ -3452,8 +3508,10 @@ async function closeWorksheet() {
   if (WS.root) { try { WS.root.unmount(); } catch (e) {} }
   Object.assign(WS, { open: false, api: null, root: null, key: null });
   $("#ws").classList.remove("on"); document.body.style.overflow = "";
-  renderDrawerWs();
-  const b = $("[data-act=ws-open]"); if (b) b.focus({ preventScroll: true });
+  const from = WS.from; WS.from = null;
+  render();
+  // back to the button that opened it, or its replacement if the page redrew
+  const b = from && from.isConnected ? from : $(S.open ? "#drawer [data-act=ws-open]" : "#view [data-act=ws-open]"); if (b) b.focus({ preventScroll: true });
 }
 
 /* ================= export / import ================= */
@@ -3647,13 +3705,14 @@ document.addEventListener("click", e => {
   if (act === "bh-round") return bhLaunch(mockRound(allItems().filter(p => p.track === "bh")).map(p => p.key));
   if (act === "bh-rate") return bhRate(el);
   if (act === "bh-copy") { const ok = copyText(BHL.prompt); el.textContent = ok ? "Copied" : "Couldn't copy"; setTimeout(() => { if (document.contains(el)) el.textContent = "Copy prompt"; }, 1800); return; }
-  if (act === "bh-ai") { if (!profile().ai) BHV.setup = true; saveProfile({ ai: el.dataset.ai }, AI[el.dataset.ai].name + " it is."); return; }
+  if (act === "bh-ai") { if (!profile().ai) STU.bh.setup = true; saveProfile({ ai: el.dataset.ai }, AI[el.dataset.ai].name + " it is."); return; }
   if (act === "bh-res-edit") return resumeModal();
-  if (act === "bh-sel") return bhSelect(key, false);
-  if (act === "bh-step") { const l = allItems().filter(p => p.track === "bh"), i = l.findIndex(p => p.key === BHV.key) + Number(el.dataset.d); if (l[i]) bhSelect(l[i].key, true); return; }
-  if (act === "bh-skill") { const sec = el.closest(".bh-skill"), open = !sec.classList.contains("is-open"); sec.classList.toggle("is-open", open); el.setAttribute("aria-expanded", String(open)); return; }
-  if (act === "bh-setup") { BHV.setup = true; BHV.shown = ""; render(); const c = $("#bh-setup-h"); if (c) c.scrollIntoView({ block: "nearest" }); return; }
-  if (act === "bh-setup-done") { BHV.setup = false; BHV.shown = ""; render(); const b = $("[data-act=bh-setup]"); if (b) b.focus(); return; }
+  if (act === "stu-sel") return stuSelect(el.dataset.track, key, false);
+  if (act === "stu-step") return stuStep(el.dataset.track, Number(el.dataset.d));
+  if (act === "stu-group") { const sec = el.closest(".stu-group"), open = !sec.classList.contains("is-open"); sec.classList.toggle("is-open", open); el.setAttribute("aria-expanded", String(open)); return; }
+  if (act === "sd-review") return startSession(allItems().filter(p => p.track === "sd" && p.status === "due").sort(dueSort).map(p => p.key));
+  if (act === "bh-setup") { STU.bh.setup = true; STU.bh.shown = ""; render(); const c = $("#bh-setup-h"); if (c) c.scrollIntoView({ block: "nearest" }); return; }
+  if (act === "bh-setup-done") { STU.bh.setup = false; STU.bh.shown = ""; render(); const b = $("[data-act=bh-setup]"); if (b) b.focus(); return; }
   if (act === "bh-res-remove") return confirmModal("Remove your resume?", "Practice prompts won't include it until you add it again.", "Remove", () => saveProfile({ resume: "", resumeName: "", resumeAt: "" }, "Resume removed."));
   if (act === "close") return closeDrawer();
   if (act === "open") return openDrawer(key, false);
@@ -3686,10 +3745,9 @@ document.addEventListener("click", e => {
   if (act === "resched") return reschedModal(key);
   if (act === "rate") { S.form.r = el.dataset.r; S.hold = null; for (const b of $$("#drawer .rate")) b.setAttribute("aria-pressed", String(b === el)); return updatePreview(); }
   if (act === "status") { S.filter.status = el.dataset.k; return renderProblemList(allItems().filter(p => p.track === "code")); }
-  if (act === "jump") { const u = $("#unit-" + el.dataset.u); if (u) u.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }); return; }
   if (act === "howto-hide") { setPref("howto", "hidden"); return render(); }
   if (act === "howto-show") { setPref("howto", null); return render(); }
-  if (act === "ws-open") return openWorksheet();
+  if (act === "ws-open") return openWorksheet(key || S.open);
   if (act === "ws-close") return closeWorksheet();
   if (act === "edit-att") {
     const p = byKey(allItems(), S.open), a = p && p.atts.find(x => x.id === el.dataset.id); if (!a) return;
@@ -3754,7 +3812,7 @@ document.addEventListener("keydown", e => {
 $("#modal-wrap").addEventListener("click", e => { if (e.target.id === "modal-wrap") closeModal(); });
 let rz = 0;
 let rzW = window.innerWidth;
-window.addEventListener("resize", () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { if (S.view === "design") layoutPaths(); if (S.view === "roadmap" && window.innerWidth !== rzW) { rzW = window.innerWidth; renderRoadmap(); } }); });
+window.addEventListener("resize", () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { if (S.view === "roadmap" && window.innerWidth !== rzW) { rzW = window.innerWidth; renderRoadmap(); } }); });
 window.addEventListener("beforeunload", () => { if (WS.open && WS.ver !== WS.savedVer) saveWorksheet(); });
 
 function route() {
@@ -3769,7 +3827,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) { da
 /* ================= boot ================= */
 S.view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "today";
 render(); syncState();
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (S.view === "design") layoutPaths(); if (S.view === "roadmap" && S.mode !== "loading") renderRoadmap(); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (S.view === "roadmap" && S.mode !== "loading") renderRoadmap(); });
 applyTheme();
 loadStars();
 connect();
