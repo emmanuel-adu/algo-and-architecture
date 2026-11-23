@@ -1574,9 +1574,11 @@ function renderNav(list) {
   const cur = v => v === S.view ? ' aria-current="page"' : "";
   const L = LISTS[activeList()];
   $("#brand-mark").textContent = L.short; $("#brand").setAttribute("aria-label", `Coding list: ${L.name}. Switch list`); $("#brand").dataset.tip = `Coding list: ${L.name}`; document.title = "Algo and Architecture";
-  $("#nav").innerHTML = NAV.map(n => `<a href="#${n.v}"${cur(n.v)}><span class="nl">${n.label}</span><span class="ns">${n.short}</span> ${extra[n.v] || ""}</a>`).join("");
+  // Rewrite the nav only when it changed: replacing a link mid-tap swallows the tap.
+  const setHTML = (el, h) => { if (el && el.dataset.h !== h) { el.innerHTML = h; el.dataset.h = h; } };
+  setHTML($("#nav"), NAV.map(n => `<a href="#${n.v}"${cur(n.v)}><span class="nl">${n.label}</span><span class="ns">${n.short}</span> ${extra[n.v] || ""}</a>`).join(""));
   const sb = $("#settings-btn"); if (sb) { if (S.view === "config") sb.setAttribute("aria-current", "page"); else sb.removeAttribute("aria-current"); }
-  $("#tabbar").innerHTML = NAV.filter(n => n.v !== "config").map(n => `<a href="#${n.v}"${cur(n.v)}>${icon(n.icon)}${n.short}${n.v === "today" && due ? `<span class="due">${due}</span>` : ""}</a>`).join("");
+  setHTML($("#tabbar"), NAV.filter(n => n.v !== "config").map(n => `<a href="#${n.v}"${cur(n.v)}>${icon(n.icon)}${n.short}${n.v === "today" && due ? `<span class="due">${due}</span>` : ""}</a>`).join(""));
 }
 function renderBanners() {
   const b = [];
@@ -2870,7 +2872,10 @@ function renderConfig() {
     </section>`;
     S.shellFor = "config";
     $("#iv-form").addEventListener("submit", e => { e.preventDefault(); saveIntervals(); });
-    $("#iv-form").addEventListener("change", e => { if (e.target.matches("input")) saveIntervals(); });
+    // Save shortly after typing stops, not only on blur: on phones, tapping a tab can swap the page
+    // out from under a focused field without it ever losing focus, and the change would be lost.
+    $("#iv-form").addEventListener("input", e => { if (e.target.matches("input")) { clearTimeout(S.ivTimer); S.ivTimer = setTimeout(() => saveIntervals(true), 500); } });
+    $("#iv-form").addEventListener("change", e => { if (e.target.matches("input")) { clearTimeout(S.ivTimer); S.ivTimer = 0; saveIntervals(); } });
     $("#csv-file").addEventListener("change", e => { const f = e.target.files[0]; e.target.value = ""; if (f) f.text().then(importCSV); });
     renderConfigActions();
     renderGitHubCard();
@@ -3265,13 +3270,16 @@ function deleteAttempt(attId) {
 // leaving the page. Mastery is worked out from your ratings with the current setting, so a new
 // setting re-checks everything; the message says what that did, with an undo.
 const TRACK_NOUN = { code: "problem", sd: "topic", bh: "question" };
-function saveIntervals() {
-  if (!guardLoaded()) return;
-  const cur = settings(), out = {};
+// typing: half-typed numbers are skipped quietly; they're checked properly when the field is left
+function saveIntervals(typing) {
+  S.ivTimer = 0;
+  if (!$("#iv-form")) return;
+  if (!S.loaded) { if (!typing) guardLoaded(); return; }
+  const cur = settings(), out = {}, bad = msg => { if (!typing) { toast(msg); fillIntervals(cur, true); } };
   for (const t of ["code", "sd", "bh"]) {
     const iv = {};
-    for (const r of RATINGS) { const n = Number($(`#iv-${t}-${r}`).value); if (!(Number.isInteger(n) && n >= 0 && n <= 365)) { toast(r + " needs a whole number of days from 0 to 365."); fillIntervals(cur, true); return; } iv[r] = n; }
-    const m = Number($(`#iv-${t}-m`).value); if (!(Number.isInteger(m) && m >= 2 && m <= 10)) { toast("Mastered needs a number of Greens from 2 to 10."); fillIntervals(cur, true); return; }
+    for (const r of RATINGS) { const v = $(`#iv-${t}-${r}`).value, n = Number(v); if (v === "" || !(Number.isInteger(n) && n >= 0 && n <= 365)) return bad(r + " needs a whole number of days from 0 to 365."); iv[r] = n; }
+    const v = $(`#iv-${t}-m`).value, m = Number(v); if (v === "" || !(Number.isInteger(m) && m >= 2 && m <= 10)) return bad("Mastered needs a number of Greens from 2 to 10.");
     out[t] = { intervals: iv, greens: m };
   }
   if (JSON.stringify(out) === JSON.stringify(cur)) return;
@@ -3962,13 +3970,14 @@ window.addEventListener("resize", () => { cancelAnimationFrame(rz); rz = request
 window.addEventListener("beforeunload", () => { if (WS.open && WS.ver !== WS.savedVer) saveWorksheet(); });
 
 function route() {
+  if (S.ivTimer) { clearTimeout(S.ivTimer); saveIntervals(true); }
   const h = (location.hash || "").slice(1), v = VIEWS.includes(h) ? h : "today";
   if (v !== S.view || S.shellFor === null) { S.view = v; S.shellFor = null; tip.classList.remove("on"); render(); window.scrollTo(0, 0); }
 }
 window.addEventListener("hashchange", route);
 function dayCheck() { const t = localISO(); if (t !== S.today) { S.today = t; S.shellFor = null; render(); } }
 setInterval(dayCheck, 60000);
-document.addEventListener("visibilitychange", () => { if (!document.hidden) { dayCheck(); poll(); } });
+document.addEventListener("visibilitychange", () => { if (document.hidden && S.ivTimer) { clearTimeout(S.ivTimer); saveIntervals(true); } if (!document.hidden) { dayCheck(); poll(); } });
 
 /* ================= boot ================= */
 S.view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "today";
