@@ -928,6 +928,17 @@ html.sess-on { overflow: hidden; }
   .stu-rate .rate-row { grid-template-columns: 1fr; }
 }
 </style>
+<script>
+// Vercel Web Analytics and Speed Insights. The queues let the app record events before the
+// scripts load. The scripts only exist on Vercel, so local dev skips them instead of 404ing.
+window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+if (!/^(localhost|127\.|\[::1\])/.test(location.hostname)) {
+  for (const src of ["/_vercel/insights/script.js", "/_vercel/speed-insights/script.js"]) {
+    const s = document.createElement("script"); s.defer = true; s.src = src; document.head.appendChild(s);
+  }
+}
+</script>
 </head>
 <body>
 <header class="top">
@@ -2619,6 +2630,7 @@ function saveRoadmap(msg) {
   if (switched) cur.list = plan.list;
   RM.draft = false; RM.edit = false; RM.sel = 0; RM.formFor = plan.start + plan.end + plan.list + plan.goal;
   writeDoc("settings", cur);
+  track("Roadmap saved", { list: plan.list, goal: plan.goal, weeks: plan.weeks.length });
   toast(msg || (switched ? `Roadmap saved. Your coding list is now ${LISTS[plan.list].name} to match.` : "Roadmap saved. Week 1 starts today."));
 }
 function removeRoadmap() {
@@ -2927,6 +2939,8 @@ function closeDrawer() {
   S.open = null; S.editing = null; S.confirmDel = null; render();
   if (lastFocus && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true });
 }
+// Custom events count real use (ratings, saved plans) without anything personal in them.
+function track(name, data) { try { window.va("event", { name, data }); } catch (e) {} }
 function logAttempt(key, r, extra = {}, opts = {}) {
   const doc = ensureIds(itemDoc(key));
   const prevSched = doc.sched ? Object.assign({}, doc.sched) : null;
@@ -2940,6 +2954,7 @@ function logAttempt(key, r, extra = {}, opts = {}) {
   const weekDone = rAfter && rAfter.kind === "done" && rAfter.done;
   if (weekDone) setTimeout(() => confetti(window.innerWidth / 2, 140, 160), 200);
   const p = byKey(allItems(), key);
+  track("Rated", { rating: r, track: p.track });
   const msg = weekDone ? (rAfter.next ? `Week ${rAfter.done.i + 1} done! Every problem is started.` : "Everything on your roadmap is started!")
     : p.status === "mastered" ? `${p.name} is mastered.` : `Logged ${r} for ${p.name}. Back ${fmtDay(p.next)}.`;
   // A review session has its own Back button, so it only toasts the week milestone.
