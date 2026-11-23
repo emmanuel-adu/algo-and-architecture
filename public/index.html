@@ -44,6 +44,7 @@
   --line: #e4e4e9;
   --code: #6246ea; --code-soft: #f0eeff; --code-ink: #4b31c9;
   --sd: #1c8ce0; --sd-soft: #e8f3fd; --sd-ink: #0f68ab;
+  --bh: #c0328a; --bh-soft: #fbe9f3; --bh-ink: #95266b;
   --red: #f05454; --red-soft: #fdecec; --red-ink: #b02525;
   --yellow: #f5b623; --yellow-soft: #fff5db; --yellow-ink: #855900;
   --green: #22b07d; --green-soft: #e3f6ee; --green-ink: #0f7049;
@@ -66,6 +67,7 @@
   --edge: rgba(255,255,255,.22); --shadow: rgba(0,0,0,.6);
   --code: #7c6cf2; --code-soft: #282540; --code-ink: #b6abff;
   --sd: #4ea8f0; --sd-soft: #1f2d3c; --sd-ink: #93cbf8;
+  --bh: #b8458b; --bh-soft: #3a2131; --bh-ink: #f2a7d3;
   --red: #eb5a5a; --red-soft: #372125; --red-ink: #f5a0a0;
   --yellow: #f2b631; --yellow-soft: #362d1f; --yellow-ink: #f3cd70;
   --green: #3fbf8c; --green-soft: #1d302d; --green-ink: #82dcb8;
@@ -114,7 +116,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; text-wrap: bala
 
 /* ---------- header ---------- */
 .top { position: sticky; top: 0; z-index: 30; background: var(--glass); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-.top-in { max-width: 1160px; margin: 0 auto; padding: 0 20px; height: 62px; display: flex; align-items: center; gap: 14px; }
+.top-in { max-width: 1160px; margin: 0 auto; padding: 0 20px; height: 62px; display: flex; align-items: center; gap: 12px; }
+/* Settings sits with the header tools at every size, so the nav and the phone tab bar hold only the sections */
+.nav a[href="#config"] { display: none; }
+.iconbtn[aria-current="page"] { color: var(--ink); background: var(--surface-2); }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); flex: none; background: none; border: 0; padding: 4px 8px 4px 4px; margin-left: -4px; border-radius: 12px; cursor: pointer; text-align: left; }
 .brand:hover, .brand[aria-expanded="true"] { background: var(--surface-2); }
 .mark { min-width: 34px; padding: 0 7px 0 8px; height: 34px; gap: 3px; border-radius: 9px; background: var(--inverse-bg); color: var(--inverse-fg); display: inline-flex; align-items: center; font: 800 13px/1 var(--font-display); letter-spacing: -0.02em; }
@@ -190,6 +195,7 @@ main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 80px; display: flex
 .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: var(--tactile); }
 .btn-primary { background: var(--code); color: #fff; border-color: color-mix(in srgb, var(--code) 78%, #000); }
 .btn-sd { background: var(--sd); color: #fff; border-color: color-mix(in srgb, var(--sd) 78%, #000); }
+.btn-bh { background: var(--bh); color: #fff; border-color: color-mix(in srgb, var(--bh) 78%, #000); }
 .btn-sm { padding: 4px 10px; font-size: 13px; border-radius: 9px; }
 .btn-ghost { background: transparent; border-color: transparent; box-shadow: none; color: var(--ink-2); }
 .btn-ghost:hover { background: var(--surface-2); box-shadow: none; transform: none; color: var(--ink); }
@@ -201,6 +207,7 @@ main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 80px; display: flex
 .tag { display: inline-flex; align-items: center; gap: 5px; border-radius: 6px; padding: 1px 7px; font-size: 12px; font-weight: 700; white-space: nowrap; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); }
 .tag.code { background: var(--code-soft); color: var(--code-ink); border-color: transparent; }
 .tag.sd { background: var(--sd-soft); color: var(--sd-ink); border-color: transparent; }
+.tag.bh { background: var(--bh-soft); color: var(--bh-ink); border-color: transparent; }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; color: var(--ink-2); font-size: 13px; }
 .diff-Hard { color: var(--ink); font-weight: 700; }
 
@@ -289,6 +296,7 @@ main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 80px; display: flex
 .qcard { display: grid; grid-template-columns: 4px minmax(0, 1fr) auto; gap: 10px 16px; padding: 14px 18px 14px 0; align-items: center; overflow: hidden; }
 .qcard .bar { align-self: stretch; background: var(--code); border-radius: 0 4px 4px 0; grid-row: span 2; }
 .qcard.sd .bar { background: var(--sd); }
+.qcard.bh .bar { background: var(--bh); }
 .q-name { font: 700 18px/1.25 var(--font-display); letter-spacing: -0.01em; }
 .q-sub { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; margin-top: 4px; font-size: 13px; color: var(--ink-2); }
 .q-late { font-weight: 700; font-size: 13px; color: var(--red-ink); white-space: nowrap; justify-self: end; }
@@ -388,7 +396,11 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .rm-goal-row { display: flex; align-items: center; gap: 8px 16px; flex-wrap: wrap; }
 .rm-goal-row .fine { flex: 1 1 320px; max-width: 76ch; }
 .rm-form .field > span { font-size: 13px; font-weight: 600; color: var(--ink-2); }
-.rm-sd { padding-bottom: 8px; white-space: nowrap; }
+.rm-inc { border: 0; padding: 0; margin: 0; min-width: 0; }
+.rm-inc legend { padding: 0; margin-bottom: 4px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.rm-checks { display: flex; flex-wrap: wrap; gap: 4px 16px; min-height: 38px; align-items: center; }
+.rm-checks .check { white-space: nowrap; }
+.rm-form .rm-inc input { width: auto; }
 .rm-actions { display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
 .rm-state { font-size: 14px; color: var(--ink-2); }
 .rm-note { grid-column: 1 / -1; margin: -2px 0 0; }
@@ -475,7 +487,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 }
 
 /* ---------- progress ---------- */
-.tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
 .tile { padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
 .tile .k { color: var(--ink-2); font-size: 13.5px; font-weight: 600; }
 .tile .v { font: 800 32px/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
@@ -590,6 +602,9 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .drawer.open { transform: none; visibility: visible; transition: transform .26s cubic-bezier(.2,.9,.3,1); }
 .dr-head { padding: 18px 22px 16px; display: flex; flex-direction: column; gap: 10px; position: relative; border-bottom: 1px solid var(--line); border-top: 5px solid var(--code); }
 .drawer.sd .dr-head { border-top-color: var(--sd); }
+.drawer.bh .dr-head { border-top-color: var(--bh); }
+.dr-signal { margin: 0; font-size: 14px; line-height: 1.5; color: var(--ink-2); max-width: 60ch; }
+.dr-signal b { color: var(--ink); }
 .dr-kicker { display: flex; flex-wrap: wrap; gap: 6px; padding-right: 44px; }
 .dr-head h2 { font-size: 26px; line-height: 1.12; padding-right: 30px; }
 .dr-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; padding: 0; font-size: 17px; }
@@ -675,8 +690,8 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 @media (max-width: 1240px) { .brand-text b { font-size: 15.5px; } }
 @media (max-width: 1700px) { .nav .n { display: none; } }
 .nav .ns { display: none; }
-@media (max-width: 1140px) { .nav .nl { display: none; } .nav .ns { display: inline; } .nav a { padding: 7px 9px; } .top-in { gap: 12px; } }
-@media (max-width: 1080px) { .brand-text { display: none; } }
+@media (max-width: 1160px) { .nav .nl { display: none; } .nav .ns { display: inline; } .nav a { padding: 7px 9px; } }
+@media (max-width: 1100px) { .brand-text { display: none; } }
 @media (max-width: 980px) {
   .today-head { grid-template-columns: 1fr; }
   .kpis { grid-template-columns: repeat(4, 1fr); }
@@ -687,7 +702,6 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
   .howto .btn { grid-column: 2; grid-row: 2; align-self: start; }
   .two, .set-grid { grid-template-columns: 1fr; }
   .tiles { grid-template-columns: repeat(2, 1fr); }
-  .tiles .tile:first-child { grid-column: 1 / -1; }
   .prow, .phead { grid-template-columns: 28px minmax(0, 1fr) 120px; }
   .c-diff, .c-hist, .c-last, .c-next, .c-q { display: none; }
   .p-m { display: flex; gap: 10px; align-items: center; margin-top: 4px; color: var(--ink-2); font-size: 12.5px; flex-wrap: wrap; font-weight: 500; }
@@ -743,6 +757,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 }
 /* small phones: keep the header on one line */
 @media (max-width: 480px) { .star-btn .sb-n { display: none; } .star-btn .sb-star { margin: 0 8px; } #theme-btn { display: none; } .search { min-width: 110px; } }
+@media (max-width: 370px) { .tabbar a { font-size: 10.5px; } }
 @media (max-width: 400px) { .top-in { gap: 7px; } .star-btn .sb-l { display: none; } .star-btn .sb-star { margin: 0 9px; } }
 /* tablets: the tabs live in the bottom bar, so the header has room for the full logo and the Star label */
 @media (min-width: 761px) and (max-width: 960px) { .brand-text { display: flex; } .star-btn .sb-l { display: inline; } .star-btn .sb-star { margin-right: 0; } }
@@ -815,6 +830,52 @@ html.sess-on { overflow: hidden; }
   .sess-results { grid-template-columns: 1fr; }
   .sess-rate .rate-row { grid-template-columns: 1fr; }
 }
+
+/* behavioral: its own magenta, used only to mark the track (tag, bar, badge, primary button) */
+.sess-card.bh .sess-links .btn-primary { background: var(--bh); border-color: color-mix(in srgb, var(--bh) 78%, #000); }
+.unit-badge.bh { background: var(--bh-soft); color: var(--bh-ink); }
+.bh-cta { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.bh-setup { padding: 16px 20px 18px; display: flex; flex-direction: column; gap: 12px; }
+.bh-setup h3 { font-size: 17px; }
+.bh-setup-grid { display: grid; grid-template-columns: auto minmax(220px, 1fr) auto; gap: 14px 24px; align-items: start; }
+.bh-setup-grid .fine { font-weight: 500; }
+.bh-res { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 38px; }
+.bh-res-name { display: flex; flex-direction: column; line-height: 1.25; margin-right: 6px; min-width: 0; }
+.bh-res-name b { color: var(--ink); font-size: 14px; overflow-wrap: anywhere; }
+.bh-res-name small { font-weight: 600; color: var(--muted); }
+.bh-privacy { max-width: 80ch; }
+.bq-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 14px 0 16px; }
+.bq { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; justify-content: space-between; }
+.bq.st-due { border-color: color-mix(in srgb, var(--red) 45%, var(--line)); }
+.bq-q { all: unset; cursor: pointer; font: 600 15px/1.4 var(--font-body); color: var(--ink); text-wrap: pretty; }
+.bq-q:hover { color: var(--bh-ink); }
+.bq-q:focus-visible { outline: 2px solid var(--bh); outline-offset: 3px; border-radius: 4px; }
+.bq-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bq-foot .btn { margin-left: auto; }
+.modal:has(.bh-log) { width: min(560px, 100%); }
+.bh-steps { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; }
+.bh-steps b { color: var(--ink); }
+.bh-log { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.bh-row { display: flex; align-items: center; gap: 8px 14px; padding: 10px 12px; flex-wrap: wrap; }
+.bh-row + .bh-row { border-top: 1px solid var(--line); }
+.bh-q { flex: 1 1 220px; font-weight: 600; font-size: 14px; color: var(--ink); }
+.bh-done { font-size: 13.5px; color: var(--ink-2); display: inline-flex; gap: 6px; align-items: center; }
+.bh-prompt summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var(--ink-2); }
+.bh-prompt pre { margin: 8px 0 0; max-height: 220px; overflow: auto; white-space: pre-wrap; font: 12.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; color: var(--ink-2); }
+.modal .actions a.btn { text-decoration: none; }
+.ai-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ai-pick .btn { padding: 14px; font-size: 16px; }
+.res-text { min-height: 280px; font-size: 13.5px; line-height: 1.5; resize: vertical; }
+@media (max-width: 980px) {
+  .bh-setup-grid { grid-template-columns: 1fr 1fr; }
+  .bh-setup-grid > .field:last-child { grid-column: 1 / -1; }
+  .bh-cta { justify-content: flex-start; }
+}
+@media (max-width: 640px) {
+  .bq-grid, .bh-setup-grid { grid-template-columns: 1fr; }
+  .modal .actions { flex-wrap: wrap; }
+  .modal .actions > * { flex: 1 1 auto; justify-content: center; text-align: center; }
+}
 </style>
 </head>
 <body>
@@ -833,6 +894,7 @@ html.sess-on { overflow: hidden; }
       <ul class="gs-list" id="gs-list" role="listbox" hidden></ul>
     </div>
     <button class="iconbtn ghost" id="theme-btn" data-act="theme" aria-label="Switch to dark mode"></button>
+    <a class="iconbtn ghost" id="settings-btn" href="#config" aria-label="Settings" data-tip="Settings"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg></a>
     <a class="star-btn" id="star-btn" href="https://github.com/emmanuel-adu/algo-and-architecture" target="_blank" rel="noopener" aria-label="Star Algo and Architecture on GitHub"><svg class="sb-star" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/></svg><span class="sb-l">Star</span><span class="sb-n" hidden></span></a>
     <a class="btn btn-sm btn-primary signin-btn" id="signin" href="/api/auth/login" hidden>Sign in</a>
     <button class="acct" id="acct" data-act="account" aria-haspopup="menu" aria-expanded="false" aria-label="Account" hidden><img id="acct-img" alt="" width="30" height="30"></button>
@@ -945,15 +1007,62 @@ SD_UNITS.forEach((u, ui) => u.items.forEach(it => SD.push({
   diff: it[4] || KIND[it[2]], unit: ui, topic: "Unit " + (ui + 1) + ": " + u.name, order: SD.length + 1
 })));
 
+// Behavioral: common loop questions grouped by the skill interviewers score. Each carries what a
+// strong answer shows, which goes into the practice prompt as the interviewer's focus.
+const BH_UNITS = [
+  { name: "Your story", blurb: "The openers almost every loop starts with. Keep them short, specific and tied to the role.", items: [
+    ["intro", "Tell me about yourself.", "A 60 to 90 second arc: where you've been, what you're best at, and why this role is the next step."],
+    ["why-company", "Why do you want to work here?", "Specific reasons tied to the company's product, mission or engineering, and how your experience fits."],
+    ["why-leaving", "Why are you looking to leave your current role?", "A forward-looking answer about growth, with nothing negative about your current team."],
+    ["proud-project", "Walk me through the project you're most proud of.", "Your own role, the hardest technical decision, and a measurable result."]] },
+  { name: "Ownership and impact", blurb: "Times you owned an outcome, not just a task.", items: [
+    ["ownership", "Tell me about a time you took ownership of a problem outside your role.", "Initiative without being asked, follow-through to a result, and how you brought others along."],
+    ["impact", "What's the biggest impact you've had on a team or product?", "A clear before and after with numbers, and what you personally did to cause it."],
+    ["beyond", "Tell me about a time you went beyond what was asked.", "Why it mattered, what extra you did, and the result for users or the team."],
+    ["root-cause", "Tell me about a hard problem you dug into until you found the root cause.", "A methodical investigation, the evidence you used, and the lasting fix."]] },
+  { name: "Conflict and collaboration", blurb: "Disagreements handled with data and respect, and what changed after.", items: [
+    ["disagree-peer", "Tell me about a time you disagreed with a teammate.", "Listening first, using data over opinion, reaching a decision, and keeping the relationship."],
+    ["disagree-manager", "Tell me about a time you disagreed with your manager.", "Pushing back respectfully with evidence, then committing once the call was made."],
+    ["hard-coworker", "Tell me about a time you worked with someone who was hard to work with.", "Empathy for their side, what you changed in your own approach, and a working outcome."],
+    ["hard-feedback", "Tell me about a time you gave someone difficult feedback.", "Specific, timely and kind feedback, and what changed afterwards."]] },
+  { name: "Failure and growth", blurb: "Real mistakes, what you owned, and what you do differently now.", items: [
+    ["failure", "Tell me about a time you failed.", "A real failure, owned without blame, and a concrete lesson you've applied since."],
+    ["mistake", "Tell me about a mistake you made and how you handled it.", "Fast acknowledgement, how you limited the damage, and the safeguard you added."],
+    ["criticism", "Tell me about critical feedback you received and what you did with it.", "No defensiveness, the specific change you made, and evidence it stuck."],
+    ["missed-deadline", "Tell me about a time you missed a deadline or commitment.", "Early warning to the people affected, the recovery plan, and how you plan differently now."]] },
+  { name: "Ambiguity and judgment", blurb: "Decisions made without full information, and the trade-offs behind them.", items: [
+    ["ambiguity", "Tell me about a time you had to deliver with unclear requirements.", "How you found clarity: the questions you asked, the assumptions you stated, and small steps to learn fast."],
+    ["incomplete-data", "Tell me about a decision you made without all the data.", "How you weighed risk and reversibility, made the call, and checked the result."],
+    ["tradeoff", "Tell me about a time you traded quality for speed, or the other way around.", "The options you saw, why you chose, and how you managed the cost."],
+    ["priorities", "Tell me about a time priorities changed suddenly.", "Adapting quickly, re-planning with the people affected, and still delivering."]] },
+  { name: "Leadership and influence", blurb: "Moving people and decisions when you aren't the boss.", items: [
+    ["influence", "Tell me about a time you convinced others to adopt your idea without authority.", "Understanding what others cared about, building evidence, and winning support."],
+    ["mentor", "Tell me about a time you helped someone grow.", "What you saw they needed, how you coached them, and how they improved."],
+    ["led-project", "Tell me about a project you led from start to finish.", "Planning, splitting the work, unblocking people, and delivering the result."],
+    ["unpopular", "Tell me about a time you pushed for something unpopular.", "Conviction backed by data, handling resistance, and the outcome."]] },
+  { name: "Delivery and customers", blurb: "Shipping under pressure and keeping the user in view.", items: [
+    ["tight-deadline", "Tell me about a time you delivered under a tight deadline.", "How you scoped and prioritized, what you cut and why, and shipping on time."],
+    ["customer", "Tell me about a time you went out of your way for a customer or user.", "Understanding the user's real problem, what you did, and the result for them."],
+    ["simplify", "Tell me about a time you simplified something complex.", "What made it complex, the simpler design or process, and what it saved."],
+    ["learn-fast", "Tell me about a time you had to learn something new quickly.", "How you learned efficiently, how soon you delivered with it, and what you'd reuse."]] }
+];
+const BH = [];
+BH_UNITS.forEach((u, ui) => u.items.forEach(it => BH.push({
+  track: "bh", key: "b_" + it[0], bid: it[0], num: BH.length + 1, name: it[1], signal: it[2],
+  diff: "Behavioral", unit: ui, topic: u.name, order: BH.length + 1, url: ""
+})));
+const TRACK_ORDER = { code: 0, sd: 1, bh: 2 };
+
 const RATINGS = ["Red", "Yellow", "Green"];
 const GUIDE = {
   code: { Red: "Needed the solution or a big hint.", Yellow: "Solved it, but slow, shaky, or with a small hint.", Green: "Solved from scratch in ~20–30 min and can explain why it works." },
   learn: { Red: "Couldn't explain it without the article open.", Yellow: "Got the idea, fuzzy on details or trade-offs.", Green: "Explained it from memory, with when to use it and what it costs." },
-  design: { Red: "Couldn't reach a working design without help.", Yellow: "Working design, but missed scale, a bottleneck, or a trade-off.", Green: "Designed it end to end in ~45 min and defended the trade-offs." }
+  design: { Red: "Couldn't reach a working design without help.", Yellow: "Working design, but missed scale, a bottleneck, or a trade-off.", Green: "Designed it end to end in ~45 min and defended the trade-offs." },
+  bh: { Red: "No story came to mind, or it wandered with no clear result.", Yellow: "Had a story, but my part, the numbers or the ending were fuzzy.", Green: "Clear story in about 2 minutes: my actions, a real result, and steady follow-up answers." }
 };
-const guideFor = it => it.track === "code" ? GUIDE.code : it.kind === "design" ? GUIDE.design : GUIDE.learn;
-const DEFAULTS = { code: { intervals: { Red: 1, Yellow: 3, Green: 18 }, mastered: 3 }, sd: { intervals: { Red: 2, Yellow: 7, Green: 21 }, mastered: 2 } };
-const VIEWS = ["today", "roadmap", "problems", "design", "progress", "config"];
+const guideFor = it => it.track === "code" ? GUIDE.code : it.track === "bh" ? GUIDE.bh : it.kind === "design" ? GUIDE.design : GUIDE.learn;
+const DEFAULTS = { code: { intervals: { Red: 1, Yellow: 3, Green: 18 }, mastered: 3 }, sd: { intervals: { Red: 2, Yellow: 7, Green: 21 }, mastered: 2 }, bh: { intervals: { Red: 2, Yellow: 5, Green: 21 }, mastered: 2 } };
+const VIEWS = ["today", "roadmap", "problems", "design", "behavioral", "progress", "config"];
 
 /* ================= utils ================= */
 const $ = (s, r = document) => r.querySelector(s);
@@ -1002,7 +1111,7 @@ function settings() {
     const mm = Number(m); if (Number.isFinite(mm) && mm >= 1) out.mastered = Math.round(mm);
     return out;
   };
-  return { code: pick(d.intervals, d.mastered, DEFAULTS.code), sd: pick(d.sdIntervals, d.sdMastered, DEFAULTS.sd) };
+  return { code: pick(d.intervals, d.mastered, DEFAULTS.code), sd: pick(d.sdIntervals, d.sdMastered, DEFAULTS.sd), bh: pick(d.bhIntervals, d.bhMastered, DEFAULTS.bh) };
 }
 
 function derive(it, st) {
@@ -1040,7 +1149,8 @@ function codeItems(st) {
   return derived.sort((a, b) => order.indexOf(a.topic) - order.indexOf(b.topic) || a.order - b.order);
 }
 function sdItems(st) { return SD.map(s => derive(Object.assign({}, s, { doc: S.docs.get(s.key) || null }), st)); }
-function allItems() { const st = settings(); return codeItems(st).concat(sdItems(st)); }
+function bhItems(st) { return BH.map(s => derive(Object.assign({}, s, { doc: S.docs.get(s.key) || null }), st)); }
+function allItems() { const st = settings(); return codeItems(st).concat(sdItems(st), bhItems(st)); }
 function topicList(list) {
   const base = LISTS[activeList()].groups, extra = [];
   for (const p of list) if (!base.includes(p.topic) && !extra.includes(p.topic)) extra.push(p.topic);
@@ -1206,7 +1316,7 @@ window.addEventListener("storage", e => {
 // After signing in, offer to bring over what was logged in this browser without an account.
 function mergeDoc(id, local, remote) {
   if (!remote) return local;
-  if (id === "settings") return Object.assign({}, local, remote);
+  if (id === "settings" || id === "profile") return Object.assign({}, local, remote);
   if (id.startsWith("w_")) return Array.isArray(remote.elements) && remote.elements.length ? remote : local;
   const seen = new Set(), attempts = [];
   for (const a of [...(remote.attempts || []), ...(local.attempts || [])]) {
@@ -1251,6 +1361,7 @@ const ICON = {
   code: '<path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/>',
   sd: '<rect x="3" y="4" width="7" height="6" rx="1.5"/><rect x="14" y="4" width="7" height="6" rx="1.5"/><rect x="8.5" y="15" width="7" height="6" rx="1.5"/><path d="M6.5 10v2.5h11V10M12 12.5V15"/>',
   chart: '<path d="M3 20h18M7 20v-6M12 20V6M17 20v-9"/>',
+  talk: '<path d="M20.5 11.5a7.5 7.5 0 0 1-10.9 6.7L4 19.5l1.3-4.6a7.5 7.5 0 1 1 15.2-3.4z"/><path d="M9 10.5h6M9 13.5h4"/>',
   map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/>',
   gear: '<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>'
 };
@@ -1299,6 +1410,7 @@ const NAV = [
   { v: "roadmap", label: "Roadmap", short: "Roadmap", icon: "map" },
   { v: "problems", label: "Coding", short: "Coding", icon: "code" },
   { v: "design", label: "System design", short: "Design", icon: "sd" },
+  { v: "behavioral", label: "Behavioral", short: "Behavioral", icon: "talk" },
   { v: "progress", label: "Progress", short: "Progress", icon: "chart" },
   { v: "config", label: "Settings", short: "Settings", icon: "gear" }
 ];
@@ -1311,10 +1423,12 @@ function render() {
   else if (S.view === "roadmap") renderRoadmap();
   else if (S.view === "problems") renderProblems(list.filter(p => p.track === "code"));
   else if (S.view === "design") renderDesign(list.filter(p => p.track === "sd"));
+  else if (S.view === "behavioral") renderBehavioral(list.filter(p => p.track === "bh"));
   else if (S.view === "progress") renderProgress(list);
   else renderConfig();
   renderDrawer(list);
   renderSession(list);
+  const bl = $("#bh-log"); if (bl) { const h = bhLogRows(list); if (bl.dataset.h !== h) { bl.innerHTML = h; bl.dataset.h = h; } }
   if (S.view !== "roadmap" && RM.open) { RM.open = false; renderWeekPanel(null); }
   S.justLogged = null;
 }
@@ -1327,7 +1441,8 @@ function renderNav(list) {
   const L = LISTS[activeList()];
   $("#brand-mark").textContent = L.short; $("#brand").setAttribute("aria-label", `Coding list: ${L.name}. Switch list`); $("#brand").dataset.tip = `Coding list: ${L.name}`; document.title = "Algo and Architecture";
   $("#nav").innerHTML = NAV.map(n => `<a href="#${n.v}"${cur(n.v)}><span class="nl">${n.label}</span><span class="ns">${n.short}</span> ${extra[n.v] || ""}</a>`).join("");
-  $("#tabbar").innerHTML = NAV.map(n => `<a href="#${n.v}"${cur(n.v)}>${icon(n.icon)}${n.short}${n.v === "today" && due ? `<span class="due">${due}</span>` : ""}</a>`).join("");
+  const sb = $("#settings-btn"); if (sb) { if (S.view === "config") sb.setAttribute("aria-current", "page"); else sb.removeAttribute("aria-current"); }
+  $("#tabbar").innerHTML = NAV.filter(n => n.v !== "config").map(n => `<a href="#${n.v}"${cur(n.v)}>${icon(n.icon)}${n.short}${n.v === "today" && due ? `<span class="due">${due}</span>` : ""}</a>`).join("");
 }
 function renderBanners() {
   const b = [];
@@ -1375,12 +1490,15 @@ function statusPill(p) {
   return `<span class="pill s-new">Not started</span>`;
 }
 function linkBtns(p, cls = "btn btn-sm") {
+  if (p.track === "bh") { const pf = profile(); return `<button type="button" class="${cls}" data-act="bh-launch" data-key="${esc(p.key)}">Practice with ${pf.ai ? AI[pf.ai].name : "Claude or ChatGPT"} ↗</button>`; }
   if (p.track === "sd") return `<a class="${cls}" href="${esc(p.url)}" target="_blank" rel="noopener">Read the guide ↗</a>`;
   let h = `<a class="${cls}" href="${esc(p.url)}" target="_blank" rel="noopener">Open on LeetCode ↗</a>`;
   if (p.nc) h += `<a class="btn btn-sm" href="${esc(p.nc)}" target="_blank" rel="noopener">NeetCode ↗</a>`;
   return h;
 }
-const trackTag = p => p.track === "sd" ? `<span class="tag sd">System design</span>` : `<span class="tag code">Coding</span>`;
+const trackTag = p => p.track === "sd" ? `<span class="tag sd">System design</span>` : p.track === "bh" ? `<span class="tag bh">Behavioral</span>` : `<span class="tag code">Coding</span>`;
+// The second line under a name: pattern for coding, kind for design, skill for behavioral.
+const subOf = p => p.track === "sd" ? KIND[p.kind] : p.track === "bh" ? p.topic : (p.sub || p.topic);
 const numLabel = p => p.num ? pad(p.num) : "+";
 // What a rating does next: when the item comes back, or that it becomes mastered.
 function ivText(p, r, long) {
@@ -1411,7 +1529,7 @@ function streak(list) {
   while (days.has(d)) { n++; d = addDays(d, -1); }
   return n;
 }
-const dueSort = (a, b) => (b.bumped - a.bumped) || a.delta - b.delta || (a.track === b.track ? a.order - b.order : a.track === "code" ? -1 : 1);
+const dueSort = (a, b) => (b.bumped - a.bumped) || a.delta - b.delta || (a.track === b.track ? a.order - b.order : TRACK_ORDER[a.track] - TRACK_ORDER[b.track]);
 const bumpTag = p => p.sched ? `<span class="tag bump">${esc(p.sched.paused ? "Paused by you" : p.bumped ? (p.why ? "Moved up: " + p.why : "Moved up by you") : "Snoozed by you")}</span>` : "";
 
 /* ----- signed out ----- */
@@ -1422,7 +1540,7 @@ function renderToday(list) {
   const soon = list.filter(p => p.status === "scheduled" && p.delta <= 7).sort((a, b) => a.delta - b.delta || a.order - b.order);
   const code = list.filter(p => p.track === "code"), sd = list.filter(p => p.track === "sd");
   let fresh = null, freshHint = "Next in list order", celebrate = "";
-  const listOrder = code.filter(p => p.status === "new").slice(0, 3).concat(sd.filter(p => p.status === "new").slice(0, 2));
+  const listOrder = code.filter(p => p.status === "new").slice(0, 3).concat(sd.filter(p => p.status === "new").slice(0, 2), list.filter(p => p.track === "bh" && p.status === "new").slice(0, 1));
   const rn = roadmapNext(), wkbar = weekBar(rn);
   if (rn && rn.kind === "items") { fresh = rn.items; freshHint = rn.hint; }
   else if (rn && rn.kind === "done") {
@@ -1473,7 +1591,7 @@ function renderToday(list) {
           <span class="bar" aria-hidden="true"></span>
           <div>
             <button class="linkish q-name" data-act="open" data-key="${esc(p.key)}">${esc(p.name)}</button>
-            <div class="q-sub">${trackTag(p)}${bumpTag(p)}<span>${esc(p.track === "sd" ? KIND[p.kind] : (p.sub || p.topic))}</span>${p.track === "code" ? `<span class="diff-${p.diff}">${p.diff}</span>` : ""}${p.last ? `<span>Last: <span class="rtag r-${p.last.r}">${p.last.r}</span> on ${fmtShort(p.last.d)}</span>${beads(p, 10)}` : "<span>Not attempted yet</span>"}</div>
+            <div class="q-sub">${trackTag(p)}${bumpTag(p)}<span>${esc(subOf(p))}</span>${p.track === "code" ? `<span class="diff-${p.diff}">${p.diff}</span>` : ""}${p.last ? `<span>Last: <span class="rtag r-${p.last.r}">${p.last.r}</span> on ${fmtShort(p.last.d)}</span>${beads(p, 10)}` : "<span>Not attempted yet</span>"}</div>
           </div>
           <span class="q-late ${p.delta < 0 && !p.bumped ? "" : "ok"}">${p.bumped ? "Moved up" : p.delta < 0 ? plural(-p.delta, "day") + " overdue" : "Due today"}</span>
           <div class="q-actions">
@@ -1492,8 +1610,8 @@ function renderToday(list) {
       ${celebrate ? "" : `<div class="card rows">
         ${fresh.map(p => `
           <div class="row new">
-            <div class="grow"><button class="linkish" data-act="open" data-key="${esc(p.key)}">${esc(p.name)}</button><div class="meta">${trackTag(p)}<span>${esc(p.track === "sd" ? KIND[p.kind] : p.topic + ", " + p.diff)}</span></div></div>
-            <a class="btn btn-sm" href="${esc(p.url)}" target="_blank" rel="noopener">${p.track === "sd" ? "Guide" : "LeetCode"} ↗</a>
+            <div class="grow"><button class="linkish" data-act="open" data-key="${esc(p.key)}">${esc(p.name)}</button><div class="meta">${trackTag(p)}<span>${esc(p.track === "code" ? p.topic + ", " + p.diff : subOf(p))}</span></div></div>
+            ${p.track === "bh" ? `<button type="button" class="btn btn-sm" data-act="bh-launch" data-key="${esc(p.key)}">Practice ↗</button>` : `<a class="btn btn-sm" href="${esc(p.url)}" target="_blank" rel="noopener">${p.track === "sd" ? "Guide" : "LeetCode"} ↗</a>`}
             ${quick(p, "")}
           </div>`).join("") || `<div class="empty">Everything has been started.</div>`}
       </div>`}
@@ -1646,14 +1764,237 @@ function layoutPaths() {
   }
 }
 
+/* ================= behavioral ================= */
+// Practice happens in the person's own Claude or ChatGPT app, by voice. The app writes the interviewer
+// prompt (question, rating guide, role, resume), copies it, opens the assistant with it prefilled when
+// the link can carry it, and keeps a rating panel open here for when they come back.
+const AI = {
+  claude: { name: "Claude", url: q => "https://claude.ai/new" + (q ? "?q=" + encodeURIComponent(q) : "") },
+  chatgpt: { name: "ChatGPT", url: q => "https://chatgpt.com/" + (q ? "?q=" + encodeURIComponent(q) : "") }
+};
+// Longer prompts are pasted instead: very long links get cut off or refused.
+const PREFILL_MAX = 12000, RESUME_MAX = 12000;
+function profile() {
+  const d = S.docs.get("profile") || {};
+  return { ai: AI[d.ai] ? d.ai : "", role: String(d.role || "").slice(0, 120), resume: String(d.resume || ""), resumeName: String(d.resumeName || "") };
+}
+function saveProfile(patch, msg) {
+  if (!guardLoaded()) return;
+  writeDoc("profile", Object.assign({}, S.docs.get("profile") || {}, patch));
+  if (msg) toast(msg);
+}
+function bhPrompt(items, pf) {
+  const one = items.length === 1, g = GUIDE.bh, L = [];
+  L.push(one ? "Run a behavioral interview practice with me. You're the interviewer, and I'll answer out loud in voice mode."
+    : `Run a ${items.length}-question mock behavioral interview with me. You're the interviewer, and I'll answer out loud in voice mode.`);
+  if (pf.role) L.push("", "The role I'm preparing for: " + pf.role);
+  L.push("", "How to run it:", `1. Reply with one short line and nothing else: "Ready. Switch to voice and say start."`);
+  let n = 2;
+  if (one) {
+    const p = items[0];
+    L.push(`${n++}. When I say start, ask me this question: "${p.name}"`,
+      `${n++}. Let me finish without interrupting. Then ask one or two follow-up questions the way a real interviewer probes: my exact actions, the numbers, what I'd do differently.`,
+      `${n++}. Then give spoken feedback in under a minute: what worked, the biggest gap, and one concrete fix. A strong answer here shows: ${p.signal}`);
+  } else {
+    L.push(`${n++}. When I say start, ask these one at a time, in order. After each answer, ask one follow-up question, then move on. Save all feedback for the end.`);
+    items.forEach((p, i) => L.push(`   ${i + 1}. "${p.name}" A strong answer shows: ${p.signal}`));
+    L.push(`${n++}. After the last answer, give spoken feedback on each one in two or three sentences: what worked, the biggest gap, and one concrete fix.`);
+  }
+  L.push(`${n++}. Judge on: a clear situation, task, action and result; "I" for my own part instead of "we"; a measurable result; and length (about 2 minutes is right).`,
+    `${n++}. Rate ${one ? "my answer" : "each answer"} Red, Yellow or Green, and say ${one ? "the rating" : "each rating"} clearly:`,
+    "   Red: " + g.Red, "   Yellow: " + g.Yellow, "   Green: " + g.Green,
+    `${n++}. Then offer to let me try ${one ? "it" : "any of them"} again.`,
+    "", "Keep your turns short and conversational, like a real interviewer. Don't give me a model answer unless I ask for one.");
+  const cv = pf.resume.trim();
+  if (cv) L.push("", "My resume, for context. Use it to make follow-ups specific to my real work. Don't read it back to me.", '"""', cv.slice(0, RESUME_MAX), '"""');
+  else L.push("", "I haven't shared my resume, so ask about my background only when a follow-up needs it.");
+  return L.join("\n");
+}
+// A mock round mixes skills, leading with what's due or weakest, then skills not practiced yet.
+function mockRound(list) {
+  const score = p => p.status === "due" ? 0 : p.last && p.last.r === "Red" ? 1 : !p.n ? 2 : p.last.r === "Yellow" ? 3 : p.status === "mastered" ? 9 : 4;
+  const pool = list.filter(p => p.status !== "paused").map(p => ({ p, k: score(p) + Math.random() * 0.9 })).sort((a, b) => a.k - b.k).map(x => x.p);
+  const out = [], units = new Set();
+  for (const p of pool) { if (out.length >= 4) break; if (!units.has(p.unit)) { out.push(p); units.add(p.unit); } }
+  for (const p of pool) { if (out.length >= 4) break; if (!out.includes(p)) out.push(p); }
+  return out;
+}
+// Synchronous copy first: it keeps the click's permission to open the assistant in a new tab.
+function copyText(t) {
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = t; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;pointer-events:none";
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, t.length);
+    const ok = document.execCommand("copy"); ta.remove();
+    if (ok) return true;
+  } catch (e) {}
+  try { if (navigator.clipboard) { navigator.clipboard.writeText(t); return true; } } catch (e) {}
+  return false;
+}
+const BHL = { keys: [], prompt: "", url: "", logged: {} };
+function bhLaunch(keys) {
+  if (!guardLoaded()) return;
+  const pf = profile();
+  if (!pf.ai) return aiPick(() => bhLaunch(keys));
+  const list = allItems(), items = keys.map(k => byKey(list, k)).filter(Boolean); if (!items.length) return;
+  const A = AI[pf.ai], prompt = bhPrompt(items, pf), fits = encodeURIComponent(prompt).length <= PREFILL_MAX;
+  const copied = copyText(prompt), url = A.url(fits ? prompt : "");
+  Object.assign(BHL, { keys: items.map(p => p.key), prompt, url, logged: {} });
+  window.open(url, "_blank", "noopener");
+  const one = items.length === 1, rows = bhLogRows(list);
+  openModal(`
+    <h2>${one ? "Practicing in " + A.name : "Mock round in " + A.name}</h2>
+    ${one ? "" : `<p class="prose">${items.length} questions across ${plural(new Set(items.map(p => p.unit)).size, "skill")}, asked one at a time.</p>`}
+    <ol class="bh-steps">
+      <li><b>Send the prompt.</b> ${fits ? `It should already be in ${A.name}'s message box. If it isn't, paste it: it's copied.` : copied ? `It's copied. Paste it into ${A.name}'s message box and send.` : `Copy it with the button below, paste it into ${A.name}, and send.`}</li>
+      <li><b>Switch to voice and say “start”.</b> ${A.name} asks out loud, follows up like an interviewer, then gives feedback.</li>
+      <li><b>Log the rating ${A.name} gives you.</b> Weak answers come back here on schedule.</li>
+    </ol>
+    <div class="bh-log" id="bh-log">${rows}</div>
+    ${pf.resume.trim() ? "" : `<p class="fine">Tip: add your resume on the Behavioral page so follow-up questions are about your real work.</p>`}
+    <details class="bh-prompt"><summary>See the prompt</summary><pre>${esc(prompt)}</pre></details>
+    <div class="actions"><button class="btn btn-ghost" data-act="bh-copy">Copy prompt</button><a class="btn" href="${esc(url)}" target="_blank" rel="noopener">Open ${A.name} ↗</a><button class="btn btn-primary" data-act="modal-close">Done</button></div>`);
+  $("#bh-log").dataset.h = rows;
+  const first = $("#bh-log [data-act=bh-rate]"); if (first) first.focus({ preventScroll: true });
+}
+function bhLogRows(list) {
+  return BHL.keys.map(k => {
+    const p = byKey(list, k); if (!p) return "";
+    // a rating taken back with Undo counts as not logged
+    const lg = BHL.logged[k], done = lg && p.atts.some(a => a.id === lg.id) ? lg.r : null;
+    return `<div class="bh-row" data-key="${esc(k)}"><span class="bh-q">${esc(p.name)}</span>${done
+      ? `<span class="bh-done"><span class="rtag r-${done}">${done}</span> logged${p.status === "mastered" ? ". Mastered." : p.next ? `. Back ${esc(fmtDay(p.next))}.` : "."}</span>`
+      : `<span class="quick" role="group" aria-label="Rate ${esc(p.name)}">${RATINGS.map(r => `<button type="button" class="qr" data-act="bh-rate" data-r="${r}" data-key="${esc(k)}">${r}</button>`).join("")}</span>`}</div>`;
+  }).join("");
+}
+function bhRate(btn) {
+  if (!guardLoaded()) return;
+  const key = btn.dataset.key, r = btn.dataset.r, rect = btn.getBoundingClientRect();
+  const out = logAttempt(key, r);
+  BHL.logged[key] = { r, id: out.a.id };
+  const box = $("#bh-log"); if (box) { const h = bhLogRows(allItems()); box.innerHTML = h; box.dataset.h = h; }
+  const nxt = $("#bh-log [data-act=bh-rate]"); if (nxt) nxt.focus({ preventScroll: true }); else { const d = $("#modal .btn-primary"); if (d) d.focus({ preventScroll: true }); }
+  if (r === "Green") confetti(rect.left + rect.width / 2, rect.top, 70);
+}
+function aiPick(then) {
+  openModal(`<h2>Which assistant do you use?</h2>
+    <p class="prose">Practice runs in your own Claude or ChatGPT app, where you answer by voice. Pick the one you have. You can change it on the Behavioral page.</p>
+    <div class="ai-pick">${Object.entries(AI).map(([k, a]) => `<button type="button" class="btn" data-ai="${k}">${a.name}</button>`).join("")}</div>
+    <div class="actions"><button class="btn btn-ghost" data-act="modal-close">Cancel</button></div>`);
+  $$("#modal [data-ai]").forEach(b => b.addEventListener("click", () => { closeModal(); saveProfile({ ai: b.dataset.ai }); if (then) then(); }));
+  const f = $("#modal [data-ai]"); if (f) f.focus();
+}
+/* resume: pasted, or read from a PDF, Word or text file in the browser */
+const PDFJS = "https://unpkg.com/pdfjs-dist@3.11.174/build/";
+const MAMMOTH = "https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js";
+async function fileText(file) {
+  const name = file.name.toLowerCase();
+  if (/\.(txt|md|markdown|text)$/.test(name) || file.type.startsWith("text/")) return file.text();
+  if (name.endsWith(".pdf") || file.type === "application/pdf") {
+    if (!window.pdfjsLib) await loadScript(PDFJS + "pdf.min.js");
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js";
+    const doc = await window.pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise, pages = [];
+    for (let i = 1; i <= Math.min(doc.numPages, 10); i++) {
+      const tc = await (await doc.getPage(i)).getTextContent();
+      pages.push(tc.items.map(it => it.str + (it.hasEOL ? "\n" : " ")).join(""));
+    }
+    return pages.join("\n\n");
+  }
+  if (name.endsWith(".docx")) {
+    if (!window.mammoth) await loadScript(MAMMOTH);
+    return (await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() })).value;
+  }
+  throw new Error("type");
+}
+const tidy = t => String(t).replace(/\r/g, "").replace(/[ \t]+\n/g, "\n").replace(/[ \t]{2,}/g, " ").replace(/\n{3,}/g, "\n\n").trim();
+async function readResume(file) {
+  if (!file) return;
+  if (file.size > 8 * 1024 * 1024) { toast("That file is over 8 MB. Try a smaller PDF, or paste the text."); return; }
+  toast("Reading " + file.name + "…");
+  try {
+    const text = tidy(await fileText(file));
+    if (text.length < 40) { toast("Couldn't find text in that file. If it's a scanned PDF, paste the text instead."); return; }
+    resumeModal(text, file.name);
+  } catch (e) {
+    if (!(e && e.message === "type")) console.warn("Couldn't read the resume file", e);
+    toast(e && e.message === "type" ? "Pick a PDF, Word (.docx) or text file, or paste the text." : "Couldn't read that file. Paste the text instead.");
+  }
+}
+function resumeModal(text, name) {
+  const pf = profile(), init = text !== undefined ? text : pf.resume;
+  openModal(`<h2>${text !== undefined ? "Check your resume text" : pf.resume ? "Your resume" : "Paste your resume"}</h2>
+    <p class="prose">${text !== undefined ? "This is the text read from " + esc(name) + ". Fix anything that came out garbled, then save." : "Plain text is fine. The interviewer uses it to ask about your real projects."}</p>
+    <textarea id="res-text" class="res-text" maxlength="${RESUME_MAX}" placeholder="Paste the text of your resume">${esc(init.slice(0, RESUME_MAX))}</textarea>
+    <p class="fine" id="res-count"></p>
+    <div class="actions"><button class="btn btn-ghost" data-act="modal-close">Cancel</button><button class="btn btn-primary" id="res-save">Save resume</button></div>`);
+  const ta = $("#res-text"), cnt = () => { $("#res-count").textContent = ta.value.length.toLocaleString() + " of " + RESUME_MAX.toLocaleString() + " characters" + (init.length > RESUME_MAX ? ". The rest was cut to fit." : ""); };
+  ta.addEventListener("input", cnt); cnt(); ta.focus(); ta.setSelectionRange(0, 0); ta.scrollTop = 0;
+  $("#res-save").addEventListener("click", () => {
+    const v = tidy(ta.value).slice(0, RESUME_MAX);
+    closeModal();
+    saveProfile({ resume: v, resumeName: v ? (name || (text === undefined && pf.resume ? pf.resumeName : "") || "") : "", resumeAt: v ? S.today : "" }, v ? "Resume saved." : "Resume removed.");
+  });
+}
+function renderBehavioral(list) {
+  const pf = profile(), A = pf.ai ? AI[pf.ai] : null;
+  // a save elsewhere re-renders the page; keep a half-typed role where it was
+  const ae = document.activeElement, keep = ae && ae.id === "bh-role" ? { v: ae.value, a: ae.selectionStart, b: ae.selectionEnd } : null;
+  const started = list.filter(p => p.n).length, mastered = list.filter(p => p.status === "mastered").length;
+  const due = list.filter(p => p.status === "due").sort(dueSort), next = due[0] || list.find(p => p.status === "new");
+  const words = pf.resume ? pf.resume.trim().split(/\s+/).length : 0;
+  $("#view").innerHTML = `
+  <section class="card sd-intro bh-intro">
+    <div><h2>Behavioral interviews</h2><p>${list.length} common questions in ${BH_UNITS.length} skills. Practice out loud with ${A ? A.name : "Claude or ChatGPT"}: it asks the question, follows up like an interviewer, and rates your answer. Log the rating here, and weaker answers come back on schedule. ${started} practiced, ${mastered} mastered.</p></div>
+    <div class="bh-cta">
+      <button class="btn btn-bh" data-act="bh-round">Start a 4-question mock round</button>
+      ${next ? `<button class="btn btn-ghost" data-act="bh-launch" data-key="${esc(next.key)}">${due.length ? "Practice what's due" : "Practice one question"}</button>` : ""}
+    </div>
+    <div class="unit-chips">${BH_UNITS.map((u, ui) => { const its = list.filter(p => p.unit === ui); return `<button class="chip" data-act="jump" data-u="${ui}">${esc(u.name)} <b>${its.filter(p => p.n).length}/${its.length}</b></button>`; }).join("")}</div>
+  </section>
+  <section class="card bh-setup" aria-labelledby="bh-setup-h">
+    <h3 id="bh-setup-h">Your interviewer</h3>
+    <div class="bh-setup-grid">
+      <div class="field"><span id="bh-ai-l">Practice with</span>
+        <div class="datechips" role="group" aria-labelledby="bh-ai-l">${Object.entries(AI).map(([k, a]) => `<button type="button" class="chip" data-act="bh-ai" data-ai="${k}" aria-pressed="${pf.ai === k}">${a.name}</button>`).join("")}</div>
+        ${A ? "" : `<span class="fine">Pick the app you have. You answer by voice there.</span>`}</div>
+      <label class="field">Role you're interviewing for <input type="text" id="bh-role" maxlength="120" placeholder="e.g. Senior software engineer at Stripe" value="${esc(pf.role)}" autocomplete="off"></label>
+      <div class="field"><span>Resume</span>
+        ${pf.resume ? `<div class="bh-res"><span class="bh-res-name"><b>${esc(pf.resumeName || "Pasted resume")}</b><small>${words.toLocaleString()} words</small></span><button type="button" class="btn btn-sm" data-act="bh-res-edit">View or edit</button><button type="button" class="btn btn-ghost btn-sm btn-danger" data-act="bh-res-remove">Remove</button></div>`
+          : `<div class="bh-res"><label class="btn btn-sm file-btn">Upload PDF or Word<input type="file" id="bh-file" accept=".pdf,.docx,.txt,.md,application/pdf,text/plain"></label><button type="button" class="btn btn-ghost btn-sm" data-act="bh-res-edit">Paste text</button></div>`}
+      </div>
+    </div>
+    <p class="fine bh-privacy">${pf.resume ? "Follow-up questions use your resume, so they're about your real projects." : "Optional, but it makes follow-up questions specific to your real projects."} It's saved ${S.mode === "db" ? "to your account" : "in this browser"}, never synced to GitHub, and only sent to ${A ? A.name : "the assistant"} when you start a practice.</p>
+  </section>
+  <div class="units">
+    ${BH_UNITS.map((u, ui) => {
+      const its = list.filter(p => p.unit === ui), us = its.filter(p => p.n).length;
+      return `<section class="card unit" id="unit-${ui}" aria-labelledby="unit-h-${ui}">
+        <div class="unit-head"><span class="unit-badge bh">Skill ${ui + 1}</span><h3 id="unit-h-${ui}">${esc(u.name)}</h3><span class="uprog">${us} of ${its.length} practiced</span><p>${esc(u.blurb)}</p></div>
+        <div class="bq-grid">${its.map(p => `
+          <article class="bq st-${p.status}">
+            <button type="button" class="bq-q" data-act="open" data-key="${esc(p.key)}">${esc(p.name)}</button>
+            <div class="bq-foot">${statusPill(p)}${p.n ? beads(p, 8) : ""}<button type="button" class="btn btn-sm" data-act="bh-launch" data-key="${esc(p.key)}" aria-label="Practice: ${esc(p.name)}">Practice ↗</button></div>
+          </article>`).join("")}</div>
+      </section>`;
+    }).join("")}
+  </div>`;
+  S.shellFor = "behavioral";
+  const role = $("#bh-role");
+  if (keep) { role.value = keep.v; role.focus({ preventScroll: true }); role.setSelectionRange(keep.a, keep.b); }
+  const saveRole = () => { const v = role.value.trim().slice(0, 120); if (v !== profile().role) saveProfile({ role: v }, v ? "Role saved." : ""); };
+  role.addEventListener("change", saveRole);
+  role.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); role.blur(); } });
+  const f = $("#bh-file"); if (f) f.addEventListener("change", () => { readResume(f.files[0]); f.value = ""; });
+}
 
 /* ================= roadmap ================= */
 const PHASES = ["Foundations", "Core patterns", "Advanced"];
 const RM = { draft: false, edit: false, form: null, sel: null, open: false, back: null };
 function savedPlan() { const d = S.docs.get("settings"); const r = d && d.roadmap; return r && r.v === 1 && Array.isArray(r.weeks) && LISTS[r.list] ? r : null; }
 function planForm(plan) {
-  return plan ? { list: plan.list, end: plan.end, days: plan.days || 5, sd: plan.sd !== false, goal: plan.goal === "master" ? "master" : "finish" }
-    : { list: activeList(), end: addDays(S.today, 8 * 7 - 1), days: 5, sd: true, goal: "finish" };
+  // plans saved before behavioral existed have no bh flag, so they stay without it until edited
+  return plan ? { list: plan.list, end: plan.end, days: plan.days || 5, sd: plan.sd !== false, bh: plan.bh === true, goal: plan.goal === "master" ? "master" : "finish" }
+    : { list: activeList(), end: addDays(S.today, 8 * 7 - 1), days: 5, sd: true, bh: true, goal: "finish" };
 }
 function buildPlan(f) {
   const st = settings();
@@ -1666,26 +2007,30 @@ function buildPlan(f) {
   const code = CATS[f.list].map(c => derive(Object.assign({}, c, { doc: S.docs.get(c.key) || null }), st));
   const todo = code.filter(p => !p.n);
   const sdAll = sdItems(st), sdTodo = f.sd ? sdAll.filter(p => !p.n) : [];
+  const bhAll = bhItems(st), bhTodo = f.bh ? bhAll.filter(p => !p.n) : [];
   const part = (arr, i) => arr.slice(Math.floor(i * arr.length / L), Math.floor((i + 1) * arr.length / L)).map(p => p.key);
   const weeks = [];
   for (let i = 0; i < W; i++) {
     const s = addDays(S.today, i * 7), e = i === W - 1 ? end : addDays(S.today, i * 7 + 6);
-    weeks.push(i < L ? { s, e, dsa: part(todo, i), sd: part(sdTodo, i) } : i < W - 1 ? { s, e, dsa: [], sd: [], review: true } : { s, e, dsa: [], sd: [], polish: true });
+    weeks.push(i < L ? { s, e, dsa: part(todo, i), sd: part(sdTodo, i), bh: part(bhTodo, i) } : i < W - 1 ? { s, e, dsa: [], sd: [], bh: [], review: true } : { s, e, dsa: [], sd: [], bh: [], polish: true });
   }
-  return { v: 1, list: f.list, goal: master ? "master" : "finish", start: S.today, end, days: Number(f.days) || 5, sd: !!f.sd, weeks, already: (code.length - todo.length) + (f.sd ? sdAll.length - sdTodo.length : 0) };
+  return { v: 1, list: f.list, goal: master ? "master" : "finish", start: S.today, end, days: Number(f.days) || 5, sd: !!f.sd, bh: !!f.bh, weeks,
+    already: (code.length - todo.length) + (f.sd ? sdAll.length - sdTodo.length : 0) + (f.bh ? bhAll.length - bhTodo.length : 0) };
 }
 // Everything the map needs to draw a plan, with live progress.
 function planView(plan) {
   const st = settings(), byK = new Map();
   for (const c of CATS[plan.list]) byK.set(c.key, derive(Object.assign({}, c, { doc: S.docs.get(c.key) || null }), st));
   for (const p of sdItems(st)) byK.set(p.key, p);
+  for (const p of bhItems(st)) byK.set(p.key, p);
   const W = plan.weeks.length, since = diffDays(plan.start, S.today), master = plan.goal === "master";
   const cur = since < 0 ? -1 : Math.min(W, Math.floor(since / 7));
   const totalDsa = plan.weeks.reduce((s, w) => s + w.dsa.length, 0);
   let seen = 0, lastPhase = -1;
   const weeks = plan.weeks.map((w, i) => {
     const dsa = w.dsa.map(k => byK.get(k)).filter(Boolean), sd = w.sd.map(k => byK.get(k)).filter(Boolean);
-    const items = dsa.concat(sd), done = items.filter(p => p.n > 0).length, mastered = items.filter(p => p.status === "mastered").length;
+    const bh = (Array.isArray(w.bh) ? w.bh : []).map(k => byK.get(k)).filter(Boolean);
+    const items = dsa.concat(sd, bh), done = items.filter(p => p.n > 0).length, mastered = items.filter(p => p.status === "mastered").length;
     let phase = w.polish ? "Interview polish" : w.review ? "Review" : PHASES[Math.min(2, Math.floor(3 * (totalDsa ? seen / totalDsa : i / Math.max(1, W - 1))))];
     seen += w.dsa.length;
     const sign = phase !== lastPhase ? phase : null; lastPhase = phase;
@@ -1695,7 +2040,9 @@ function planView(plan) {
       : allMastered ? "done" : i === cur ? "current" : i < cur ? (allStarted ? "started" : "behind") : "upcoming";
     const groups = [];
     for (const p of dsa) { const t = p.sub || p.topic, g = groups[groups.length - 1]; if (g && g.t === t) g.n++; else groups.push({ t, n: 1 }); }
-    return { i, s: w.s, e: w.e, polish: !!w.polish, review: !!w.review, dsa, sd, items, done, mastered, status, groups, sign };
+    const skills = [];
+    for (const p of bh) { const g = skills[skills.length - 1]; if (g && g.t === p.topic) g.n++; else skills.push({ t: p.topic, n: 1 }); }
+    return { i, s: w.s, e: w.e, polish: !!w.polish, review: !!w.review, dsa, sd, bh, items, done, mastered, status, groups, skills, sign };
   });
   const left = weeks.filter(w => w.i < cur).reduce((s, w) => s + w.items.length - w.done, 0);
   const todo = weeks.flatMap(w => w.items).filter(p => !p.n);
@@ -1712,7 +2059,11 @@ function roadmapNext() {
   const open = w => w.items.filter(p => !p.n && p.status !== "paused");
   const upto = Math.max(cur, ahead);
   const pending = V.weeks.filter(w => w.i <= upto).flatMap(open);
-  if (pending.length) return { kind: "items", V, cur, focus: upto, earlier: V.weeks.filter(w => w.i < upto).flatMap(open).length, items: pending.slice(0, 5), count: pending.length, hint: ahead > cur ? `From your roadmap, week ${ahead + 1}, started early` : `From your roadmap, week ${cur + 1}` };
+  // Today shows five: mostly coding, plus a design topic and a behavioral question when the plan has them
+  const quota = { code: 3, sd: 1, bh: 1 }, pick = new Set();
+  for (const p of pending) if (quota[p.track] > 0) { pick.add(p); quota[p.track]--; }
+  for (const p of pending) { if (pick.size >= 5) break; pick.add(p); }
+  if (pending.length) return { kind: "items", V, cur, focus: upto, earlier: V.weeks.filter(w => w.i < upto).flatMap(open).length, items: pending.filter(p => pick.has(p)), count: pending.length, hint: ahead > cur ? `From your roadmap, week ${ahead + 1}, started early` : `From your roadmap, week ${cur + 1}` };
   const learn = V.weeks.filter(w => !w.polish && !w.review && w.items.length);
   const done = [...learn].reverse().find(w => w.i <= upto) || null, next = learn.find(w => w.i > upto && open(w).length) || null;
   return { kind: "done", V, cur, focus: done ? done.i : cur, done, next, nextCount: next ? open(next).length : 0, early: !!done && done.i > cur, listOk, key };
@@ -1738,23 +2089,28 @@ function weekBar(rn) {
 }
 function startWeekEarly(i) { const r = roadmapNext(); if (r && r.key) setPref("rmAhead", r.key + "|" + i); render(); }
 function continueListOrder() { const r = roadmapNext(); if (r && r.key) setPref("rmAhead", r.key + "|list"); render(); }
+// "problems", "topics" and "questions", named for what a week actually holds
+function kindsOf(w) { return [w.dsa.length && "problems", w.sd.length && "topics", w.bh.length && "questions"].filter(Boolean); }
+function joinWords(a) { return a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1]; }
 function weekDoneCard(r) {
   const w = r.done, n = w ? w.items.length : 0, spare = w && !r.early ? diffDays(S.today, w.e) : 0;
-  const what = w ? (w.sd.length && w.dsa.length ? `all ${n} problems and topics` : w.sd.length ? `all ${plural(n, "topic")}` : `all ${plural(n, "problem")}`) : "";
-  const title = !w ? "Roadmap started" : r.next ? `Week ${w.i + 1} done${r.early ? ", ahead of schedule" : ""}` : "Every new problem is started";
+  const kinds = w ? kindsOf(w) : [];
+  const what = !w ? "" : kinds.length > 1 ? `all ${n} ${joinWords(kinds)}` : `all ${plural(n, (kinds[0] || "problems").slice(0, -1))}`;
+  const title = !w ? "Roadmap started" : r.next ? `Week ${w.i + 1} done${r.early ? ", ahead of schedule" : ""}` : "Everything on your roadmap is started";
   const body = !w ? "" : r.next
     ? `You've started ${what} for week ${w.i + 1}${spare > 0 ? `, with ${plural(spare, "day")} to spare` : ""}. Nice work.${r.V.master ? " Reviews over the next few weeks take them to mastery." : ""}`
-    : `That's the whole roadmap: every new problem${r.V.plan.sd ? " and topic" : ""} has its first attempt. ${r.V.master ? "From here, reviews take them to mastery before your date." : "From here it's reviews and the final week."}`;
+    : `That's the whole roadmap: every new ${joinWords(["problem", r.V.plan.sd && "topic", r.V.plan.bh && "question"].filter(Boolean))} has its first attempt. ${r.V.master ? "From here, reviews take them to mastery before your date." : "From here it's reviews and the final week."}`;
   const action = r.next
-    ? `<button class="btn btn-primary" data-act="rm-ahead" data-i="${r.next.i}">Start week ${r.next.i + 1} early</button><span class="fine">${plural(r.nextCount, "new problem")}${r.next.sd.length ? " and topic" + (r.next.sd.length === 1 ? "" : "s") : ""}, planned for ${esc(fmtRange(r.next.s, r.next.e))}</span>`
+    ? `<button class="btn btn-primary" data-act="rm-ahead" data-i="${r.next.i}">Start week ${r.next.i + 1} early</button><span class="fine">${r.nextCount} new ${joinWords(kindsOf(r.next))}, planned for ${esc(fmtRange(r.next.s, r.next.e))}</span>`
     : r.hasList ? `<button class="btn" data-act="rm-listorder">Keep going in list order</button>` : "";
   return `<div class="card wkdone" role="status">
     <span class="wkdone-badge" aria-hidden="true">${CHECK}</span>
     <div class="wkdone-txt"><h3>${title}</h3>${body ? `<p>${body}</p>` : ""}${action ? `<div class="wkdone-act">${action}</div>` : ""}</div>
   </div>`;
 }
-function estimate(dsaCount, sdList, weeks) {
-  const hours = dsaCount * 1.25 + sdList.reduce((s, p) => s + (p.kind === "design" ? 1.5 : 1), 0);
+// Rough hours: a new problem 75 min, a design 90, a concept 60, a behavioral story and practice 30.
+function estimate(dsaCount, sdList, weeks, bhCount = 0) {
+  const hours = dsaCount * 1.25 + sdList.reduce((s, p) => s + (p.kind === "design" ? 1.5 : 1), 0) + bhCount * 0.5;
   return weeks ? hours / weeks : 0;
 }
 function fmtRange(a, b) { const pa = parts(a), pb = parts(b); return MON[pa.m - 1] + " " + pa.d + " to " + (pa.m === pb.m ? "" : MON[pb.m - 1] + " ") + pb.d; }
@@ -1773,7 +2129,8 @@ function renderRoadmap() {
   const reviewN = plan.weeks.filter(w => w.review).length, lastNew = [...plan.weeks].reverse().find(w => !w.polish && !w.review);
   const dsaN = plan.weeks.reduce((s, w) => s + w.dsa.length, 0), sdKeys = plan.weeks.flatMap(w => w.sd);
   const sdList = sdKeys.map(k => SD.find(x => x.key === k)).filter(Boolean);
-  const perWeek = estimate(dsaN, sdList, learn);
+  const bhN = plan.weeks.reduce((s, w) => s + (Array.isArray(w.bh) ? w.bh.length : 0), 0);
+  const perWeek = estimate(dsaN, sdList, learn, bhN);
   const f = RM.form;
   if (RM.sel === null || RM.sel >= V.W) RM.sel = Math.max(0, Math.min(V.W - 1, V.cur));
   if (RM.sel >= V.W) RM.open = false;
@@ -1785,18 +2142,19 @@ function renderRoadmap() {
   <section class="rm-head">
     <div>
       <h2>Roadmap</h2>
-      <p class="prose">A week-by-week route through ${esc(LISTS[plan.list].name)}${plan.sd ? " and the system design path" : ""}, finishing ${esc(fmtFull(plan.end))}.${V.master && reviewN && lastNew ? ` New problems end ${esc(fmtShort(lastNew.e))}, leaving ${plural(reviewN, "review week")} and a final week so they have time to reach mastery.` : ""} Problems you've already started stay in your review queue; the map spreads out everything else.</p>
+      <p class="prose">A week-by-week route through ${esc(joinWords([LISTS[plan.list].name, plan.sd && "the system design path", plan.bh && "behavioral questions"].filter(Boolean)))}, finishing ${esc(fmtFull(plan.end))}.${V.master && reviewN && lastNew ? ` New problems end ${esc(fmtShort(lastNew.e))}, leaving ${plural(reviewN, "review week")} and a final week so they have time to reach mastery.` : ""} Problems you've already started stay in your review queue; the map spreads out everything else.</p>
     </div>
     <div class="kpis rm-kpis">
       <div class="kpi"><b>${plan.weeks.length}</b><span>${plan.weeks.length === 1 ? "week" : "weeks"}</span></div>
       <div class="kpi"><b>${dsaN}</b><span>new problems</span></div>
       <div class="kpi"><b>${sdKeys.length}</b><span>design topics</span></div>
+      ${plan.bh ? `<div class="kpi"><b>${bhN}</b><span>behavioral</span></div>` : ""}
       <div class="kpi"><b>~${Math.max(1, Math.round(perWeek))}h</b><span>a week, est.</span></div>
     </div>
   </section>
   ${editing ? "" : `<section class="card rm-sum" aria-label="Your plan">
     <span class="rm-state">${state}</span>
-    <span class="rm-meta">Planned for ${saved.goal === "master" ? "mastery" : "finishing the list"}, ${plural(saved.days || 5, "study day")} a week.</span>
+    <span class="rm-meta">Planned for ${saved.goal === "master" ? "mastery" : "finishing the list"}${saved.sd || saved.bh ? ", with " + joinWords([saved.sd && "system design", saved.bh && "behavioral"].filter(Boolean)) : ""}, ${plural(saved.days || 5, "study day")} a week.</span>
     <button type="button" class="btn btn-sm" data-act="rm-edit" aria-expanded="false">Edit plan</button>
     ${mismatch}
   </section>`}
@@ -1809,12 +2167,14 @@ function renderRoadmap() {
     <label class="field">Interview or finish date<input type="date" id="rm-end" min="${addDays(S.today, 6)}" value="${esc(f.end)}"></label>
     <div class="field"><span>Quick pick</span><div class="datechips">${[4, 8, 12, 16].map(n => `<button type="button" class="chip" data-act="rm-weeks" data-n="${n}" aria-pressed="${f.end === addDays(S.today, n * 7 - 1)}">${n} weeks</button>`).join("")}</div></div>
     <label class="field">Study days a week<select id="rm-days">${[3, 4, 5, 6, 7].map(n => `<option ${n === Number(f.days) ? "selected" : ""}>${n}</option>`).join("")}</select></label>
-    <label class="check rm-sd"><input type="checkbox" id="rm-sd" ${f.sd ? "checked" : ""}> Include system design</label>
+    <fieldset class="field rm-inc"><legend>Also include</legend>
+      <div class="rm-checks"><label class="check"><input type="checkbox" id="rm-sd" ${f.sd ? "checked" : ""}> System design</label><label class="check"><input type="checkbox" id="rm-bh" ${f.bh ? "checked" : ""}> Behavioral</label></div>
+    </fieldset>
     <div class="rm-actions">
       ${draft ? `<button type="submit" class="btn btn-primary">${saved ? "Save new plan" : "Start this roadmap"}</button>${saved ? `<button type="button" class="btn btn-ghost" data-act="rm-cancel">Cancel</button>` : ""}`
         : `<span class="rm-state">${state}</span><button type="button" class="btn btn-ghost btn-sm btn-danger" data-act="rm-remove">Remove roadmap</button><button type="button" class="btn btn-sm" data-act="rm-edit-done">Done</button>`}
     </div>
-    ${draft ? `<p class="fine rm-note">${saved ? "Previewing changes. Saving rebuilds the plan from today with what you haven't started yet." : "This is a preview. Start it to save the plan and track your progress on the map."}${fast ? " That's more than 20 new problems a week; a later date or skipping system design gives you more breathing room." : ""} About ${Math.max(10, Math.round(perWeek * 60 / (Number(f.days) || 5) / 5) * 5)} minutes a study day.</p>`
+    ${draft ? `<p class="fine rm-note">${saved ? "Previewing changes. Saving rebuilds the plan from today with what you haven't started yet." : "This is a preview. Start it to save the plan and track your progress on the map."}${fast ? " That's more than 20 new problems a week; a later date or fewer extras gives you more breathing room." : ""} About ${Math.max(10, Math.round(perWeek * 60 / (Number(f.days) || 5) / 5) * 5)} minutes a study day.</p>`
       : mismatch}
   </form>` : ""}
   <section class="card rm-mapcard ${draft ? "is-draft" : ""}" aria-label="Roadmap map">
@@ -1833,6 +2193,7 @@ function renderRoadmap() {
     else if (t.id === "rm-end") { if (!/^\d{4}-\d{2}-\d{2}$/.test(t.value)) return; RM.form.end = t.value; }
     else if (t.id === "rm-days") RM.form.days = Number(t.value);
     else if (t.id === "rm-sd") RM.form.sd = t.checked;
+    else if (t.id === "rm-bh") RM.form.bh = t.checked;
     else return;
     RM.draft = true; renderRoadmap();
   });
@@ -1862,12 +2223,14 @@ function rmCard(w, V) {
   const ring = w.items.length ? `<span class="rm-ring" style="--p:${pct}%" title="${got} of ${w.items.length} ${V && V.master ? "mastered" : "started"}"><i>${got}/${w.items.length}</i></span>` : "";
   const topics = w.groups.length ? w.groups.map(g => `${esc(g.t)} <b>${g.n}</b>`).join(", ") : "";
   const sdNames = w.sd.slice(0, 2).map(p => esc(p.name)).join(", ") + (w.sd.length > 2 ? `, +${w.sd.length - 2} more` : "");
+  const skills = w.skills.map(g => `${esc(g.t)} <b>${g.n}</b>`).join(", ");
   return `<div class="rm-card rm-${w.status}${w.review ? " rm-review" : ""}" data-act="rm-week" data-i="${w.i}" role="button" tabindex="0" aria-pressed="${RM.open && RM.sel === w.i}" aria-haspopup="dialog">
     <div class="rm-card-h"><div><b>${w.polish ? "Final week" : "Week " + (w.i + 1)}</b><span class="rm-dates">${esc(fmtRange(w.s, w.e))}</span></div>${ring}</div>
-    ${w.polish ? `<p class="rm-line">Mock interviews and review. Redo your Red and Yellow problems against the clock and talk through two designs out loud.</p>` : ""}
+    ${w.polish ? `<p class="rm-line">Mock interviews and review. Redo your Red and Yellow problems against the clock and talk through two designs out loud.${V && V.plan.bh ? " Run a behavioral mock round or two." : ""}</p>` : ""}
     ${w.review ? `<p class="rm-line">No new problems. Clear your review queue on Today so earlier weeks reach mastery.</p>` : ""}
     ${topics ? `<p class="rm-line"><span class="tag code">DSA</span> ${topics}</p>` : ""}
     ${w.sd.length ? `<p class="rm-line"><span class="tag sd">Design</span> ${sdNames}</p>` : ""}
+    ${skills ? `<p class="rm-line"><span class="tag bh">Behavioral</span> ${skills}</p>` : ""}
     ${w.items.length ? rmDots(w) : ""}
     ${w.status === "behind" ? `<p class="rm-behind">${w.items.length - w.done} still to start</p>` : ""}
   </div>`;
@@ -1978,8 +2341,8 @@ function renderWeekPanel(V, focus) {
   const row = p => `
     <div class="wk-row">
       <div><button class="linkish" data-act="open" data-key="${esc(p.key)}">${esc(p.name)}</button>
-        <div class="wk-meta">${trackTag(p)}<span>${esc(p.track === "sd" ? KIND[p.kind] : (p.sub || p.topic) + ", " + p.diff)}</span>${statusPill(p)}${p.n ? beads(p, 8) : ""}</div></div>
-      <div class="wk-act"><a class="btn btn-sm" href="${esc(p.url)}" target="_blank" rel="noopener">${p.track === "sd" ? "Guide" : "LeetCode"} ↗</a>${quick(p, "")}</div>
+        <div class="wk-meta">${trackTag(p)}<span>${esc(p.track === "code" ? (p.sub || p.topic) + ", " + p.diff : subOf(p))}</span>${statusPill(p)}${p.n ? beads(p, 8) : ""}</div></div>
+      <div class="wk-act">${p.track === "bh" ? `<button type="button" class="btn btn-sm" data-act="bh-launch" data-key="${esc(p.key)}">Practice ↗</button>` : `<a class="btn btn-sm" href="${esc(p.url)}" target="_blank" rel="noopener">${p.track === "sd" ? "Guide" : "LeetCode"} ↗</a>`}${quick(p, "")}</div>
     </div>`;
   const prev = $(".wkp-body", el), keep = prev && el.dataset.week === String(w.i) + (draft ? "d" : "") ? prev.scrollTop : 0;
   el.dataset.week = String(w.i) + (draft ? "d" : "");
@@ -1997,11 +2360,12 @@ function renderWeekPanel(V, focus) {
       <h2>${esc(fmtRange(w.s, w.e))}</h2>
       ${topics ? `<p class="rm-line"><span class="tag code">DSA</span> ${topics}</p>` : ""}
       ${w.sd.length ? `<p class="rm-line"><span class="tag sd">Design</span> ${plural(w.sd.length, "topic")}</p>` : ""}
+      ${w.bh.length ? `<p class="rm-line"><span class="tag bh">Behavioral</span> ${plural(w.bh.length, "question")}</p>` : ""}
       ${w.items.length ? `<div class="wkp-prog"><span>${w.done} of ${w.items.length} started${w.mastered ? `, <b>${w.mastered}</b> mastered` : ""}</span>${rmDots(w)}</div>` : ""}
     </div>
     <div class="wkp-body">
       ${w.review ? `<p class="wkp-empty">No new problems this week. Work through your review queue on <a href="#today">Today</a>: problems from earlier weeks come back on schedule, and each clean Green moves them toward mastery.</p>`
-        : w.polish ? `<p class="wkp-empty">Mock interviews and review: redo your Red and Yellow problems against the clock, and talk through two system designs out loud on a worksheet.</p>`
+        : w.polish ? `<p class="wkp-empty">Mock interviews and review: redo your Red and Yellow problems against the clock, and talk through two system designs out loud on a worksheet.${V.plan.bh ? ` Then run a <a href="#behavioral">behavioral mock round</a>.` : ""}</p>`
         : w.items.map(row).join("") || `<p class="wkp-empty">Nothing new this week.</p>`}
     </div>`;
   if (keep) $(".wkp-body", el).scrollTop = keep;
@@ -2028,7 +2392,7 @@ function removeRoadmap() {
 
 /* ----- progress ----- */
 function renderProgress(list) {
-  const code = list.filter(p => p.track === "code"), sd = list.filter(p => p.track === "sd");
+  const code = list.filter(p => p.track === "code"), sd = list.filter(p => p.track === "sd"), bh = list.filter(p => p.track === "bh");
   const due = list.filter(p => p.status === "due").length, mastered = list.filter(p => p.status === "mastered").length;
   const total = list.reduce((s, p) => s + p.n, 0);
   const counts = new Map(); const recent = [];
@@ -2065,6 +2429,7 @@ function renderProgress(list) {
       <div class="card tile"><span class="k">Mastered</span><span class="v">${mastered}<small>of ${list.length}</small></span></div>
       <div class="card tile"><span class="k">Coding started</span><span class="v">${code.filter(p => p.n).length}<small>of ${code.length}</small></span></div>
       <div class="card tile"><span class="k">Design started</span><span class="v">${sd.filter(p => p.n).length}<small>of ${sd.length}</small></span></div>
+      <div class="card tile"><span class="k">Behavioral practiced</span><span class="v">${bh.filter(p => p.n).length}<small>of ${bh.length}</small></span></div>
     </div>
   </section>
   <div class="two">
@@ -2087,7 +2452,10 @@ function renderProgress(list) {
   </div>
   <div class="two">
     <section class="card panel"><h3>${esc(LISTS[activeList()].name)} by ${activeList() === "grind75" ? "week" : "pattern"}</h3>${legend}<div class="bars">${head}${barRows(grp(code, p => p.topic, topicList(code)))}</div></section>
-    <section class="card panel"><h3>System design by unit</h3>${legend}<div class="bars">${head}${barRows(grp(sd, p => p.unit, SD_UNITS.map((u, i) => i)).map(x => Object.assign(x, { t: (x.t + 1) + ". " + SD_UNITS[x.t].name })))}</div></section>
+    <div class="sec" style="gap:24px">
+      <section class="card panel"><h3>System design by unit</h3>${legend}<div class="bars">${head}${barRows(grp(sd, p => p.unit, SD_UNITS.map((u, i) => i)).map(x => Object.assign(x, { t: (x.t + 1) + ". " + SD_UNITS[x.t].name })))}</div></section>
+      <section class="card panel"><h3>Behavioral by skill</h3>${legend}<div class="bars">${head.replace(">Started<", ">Practiced<")}${barRows(grp(bh, p => p.unit, BH_UNITS.map((u, i) => i)).map(x => Object.assign(x, { t: BH_UNITS[x.t].name })))}</div></section>
+    </div>
   </div>`;
   S.shellFor = "progress";
   // on narrow screens the heatmap scrolls; start at the most recent weeks
@@ -2107,7 +2475,7 @@ function renderConfig() {
         <form class="card panel" id="iv-form">
           <h3>Review intervals</h3>
           <p class="prose">After each attempt, the next review lands this many days later, based on its rating. Changes apply to everything right away.</p>
-          <div class="iv"><h4><span class="tag code">Coding</span></h4>${ivRows("code", GUIDE.code)}<h4><span class="tag sd">System design</span></h4>${ivRows("sd", GUIDE.design)}</div>
+          <div class="iv"><h4><span class="tag code">Coding</span></h4>${ivRows("code", GUIDE.code)}<h4><span class="tag sd">System design</span></h4>${ivRows("sd", GUIDE.design)}<h4><span class="tag bh">Behavioral</span></h4>${ivRows("bh", GUIDE.bh)}</div>
           <div class="row-gap"><button class="btn btn-primary" type="submit">Save intervals</button><button class="btn btn-ghost" type="button" data-act="iv-reset">Reset to defaults</button></div>
         </form>
         <div class="sec" style="gap:22px">
@@ -2152,7 +2520,7 @@ function renderConfig() {
   } else fillIntervals(st, false);
 }
 function fillIntervals(st, force) {
-  for (const t of ["code", "sd"]) {
+  for (const t of ["code", "sd", "bh"]) {
     for (const r of RATINGS) { const el = $(`#iv-${t}-${r}`); if (el && (force || document.activeElement !== el)) el.value = st[t].intervals[r]; }
     const m = $(`#iv-${t}-m`); if (m && (force || document.activeElement !== m)) m.value = st[t].mastered;
   }
@@ -2176,13 +2544,14 @@ function renderDrawer(list) {
   const st = settings()[p.track], g = guideFor(p);
   if (el.dataset.key !== p.key) {
     el.dataset.key = p.key;
-    el.classList.toggle("sd", p.track === "sd");
+    el.classList.toggle("sd", p.track === "sd"); el.classList.toggle("bh", p.track === "bh");
     el.innerHTML = `
       <header class="dr-head">
         <div class="dr-kicker" id="dr-kicker"></div>
         <h2 id="dr-title"></h2>
         <div class="dr-links" id="dr-links"></div>
         <div class="dr-status" id="dr-status"></div>
+        ${p.track === "bh" ? `<p class="dr-signal"><b>What a strong answer shows.</b> ${esc(p.signal)}</p>` : ""}
         <div class="sched-line" id="dr-sched"></div>
         <button class="btn dr-close" data-act="close" aria-label="Close">✕</button>
       </header>
@@ -2196,20 +2565,20 @@ function renderDrawer(list) {
           <details class="more"><summary>Change the date, or add time and a note</summary>
             <div class="f-row">
               <label class="field">Date<input type="date" id="f-date" max="${S.today}"></label>
-              <label class="field">Minutes<input type="number" id="f-min" min="0" max="600" inputmode="numeric" placeholder="e.g. ${p.track === "sd" ? 45 : 25}"></label>
+              <label class="field">Minutes<input type="number" id="f-min" min="0" max="600" inputmode="numeric" placeholder="e.g. ${p.track === "sd" ? 45 : p.track === "bh" ? 10 : 25}"></label>
             </div>
             <label class="field" style="margin-top:10px">Note<input type="text" id="f-note" maxlength="500" placeholder="What tripped you up this time?"></label>
           </details>
           <div class="f-foot"><span class="f-preview" id="f-preview"></span><button class="btn btn-primary" type="submit" id="f-save">Save attempt</button></div>
         </form>
       </section>
-      <section class="dr-sec">
+      ${p.track === "bh" ? "" : `<section class="dr-sec">
         <h3>Worksheet</h3>
         <div class="ws-card" id="dr-ws"></div>
-      </section>
+      </section>`}
       <section class="dr-sec">
-        <h3><label for="dr-notes">Notes and pattern</label><span class="note-state" id="note-state"></span></h3>
-        <textarea id="dr-notes" placeholder="${p.track === "sd" ? "Key components, numbers, and the trade-offs you'd call out" : "The pattern in your own words, e.g. prefix product, then suffix product, then multiply"}"></textarea>
+        <h3><label for="dr-notes">${p.track === "bh" ? "Your story" : "Notes and pattern"}</label><span class="note-state" id="note-state"></span></h3>
+        <textarea id="dr-notes" placeholder="${p.track === "sd" ? "Key components, numbers, and the trade-offs you'd call out" : p.track === "bh" ? "The story you'll tell: the situation, what you did, the result with numbers, what you learned" : "The pattern in your own words, e.g. prefix product, then suffix product, then multiply"}"></textarea>
       </section>
       <section class="dr-sec">
         <h3><span id="hist-title">History</span></h3>
@@ -2228,9 +2597,9 @@ function renderDrawer(list) {
     el.classList.add("open"); el.setAttribute("aria-hidden", "false"); $("#scrim").classList.add("on");
     el.scrollTop = 0;
   }
-  $("#dr-kicker").innerHTML = trackTag(p) + `<span class="tag">${esc(p.track === "sd" ? p.topic : (p.num ? "#" + p.num + " " : "") + p.topic)}</span><span class="tag">${esc(p.track === "sd" && p.kind !== "design" ? KIND[p.kind] : p.diff)}</span>` + (p.premium ? `<span class="tag">LC Premium</span>` : "");
+  $("#dr-kicker").innerHTML = trackTag(p) + (p.track === "bh" ? `<span class="tag">${esc(p.topic)}</span>` : `<span class="tag">${esc(p.track === "sd" ? p.topic : (p.num ? "#" + p.num + " " : "") + p.topic)}</span><span class="tag">${esc(p.track === "sd" && p.kind !== "design" ? KIND[p.kind] : p.diff)}</span>`) + (p.premium ? `<span class="tag">LC Premium</span>` : "");
   $("#dr-title").textContent = p.name;
-  $("#dr-links").innerHTML = linkBtns(p, "btn btn-sm " + (p.track === "sd" ? "btn-sd" : "btn-primary"));
+  $("#dr-links").innerHTML = linkBtns(p, "btn btn-sm " + (p.track === "sd" ? "btn-sd" : p.track === "bh" ? "btn-bh" : "btn-primary"));
   $("#dr-status").innerHTML = statusPill(p) + (p.last
     ? (p.status === "paused" ? `<span>Paused. It stays out of your reviews until you add it back.</span>` : p.status === "mastered" ? `<span>Green on attempt ${p.n}. No more reviews needed.</span>`
       : `<span>Next review <b>${fmtDay(p.next)}</b> (${rel(p.next)})${p.sched && p.normalNext && !p.wasMastered ? `, normally ${fmtShort(p.normalNext)}` : ""}</span>`)
@@ -2301,6 +2670,8 @@ function renderHistory(p) {
 function itemDoc(key) {
   const cur = S.docs.get(key);
   if (cur) return JSON.parse(JSON.stringify(cur));
+  // a behavioral record keeps its question so the GitHub copy can title the page
+  if (key.startsWith("b_")) { const b = BH.find(x => x.key === key); return { bid: key.slice(2), q: b ? b.name : "", attempts: [], notes: "" }; }
   return key.startsWith("s_") ? { sid: key.slice(2), attempts: [], notes: "" } : { pid: key.slice(2), attempts: [], notes: "" };
 }
 function ensureIds(doc) { doc.attempts = (doc.attempts || []).map((a, i) => a && a.id ? a : Object.assign({}, a, { id: "a" + i + "_" + uid() })); return doc; }
@@ -2330,7 +2701,7 @@ function logAttempt(key, r, extra = {}, opts = {}) {
   const weekDone = rAfter && rAfter.kind === "done" && rAfter.done;
   if (weekDone) setTimeout(() => confetti(window.innerWidth / 2, 140, 160), 200);
   const p = byKey(allItems(), key);
-  const msg = weekDone ? (rAfter.next ? `Week ${rAfter.done.i + 1} done! Every problem is started.` : "Every new problem on your roadmap is started!")
+  const msg = weekDone ? (rAfter.next ? `Week ${rAfter.done.i + 1} done! Every problem is started.` : "Everything on your roadmap is started!")
     : p.status === "mastered" ? `${p.name} is mastered.` : `Logged ${r} for ${p.name}. Back ${fmtDay(p.next)}.`;
   // A review session has its own Back button, so it only toasts the week milestone.
   if (!opts.quiet) toast(msg, { label: "Undo", fn: () => undoAttempt(key, a.id, prevSched) });
@@ -2436,14 +2807,14 @@ function renderSession(list) {
   el.innerHTML = bar + `
     <div class="sess-body">
       <article class="sess-card ${p.track}">
-        <div class="q-sub">${trackTag(p)}${bumpTag(p)}<span>${esc(p.track === "sd" ? KIND[p.kind] : (p.sub || p.topic))}</span>${p.track === "code" ? `<span class="diff-${p.diff}">${p.diff}</span>` : ""}<span class="q-late ${p.delta < 0 && !p.bumped ? "" : "ok"}">${late}</span></div>
+        <div class="q-sub">${trackTag(p)}${bumpTag(p)}<span>${esc(subOf(p))}</span>${p.track === "code" ? `<span class="diff-${p.diff}">${p.diff}</span>` : ""}<span class="q-late ${p.delta < 0 && !p.bumped ? "" : "ok"}">${late}</span></div>
         <h2 class="sess-name" tabindex="-1">${esc(p.name)}</h2>
         <p class="sess-last">${p.last ? `Last time <span class="rtag r-${p.last.r}">${p.last.r}</span> on ${fmtShort(p.last.d)}, ${plural(p.n, "attempt")} so far ${beads(p, 14)}` : "First attempt"}</p>
-        <div class="sess-links">${linkBtns(p, "btn btn-primary")}<button class="btn btn-ghost" data-act="open" data-key="${esc(p.key)}">Notes and worksheet</button></div>
+        <div class="sess-links">${linkBtns(p, "btn btn-primary")}<button class="btn btn-ghost" data-act="open" data-key="${esc(p.key)}">${p.track === "bh" ? "Your story notes" : "Notes and worksheet"}</button></div>
         ${p.notes.trim() ? `<details class="sess-notes"><summary>Your notes</summary><p>${esc(p.notes.trim().slice(0, 1200))}</p></details>` : ""}
       </article>
       <section class="sess-rate" aria-labelledby="sess-q">
-        <h3 id="sess-q">${p.track === "sd" ? "Once you've worked through it, how did it go?" : "Once you've solved it again, how did it go?"}</h3>
+        <h3 id="sess-q">${p.track === "sd" ? "Once you've worked through it, how did it go?" : p.track === "bh" ? "After the practice, how did it go? Use the rating you were given." : "Once you've solved it again, how did it go?"}</h3>
         <div class="rate-row">${RATINGS.map((r, j) => `<button type="button" class="rate" data-act="sess-rate" data-r="${r}" aria-keyshortcuts="${j + 1}"><b>${r}<em>${ivText(p, r, true)}</em>${KBD(j + 1)}</b><span>${g[r]}</span></button>`).join("")}</div>
       </section>
       <div class="sess-foot">
@@ -2531,13 +2902,13 @@ function deleteAttempt(attId) {
 function saveIntervals() {
   if (!guardLoaded()) return;
   const out = {};
-  for (const t of ["code", "sd"]) {
+  for (const t of ["code", "sd", "bh"]) {
     const iv = {};
     for (const r of RATINGS) { const n = parseInt($(`#iv-${t}-${r}`).value, 10); if (!(n >= 0 && n <= 365)) { toast(r + " needs a number of days from 0 to 365."); return; } iv[r] = n; }
     const m = parseInt($(`#iv-${t}-m`).value, 10); if (!(m >= 1 && m <= 20)) { toast("Mastered needs a number from 1 to 20."); return; }
     out[t] = { iv, m };
   }
-  writeDoc("settings", Object.assign({}, S.docs.get("settings") || {}, { intervals: out.code.iv, mastered: out.code.m, sdIntervals: out.sd.iv, sdMastered: out.sd.m }));
+  writeDoc("settings", Object.assign({}, S.docs.get("settings") || {}, { intervals: out.code.iv, mastered: out.code.m, sdIntervals: out.sd.iv, sdMastered: out.sd.m, bhIntervals: out.bh.iv, bhMastered: out.bh.m }));
   toast("Intervals saved.");
 }
 
@@ -2936,7 +3307,7 @@ function importJSON(text) {
   if (!guardLoaded()) return;
   let data; try { data = JSON.parse(text); } catch (e) { toast("That file isn't valid JSON."); return; }
   if (!data || data.app !== "blind75-tracker" || !data.docs || typeof data.docs !== "object") { toast("That isn't a backup from this tracker."); return; }
-  const entries = Object.entries(data.docs).filter(([k, v]) => (k === "settings" || /^[psw]_[A-Za-z0-9_.~:@+-]{1,180}$/.test(k)) && v && typeof v === "object");
+  const entries = Object.entries(data.docs).filter(([k, v]) => (k === "settings" || k === "profile" || /^[psbw]_[A-Za-z0-9_.~:@+-]{1,180}$/.test(k)) && v && typeof v === "object");
   const nAtt = entries.reduce((s, [, v]) => s + (Array.isArray(v.attempts) ? v.attempts.filter(validAtt).length : 0), 0);
   confirmModal("Restore this backup?", `It has ${plural(nAtt, "attempt")}${data.exportedAt ? ", exported " + esc(fmtFull(localISO(new Date(data.exportedAt)))) : ""}. Everything currently in the tracker is replaced.`, "Replace my data", async () => {
     const keep = new Set(entries.map(([k]) => k)); let i = 0;
@@ -3089,6 +3460,13 @@ document.addEventListener("click", e => {
   if (act === "sess-again") return startSession(SESS.skipped.filter(k => { const p = byKey(allItems(), k); return p && p.status === "due"; }));
   if (act === "sess-new") { exitSession(); return openDrawer(key, false); }
   if (act === "qmore") return queueMenu(el);
+  if (act === "bh-launch") return bhLaunch([key]);
+  if (act === "bh-round") return bhLaunch(mockRound(allItems().filter(p => p.track === "bh")).map(p => p.key));
+  if (act === "bh-rate") return bhRate(el);
+  if (act === "bh-copy") { const ok = copyText(BHL.prompt); el.textContent = ok ? "Copied" : "Couldn't copy"; setTimeout(() => { if (document.contains(el)) el.textContent = "Copy prompt"; }, 1800); return; }
+  if (act === "bh-ai") { saveProfile({ ai: el.dataset.ai }, AI[el.dataset.ai].name + " it is."); return; }
+  if (act === "bh-res-edit") return resumeModal();
+  if (act === "bh-res-remove") return confirmModal("Remove your resume?", "Practice prompts won't include it until you add it again.", "Remove", () => saveProfile({ resume: "", resumeName: "", resumeAt: "" }, "Resume removed."));
   if (act === "close") return closeDrawer();
   if (act === "open") return openDrawer(key, false);
   if (act === "log") return openDrawer(key, true);
@@ -3142,7 +3520,7 @@ document.addEventListener("click", e => {
     return confirmModal("Delete " + p.name + "?", `This removes the problem and its ${plural(p.n, "attempt")}. It can't be undone unless you have a backup.`, "Delete", async () => { S.open = null; await writeDoc(p.key, null); await writeDoc("w_" + p.key, null); toast("Deleted."); });
   }
   if (act === "modal-close") return closeModal();
-  if (act === "iv-reset") { for (const t of ["code", "sd"]) { for (const r of RATINGS) $(`#iv-${t}-${r}`).value = DEFAULTS[t].intervals[r]; $(`#iv-${t}-m`).value = DEFAULTS[t].mastered; } return; }
+  if (act === "iv-reset") { for (const t of ["code", "sd", "bh"]) { for (const r of RATINGS) $(`#iv-${t}-${r}`).value = DEFAULTS[t].intervals[r]; $(`#iv-${t}-m`).value = DEFAULTS[t].mastered; } return; }
   if (act === "export-dl") return exportDownload();
   if (act === "csv-sample") return csvSampleDownload();
   if (act === "export-copy") return exportCopy();
