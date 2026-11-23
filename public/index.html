@@ -833,8 +833,6 @@ html.sess-on { overflow: hidden; }
 
 /* behavioral: its own magenta, used only to mark the track (tag, bar, badge, primary button) */
 .sess-card.bh .sess-links .btn-primary { background: var(--bh); border-color: color-mix(in srgb, var(--bh) 78%, #000); }
-.unit-badge.bh { background: var(--bh-soft); color: var(--bh-ink); }
-.bh-cta { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
 .bh-setup { padding: 16px 20px 18px; display: flex; flex-direction: column; gap: 12px; }
 .bh-setup h3 { font-size: 17px; }
 .bh-setup-grid { display: grid; grid-template-columns: auto minmax(220px, 1fr) auto; gap: 14px 24px; align-items: start; }
@@ -844,14 +842,6 @@ html.sess-on { overflow: hidden; }
 .bh-res-name b { color: var(--ink); font-size: 14px; overflow-wrap: anywhere; }
 .bh-res-name small { font-weight: 600; color: var(--muted); }
 .bh-privacy { max-width: 80ch; }
-.bq-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 14px 0 16px; }
-.bq { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; justify-content: space-between; }
-.bq.st-due { border-color: color-mix(in srgb, var(--red) 45%, var(--line)); }
-.bq-q { all: unset; cursor: pointer; font: 600 15px/1.4 var(--font-body); color: var(--ink); text-wrap: pretty; }
-.bq-q:hover { color: var(--bh-ink); }
-.bq-q:focus-visible { outline: 2px solid var(--bh); outline-offset: 3px; border-radius: 4px; }
-.bq-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.bq-foot .btn { margin-left: auto; }
 .modal:has(.bh-log) { width: min(560px, 100%); }
 .bh-steps { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; }
 .bh-steps b { color: var(--ink); }
@@ -869,12 +859,79 @@ html.sess-on { overflow: hidden; }
 @media (max-width: 980px) {
   .bh-setup-grid { grid-template-columns: 1fr 1fr; }
   .bh-setup-grid > .field:last-child { grid-column: 1 / -1; }
-  .bh-cta { justify-content: flex-start; }
 }
 @media (max-width: 640px) {
-  .bq-grid, .bh-setup-grid { grid-template-columns: 1fr; }
+  .bh-setup-grid { grid-template-columns: 1fr; }
   .modal .actions { flex-wrap: wrap; }
   .modal .actions > * { flex: 1 1 auto; justify-content: center; text-align: center; }
+}
+
+/* behavioral studio: questions on the left, the selected one on the right */
+.bh-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; }
+.bh-top h2 { font-size: clamp(28px, 3.6vw, 38px); font-weight: 800; }
+.bh-top .prose { margin: 6px 0 0; max-width: 70ch; }
+.bh-top-act { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.bh-top-act .fine { max-width: none; }
+.bh-setup-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bh-setup-sum { display: flex; align-items: center; gap: 8px 16px; flex-wrap: wrap; padding: 12px 14px 12px 18px; font-size: 14.5px; color: var(--ink-2); }
+.bh-setup-sum b { color: var(--ink); font-weight: 600; }
+.bh-setup-sum .btn { margin-left: auto; }
+.bh-studio { display: grid; grid-template-columns: minmax(260px, 330px) minmax(0, 1fr); gap: 24px; align-items: start; }
+.bh-rail { position: sticky; top: 80px; padding: 6px; overflow: hidden; }
+.bh-rail-list { max-height: calc(100vh - 104px); overflow-y: auto; overscroll-behavior: contain; padding: 2px; }
+.bh-skill + .bh-skill { margin-top: 4px; }
+.bh-skill h3 { margin: 0; }
+.bh-skill-h { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 10px 10px 4px; font: 700 12.5px/1.3 var(--font-body); color: var(--ink-2); cursor: default; }
+.bh-skill-h small { font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bh-skill ul { list-style: none; margin: 0; padding: 0; }
+.bh-item { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 9px; cursor: pointer; font-size: 14px; line-height: 1.35; color: var(--ink); position: relative; }
+.bh-item:hover { background: var(--surface-2); }
+.bh-item:focus-visible { outline: 2px solid var(--bh); outline-offset: -2px; }
+.bh-item.is-sel { background: var(--bh-soft); color: var(--bh-ink); font-weight: 600; }
+.bh-item.is-sel::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: var(--bh); }
+.bh-item-q { flex: 1; min-width: 0; text-wrap: pretty; }
+.bh-dot { flex: none; width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; border: 1.5px solid var(--edge); background: transparent; display: grid; place-items: center; font-style: normal; }
+.bh-dot.r-Red { background: var(--red); border-color: transparent; } .bh-dot.r-Yellow { background: var(--yellow); border-color: transparent; } .bh-dot.r-Green { background: var(--green); border-color: transparent; }
+.bh-dot.is-m { width: 14px; height: 14px; margin-top: 2px; background: var(--mastered); border-color: transparent; color: var(--on-mastered); }
+.bh-dot.is-m svg { width: 9px; height: 9px; }
+.bh-due { flex: none; font-size: 11.5px; font-weight: 700; color: var(--red-ink); background: var(--red-soft); border-radius: 6px; padding: 1px 6px; }
+.bh-has { flex: none; color: var(--muted); margin-top: 1px; }
+.bh-detail { display: flex; flex-direction: column; gap: 20px; min-width: 0; scroll-margin-top: 76px; }
+.bh-hero { border-radius: 18px; padding: 22px 24px 22px; background: linear-gradient(160deg, var(--bh-soft), var(--surface) 70%); border: 1px solid color-mix(in srgb, var(--bh) 22%, var(--line)); display: flex; flex-direction: column; gap: 14px; }
+.bh-hero-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bh-kicker { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.bh-step { display: flex; gap: 6px; }
+.bh-step .btn { padding: 4px 11px; font-size: 16px; line-height: 1.2; }
+.bh-hero h2 { font: 800 clamp(24px, 3vw, 34px)/1.15 var(--font-display); letter-spacing: -0.02em; text-wrap: balance; outline: none; max-width: 30ch; }
+.bh-status { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 13.5px; color: var(--ink-2); }
+.bh-hist { font-size: 13.5px; }
+.bh-hero-act { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 2px; }
+.bh-hero-act .btn { padding: 10px 18px; font-size: 15px; border-radius: 12px; }
+.bh-hero-act .fine { max-width: 40ch; }
+.bh-guide { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; padding: 0 4px; }
+.bh-guide h3, .bh-rate-sec h3, .bh-story h3 { font-size: 15px; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.bh-guide p { margin: 6px 0 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.55; }
+.bh-story { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.bh-story textarea { min-height: 150px; resize: vertical; font-size: 14.5px; line-height: 1.55; }
+.bh-rate-sec { display: flex; flex-direction: column; gap: 10px; }
+.bh-rate-sec .rate[data-r="Red"]:hover { background: var(--red-soft); } .bh-rate-sec .rate[data-r="Yellow"]:hover { background: var(--yellow-soft); } .bh-rate-sec .rate[data-r="Green"]:hover { background: var(--green-soft); }
+@media (max-width: 900px) {
+  .bh-studio { grid-template-columns: 1fr; }
+  .bh-rail { position: static; }
+  .bh-rail-list { max-height: none; }
+  .bh-skill-h { cursor: pointer; padding: 10px; font-size: 13.5px; }
+  .bh-skill-h::after { content: "›"; font-size: 16px; color: var(--muted); transform: rotate(90deg); transition: transform .15s; margin-left: 6px; }
+  .bh-skill.is-open .bh-skill-h::after { transform: rotate(-90deg); }
+  .bh-skill:not(.is-open) ul { display: none; }
+  .bh-skill-h small { margin-left: auto; }
+}
+@media (max-width: 640px) {
+  .bh-top-act { align-items: flex-start; }
+  .bh-guide { grid-template-columns: 1fr; }
+  .bh-hero { padding: 18px; }
+  .bh-of { display: none; }
+  .bh-hero-act .btn { width: 100%; justify-content: center; text-align: center; white-space: normal; }
+  .bh-rate-sec .rate-row { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -1010,37 +1067,37 @@ SD_UNITS.forEach((u, ui) => u.items.forEach(it => SD.push({
 // Behavioral: common loop questions grouped by the skill interviewers score. Each carries what a
 // strong answer shows, which goes into the practice prompt as the interviewer's focus.
 const BH_UNITS = [
-  { name: "Your story", blurb: "The openers almost every loop starts with. Keep them short, specific and tied to the role.", items: [
+  { name: "Your story", frame: "Present, past, future: what you do now, how you got here, and why this role is next. Keep it to 60 to 90 seconds.", blurb: "The openers almost every loop starts with. Keep them short, specific and tied to the role.", items: [
     ["intro", "Tell me about yourself.", "A 60 to 90 second arc: where you've been, what you're best at, and why this role is the next step."],
     ["why-company", "Why do you want to work here?", "Specific reasons tied to the company's product, mission or engineering, and how your experience fits."],
     ["why-leaving", "Why are you looking to leave your current role?", "A forward-looking answer about growth, with nothing negative about your current team."],
     ["proud-project", "Walk me through the project you're most proud of.", "Your own role, the hardest technical decision, and a measurable result."]] },
-  { name: "Ownership and impact", blurb: "Times you owned an outcome, not just a task.", items: [
+  { name: "Ownership and impact", frame: "The problem you noticed, why you took it on, what you did, and the result with a number.", blurb: "Times you owned an outcome, not just a task.", items: [
     ["ownership", "Tell me about a time you took ownership of a problem outside your role.", "Initiative without being asked, follow-through to a result, and how you brought others along."],
     ["impact", "What's the biggest impact you've had on a team or product?", "A clear before and after with numbers, and what you personally did to cause it."],
     ["beyond", "Tell me about a time you went beyond what was asked.", "Why it mattered, what extra you did, and the result for users or the team."],
     ["root-cause", "Tell me about a hard problem you dug into until you found the root cause.", "A methodical investigation, the evidence you used, and the lasting fix."]] },
-  { name: "Conflict and collaboration", blurb: "Disagreements handled with data and respect, and what changed after.", items: [
+  { name: "Conflict and collaboration", frame: "The tension or disagreement, how you understood the other person's side, what you said or did, and how things stood after.", blurb: "Disagreements handled with data and respect, and what changed after.", items: [
     ["disagree-peer", "Tell me about a time you disagreed with a teammate.", "Listening first, using data over opinion, reaching a decision, and keeping the relationship."],
     ["disagree-manager", "Tell me about a time you disagreed with your manager.", "Pushing back respectfully with evidence, then committing once the call was made."],
     ["hard-coworker", "Tell me about a time you worked with someone who was hard to work with.", "Empathy for their side, what you changed in your own approach, and a working outcome."],
     ["hard-feedback", "Tell me about a time you gave someone difficult feedback.", "Specific, timely and kind feedback, and what changed afterwards."]] },
-  { name: "Failure and growth", blurb: "Real mistakes, what you owned, and what you do differently now.", items: [
+  { name: "Failure and growth", frame: "What went wrong, the part you own, how you fixed it, and what you do differently now. Spend real time on the lesson.", blurb: "Real mistakes, what you owned, and what you do differently now.", items: [
     ["failure", "Tell me about a time you failed.", "A real failure, owned without blame, and a concrete lesson you've applied since."],
     ["mistake", "Tell me about a mistake you made and how you handled it.", "Fast acknowledgement, how you limited the damage, and the safeguard you added."],
     ["criticism", "Tell me about critical feedback you received and what you did with it.", "No defensiveness, the specific change you made, and evidence it stuck."],
     ["missed-deadline", "Tell me about a time you missed a deadline or commitment.", "Early warning to the people affected, the recovery plan, and how you plan differently now."]] },
-  { name: "Ambiguity and judgment", blurb: "Decisions made without full information, and the trade-offs behind them.", items: [
+  { name: "Ambiguity and judgment", frame: "What was unclear, how you cut down the unknowns, the call you made and why, and how you checked it.", blurb: "Decisions made without full information, and the trade-offs behind them.", items: [
     ["ambiguity", "Tell me about a time you had to deliver with unclear requirements.", "How you found clarity: the questions you asked, the assumptions you stated, and small steps to learn fast."],
     ["incomplete-data", "Tell me about a decision you made without all the data.", "How you weighed risk and reversibility, made the call, and checked the result."],
     ["tradeoff", "Tell me about a time you traded quality for speed, or the other way around.", "The options you saw, why you chose, and how you managed the cost."],
     ["priorities", "Tell me about a time priorities changed suddenly.", "Adapting quickly, re-planning with the people affected, and still delivering."]] },
-  { name: "Leadership and influence", blurb: "Moving people and decisions when you aren't the boss.", items: [
+  { name: "Leadership and influence", frame: "The goal, who you needed on board and what they cared about, how you won them over, and the outcome.", blurb: "Moving people and decisions when you aren't the boss.", items: [
     ["influence", "Tell me about a time you convinced others to adopt your idea without authority.", "Understanding what others cared about, building evidence, and winning support."],
     ["mentor", "Tell me about a time you helped someone grow.", "What you saw they needed, how you coached them, and how they improved."],
     ["led-project", "Tell me about a project you led from start to finish.", "Planning, splitting the work, unblocking people, and delivering the result."],
     ["unpopular", "Tell me about a time you pushed for something unpopular.", "Conviction backed by data, handling resistance, and the outcome."]] },
-  { name: "Delivery and customers", blurb: "Shipping under pressure and keeping the user in view.", items: [
+  { name: "Delivery and customers", frame: "The constraint, how you prioritized and what you cut, what shipped, and what it did for users.", blurb: "Shipping under pressure and keeping the user in view.", items: [
     ["tight-deadline", "Tell me about a time you delivered under a tight deadline.", "How you scoped and prioritized, what you cut and why, and shipping on time."],
     ["customer", "Tell me about a time you went out of your way for a customer or user.", "Understanding the user's real problem, what you did, and the result for them."],
     ["simplify", "Tell me about a time you simplified something complex.", "What made it complex, the simpler design or process, and what it saved."],
@@ -1367,6 +1424,7 @@ const ICON = {
 };
 const icon = k => `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
 const CHECK = `<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M5 12.5 L10 17 L19 7" fill="none" stroke="#1e1a33" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const PEN = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>`;
 const CHECK_SM = `<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M5 12.5 L10 17 L19 7" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 function getPref(k) { try { return localStorage.getItem("b75." + k); } catch (e) { return null; } }
 function setPref(k, v) { try { if (v === null) localStorage.removeItem("b75." + k); else localStorage.setItem("b75." + k, v); } catch (e) {} }
@@ -1935,24 +1993,91 @@ function resumeModal(text, name) {
     saveProfile({ resume: v, resumeName: v ? (name || (text === undefined && pf.resume ? pf.resumeName : "") || "") : "", resumeAt: v ? S.today : "" }, v ? "Resume saved." : "Resume removed.");
   });
 }
+// The Behavioral page is a practice studio: every question in a list on the left, grouped by skill,
+// and the selected one on the right with what a strong answer shows, how to shape it, your story notes,
+// the practice launch and the rating. The shell renders once per question; saves only patch the parts
+// that change, so a half-typed story is never redrawn.
+const BHV = { key: null, shown: "", noteTimer: 0, noteDirty: false, setup: false };
+function bhSelected(list) {
+  const pick = getPref("bhSel"), has = k => list.some(p => p.key === k);
+  if (BHV.key && has(BHV.key)) return BHV.key;
+  if (pick && has(pick)) return (BHV.key = pick);
+  // until saved data loads, suggest without locking it in, so a due question can take over
+  const due = list.filter(p => p.status === "due").sort(dueSort)[0], fresh = list.find(p => p.status === "new");
+  const k = (due || fresh || list[0]).key;
+  if (S.loaded) BHV.key = k;
+  return k;
+}
+function bhSelect(key, focus) {
+  BHV.key = key; setPref("bhSel", key);
+  if (BHV.noteDirty) bhSaveNote();
+  renderBehavioral(allItems().filter(p => p.track === "bh"));
+  const h = $("#bh-q"); if (h && focus) h.focus({ preventScroll: true });
+  const row = $(`.bh-rail [data-key="${key}"]`); if (row) row.scrollIntoView({ block: "nearest" });
+  if (window.innerWidth <= 900) { const d = $("#bh-detail"); if (d) d.scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" }); }
+}
+function bhSaveNote() {
+  clearTimeout(BHV.noteTimer);
+  const ta = $("#bh-note"); if (!ta || !BHV.noteDirty) return;
+  if (!S.loaded) { BHV.noteTimer = setTimeout(bhSaveNote, 1500); return; }
+  const key = ta.dataset.key, doc = itemDoc(key), val = ta.value.slice(0, 20000);
+  BHV.noteDirty = false;
+  if ((doc.notes || "") === val) { const st = $("#bh-note-state"); if (st) st.textContent = ""; return; }
+  doc.notes = val;
+  writeDoc(key, doc).then(() => { const st = $("#bh-note-state"); if (st && !BHV.noteDirty) st.textContent = S.writeError ? "Not saved" : "Saved"; });
+}
+const bhDot = p => p.status === "mastered" ? `<i class="bh-dot is-m" aria-hidden="true">${CHECK_SM}</i>` : p.last ? `<i class="bh-dot r-${p.last.r}" aria-hidden="true"></i>` : `<i class="bh-dot" aria-hidden="true"></i>`;
+function bhRail(list, sel) {
+  return BH_UNITS.map((u, ui) => {
+    const its = list.filter(p => p.unit === ui), done = its.filter(p => p.n).length, open = its.some(p => p.key === sel);
+    return `<section class="bh-skill${open ? " is-open" : ""}">
+      <h3><button type="button" class="bh-skill-h" data-act="bh-skill" data-u="${ui}" aria-expanded="${open}"><span>${esc(u.name)}</span><small>${done}/${its.length}</small></button></h3>
+      <ul>${its.map(p => `<li><button type="button" class="bh-item${p.key === sel ? " is-sel" : ""}" data-act="bh-sel" data-key="${esc(p.key)}" aria-current="${p.key === sel ? "true" : "false"}">
+        ${bhDot(p)}<span class="bh-item-q">${esc(p.name)}</span>${p.status === "due" ? `<span class="bh-due">Due</span>` : p.notes.trim() ? `<span class="bh-has" data-tip="Story drafted">${PEN}</span>` : ""}</button></li>`).join("")}</ul>
+    </section>`;
+  }).join("");
+}
+function bhStatus(p) {
+  return `${statusPill(p)}${p.last ? `<span>Last <span class="rtag r-${p.last.r}">${p.last.r}</span> on ${fmtShort(p.last.d)}</span>${beads(p, 12)}` : ""}${p.n ? `<button type="button" class="linkish bh-hist" data-act="open" data-key="${esc(p.key)}">History and edits</button>` : ""}`;
+}
+function bhRates(p) {
+  const g = GUIDE.bh;
+  return RATINGS.map(r => `<button type="button" class="rate" data-act="quick" data-r="${r}" data-key="${esc(p.key)}"><b>${r}<em>${ivText(p, r, true)}</em></b><span>${g[r]}</span></button>`).join("");
+}
 function renderBehavioral(list) {
-  const pf = profile(), A = pf.ai ? AI[pf.ai] : null;
-  // a save elsewhere re-renders the page; keep a half-typed role where it was
-  const ae = document.activeElement, keep = ae && ae.id === "bh-role" ? { v: ae.value, a: ae.selectionStart, b: ae.selectionEnd } : null;
-  const started = list.filter(p => p.n).length, mastered = list.filter(p => p.status === "mastered").length;
-  const due = list.filter(p => p.status === "due").sort(dueSort), next = due[0] || list.find(p => p.status === "new");
+  const pf = profile(), A = pf.ai ? AI[pf.ai] : null, sel = bhSelected(list), p = byKey(list, sel);
+  const ui = p.unit, u = BH_UNITS[ui], idx = list.indexOf(p);
+  const started = list.filter(x => x.n).length, mastered = list.filter(x => x.status === "mastered").length, due = list.filter(x => x.status === "due").length;
   const words = pf.resume ? pf.resume.trim().split(/\s+/).length : 0;
+  const setupOpen = !A || BHV.setup;
+  const shell = [sel, A ? pf.ai : "", setupOpen, pf.role, words, pf.resumeName].join("|");
+  if (S.shellFor === "behavioral" && BHV.shown === shell) {
+    // same question and setup: patch what a save can change, and leave the story box alone
+    const rail = $("#bh-rail-list"), top = rail ? rail.scrollTop : 0;
+    if (rail) { rail.innerHTML = bhRail(list, sel); rail.scrollTop = top; }
+    $("#bh-sum").innerHTML = bhSummary(list, started, mastered, due);
+    $("#bh-status").innerHTML = bhStatus(p);
+    $("#bh-rates").innerHTML = bhRates(p);
+    const ta = $("#bh-note"); if (ta && document.activeElement !== ta && !BHV.noteDirty && ta.value !== p.notes) ta.value = p.notes;
+    return;
+  }
+  const ae = document.activeElement, keepRole = ae && ae.id === "bh-role" ? { v: ae.value, a: ae.selectionStart, b: ae.selectionEnd } : null;
+  const railTop = $("#bh-rail-list") ? $("#bh-rail-list").scrollTop : null;
+  if (BHV.noteDirty) bhSaveNote();
+  BHV.shown = shell;
   $("#view").innerHTML = `
-  <section class="card sd-intro bh-intro">
-    <div><h2>Behavioral interviews</h2><p>${list.length} common questions in ${BH_UNITS.length} skills. Practice out loud with ${A ? A.name : "Claude or ChatGPT"}: it asks the question, follows up like an interviewer, and rates your answer. Log the rating here, and weaker answers come back on schedule. ${started} practiced, ${mastered} mastered.</p></div>
-    <div class="bh-cta">
-      <button class="btn btn-bh" data-act="bh-round">Start a 4-question mock round</button>
-      ${next ? `<button class="btn btn-ghost" data-act="bh-launch" data-key="${esc(next.key)}">${due.length ? "Practice what's due" : "Practice one question"}</button>` : ""}
+  <section class="bh-top">
+    <div>
+      <h2>Behavioral interviews</h2>
+      <p class="prose" id="bh-sum">${bhSummary(list, started, mastered, due)}</p>
     </div>
-    <div class="unit-chips">${BH_UNITS.map((u, ui) => { const its = list.filter(p => p.unit === ui); return `<button class="chip" data-act="jump" data-u="${ui}">${esc(u.name)} <b>${its.filter(p => p.n).length}/${its.length}</b></button>`; }).join("")}</div>
+    <div class="bh-top-act">
+      <button class="btn btn-bh" data-act="bh-round">Start a mock round</button>
+      <span class="fine">4 questions across skills, about 20 minutes</span>
+    </div>
   </section>
-  <section class="card bh-setup" aria-labelledby="bh-setup-h">
-    <h3 id="bh-setup-h">Your interviewer</h3>
+  ${setupOpen ? `<section class="card bh-setup" aria-labelledby="bh-setup-h">
+    <div class="bh-setup-head"><h3 id="bh-setup-h">Your interviewer</h3>${A ? `<button type="button" class="btn btn-sm" data-act="bh-setup-done">Done</button>` : ""}</div>
     <div class="bh-setup-grid">
       <div class="field"><span id="bh-ai-l">Practice with</span>
         <div class="datechips" role="group" aria-labelledby="bh-ai-l">${Object.entries(AI).map(([k, a]) => `<button type="button" class="chip" data-act="bh-ai" data-ai="${k}" aria-pressed="${pf.ai === k}">${a.name}</button>`).join("")}</div>
@@ -1964,29 +2089,54 @@ function renderBehavioral(list) {
       </div>
     </div>
     <p class="fine bh-privacy">${pf.resume ? "Follow-up questions use your resume, so they're about your real projects." : "Optional, but it makes follow-up questions specific to your real projects."} It's saved ${S.mode === "db" ? "to your account" : "in this browser"}, never synced to GitHub, and only sent to ${A ? A.name : "the assistant"} when you start a practice.</p>
-  </section>
-  <div class="units">
-    ${BH_UNITS.map((u, ui) => {
-      const its = list.filter(p => p.unit === ui), us = its.filter(p => p.n).length;
-      return `<section class="card unit" id="unit-${ui}" aria-labelledby="unit-h-${ui}">
-        <div class="unit-head"><span class="unit-badge bh">Skill ${ui + 1}</span><h3 id="unit-h-${ui}">${esc(u.name)}</h3><span class="uprog">${us} of ${its.length} practiced</span><p>${esc(u.blurb)}</p></div>
-        <div class="bq-grid">${its.map(p => `
-          <article class="bq st-${p.status}">
-            <button type="button" class="bq-q" data-act="open" data-key="${esc(p.key)}">${esc(p.name)}</button>
-            <div class="bq-foot">${statusPill(p)}${p.n ? beads(p, 8) : ""}<button type="button" class="btn btn-sm" data-act="bh-launch" data-key="${esc(p.key)}" aria-label="Practice: ${esc(p.name)}">Practice ↗</button></div>
-          </article>`).join("")}</div>
-      </section>`;
-    }).join("")}
+  </section>` : `<section class="card bh-setup-sum">
+    <span>Practicing with <b>${A.name}</b>${pf.role ? ` for <b>${esc(pf.role)}</b>` : ""}${pf.resume ? `, using your resume` : `. No resume added yet, so follow-ups stay general`}.</span>
+    <button type="button" class="btn btn-sm" data-act="bh-setup" aria-expanded="false">Edit</button>
+  </section>`}
+  <div class="bh-studio">
+    <nav class="card bh-rail" aria-label="Behavioral questions"><div class="bh-rail-list" id="bh-rail-list">${bhRail(list, sel)}</div></nav>
+    <article class="bh-detail" id="bh-detail" aria-labelledby="bh-q">
+      <header class="bh-hero">
+        <div class="bh-hero-top">
+          <span class="bh-kicker"><span class="tag bh">${esc(u.name)}</span><span class="bh-of">Question ${idx + 1} of ${list.length}</span></span>
+          <span class="bh-step"><button type="button" class="btn" data-act="bh-step" data-d="-1" aria-label="Previous question" ${idx === 0 ? "disabled" : ""}>‹</button><button type="button" class="btn" data-act="bh-step" data-d="1" aria-label="Next question" ${idx === list.length - 1 ? "disabled" : ""}>›</button></span>
+        </div>
+        <h2 id="bh-q" tabindex="-1">${esc(p.name)}</h2>
+        <div class="bh-status" id="bh-status">${bhStatus(p)}</div>
+        <div class="bh-hero-act">${linkBtns(p, "btn btn-bh")}<span class="fine">${A ? `${A.name} asks it out loud, follows up, and rates you.` : "Pick Claude or ChatGPT above first."}</span></div>
+      </header>
+      <div class="bh-guide">
+        <section><h3>What a strong answer shows</h3><p>${esc(p.signal)}</p></section>
+        <section><h3>How to shape it</h3><p>${esc(u.frame)}</p></section>
+      </div>
+      <section class="card bh-story">
+        <h3><label for="bh-note">Your story</label><span class="note-state" id="bh-note-state"></span></h3>
+        <textarea id="bh-note" data-key="${esc(p.key)}" placeholder="Draft the story you'll tell: the situation, what you did, the result with numbers, what you learned. Saved as you type.">${esc(p.notes)}</textarea>
+      </section>
+      <section class="bh-rate-sec" aria-labelledby="bh-rate-h">
+        <h3 id="bh-rate-h">After practicing, log the rating you got</h3>
+        <div class="rate-row" id="bh-rates">${bhRates(p)}</div>
+      </section>
+    </article>
   </div>`;
   S.shellFor = "behavioral";
+  if (railTop !== null) $("#bh-rail-list").scrollTop = railTop;
+  else { const r = $(".bh-item.is-sel"); if (r) r.scrollIntoView({ block: "nearest" }); }
+  const ta = $("#bh-note");
+  ta.addEventListener("input", () => { BHV.noteDirty = true; $("#bh-note-state").textContent = "Editing…"; clearTimeout(BHV.noteTimer); BHV.noteTimer = setTimeout(bhSaveNote, 900); });
+  ta.addEventListener("blur", () => { if (BHV.noteDirty) bhSaveNote(); });
   const role = $("#bh-role");
-  if (keep) { role.value = keep.v; role.focus({ preventScroll: true }); role.setSelectionRange(keep.a, keep.b); }
-  const saveRole = () => { const v = role.value.trim().slice(0, 120); if (v !== profile().role) saveProfile({ role: v }, v ? "Role saved." : ""); };
-  role.addEventListener("change", saveRole);
-  role.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); role.blur(); } });
+  if (role) {
+    if (keepRole) { role.value = keepRole.v; role.focus({ preventScroll: true }); role.setSelectionRange(keepRole.a, keepRole.b); }
+    const saveRole = () => { const v = role.value.trim().slice(0, 120); if (v !== profile().role) saveProfile({ role: v }, v ? "Role saved." : ""); };
+    role.addEventListener("change", saveRole);
+    role.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); role.blur(); } });
+  }
   const f = $("#bh-file"); if (f) f.addEventListener("change", () => { readResume(f.files[0]); f.value = ""; });
 }
-
+function bhSummary(list, started, mastered, due) {
+  return `${list.length} questions in ${BH_UNITS.length} skills. ${started ? `${started} practiced, ${mastered} mastered${due ? `, <b>${due} due</b>` : ""}.` : "Pick a question, draft your story, then practice it out loud."}`;
+}
 /* ================= roadmap ================= */
 const PHASES = ["Foundations", "Core patterns", "Advanced"];
 const RM = { draft: false, edit: false, form: null, sel: null, open: false, back: null };
@@ -1996,6 +2146,35 @@ function planForm(plan) {
   return plan ? { list: plan.list, end: plan.end, days: plan.days || 5, sd: plan.sd !== false, bh: plan.bh === true, goal: plan.goal === "master" ? "master" : "finish" }
     : { list: activeList(), end: addDays(S.today, 8 * 7 - 1), days: 5, sd: true, bh: true, goal: "finish" };
 }
+// Splits a list into `weeks` runs, in order, keeping each group (a pattern or a skill) inside one week.
+// A group splits across back-to-back weeks only when it won't fit in about a third more than an average
+// week. Dynamic programming over the cut points: the cost is each week's distance from the average,
+// plus a penalty for every cut inside a group, plus a steep one for going over the cap.
+function packWeeks(items, weeks, groupOf) {
+  const n = items.length, L = Math.max(1, weeks);
+  if (!n) return Array.from({ length: L }, () => []);
+  // Costs are relative to the average week, so short and long plans behave alike: an empty week costs 1,
+  // a split 0.3, and a week a third over average about 0.11. Long plans still split groups rather than
+  // leave weeks empty.
+  const t = n / L, cap = Math.max(Math.ceil(t * 4 / 3), Math.ceil(t) + 1), SPLIT = 0.3, INF = Infinity;
+  const g = items.map(groupOf), edge = j => j === 0 || j === n || g[j - 1] !== g[j];
+  const cost = (i, j) => { const sz = j - i; return ((sz - t) / t) ** 2 + (sz > cap ? (sz - cap) * 100 : 0) + (edge(j) ? 0 : SPLIT); };
+  let prev = new Float64Array(n + 1).fill(INF); prev[0] = 0;
+  const back = [];
+  for (let k = 1; k <= L; k++) {
+    const row = new Float64Array(n + 1).fill(INF), from = new Int32Array(n + 1);
+    for (let j = 0; j <= n; j++) for (let i = 0; i <= j; i++) {
+      if (prev[i] === INF) continue;
+      const c = prev[i] + cost(i, j);
+      if (c < row[j]) { row[j] = c; from[j] = i; }
+    }
+    back.push(from); prev = row;
+  }
+  const out = []; let j = n;
+  for (let k = L - 1; k >= 0; k--) { const i = back[k][j]; out.unshift(items.slice(i, j)); j = i; }
+  return out;
+}
+const DIFF_RANK = { Easy: 0, Medium: 1, Hard: 2 };
 function buildPlan(f) {
   const st = settings();
   const end = f.end > S.today ? f.end : addDays(S.today, 6);
@@ -2005,14 +2184,18 @@ function buildPlan(f) {
   const master = f.goal === "master";
   const reserve = W < 4 ? 0 : master ? Math.min(3, Math.max(1, Math.floor(W / 2) - 1)) : 1, L = W - reserve;
   const code = CATS[f.list].map(c => derive(Object.assign({}, c, { doc: S.docs.get(c.key) || null }), st));
-  const todo = code.filter(p => !p.n);
+  // patterns stay in list order; inside each one, easier problems come first
+  const todo = [], byTopic = new Map();
+  for (const p of code) if (!p.n) { if (!byTopic.has(p.topic)) byTopic.set(p.topic, []); byTopic.get(p.topic).push(p); }
+  for (const ps of byTopic.values()) todo.push(...ps.sort((a, b) => DIFF_RANK[a.diff] - DIFF_RANK[b.diff] || a.order - b.order));
   const sdAll = sdItems(st), sdTodo = f.sd ? sdAll.filter(p => !p.n) : [];
   const bhAll = bhItems(st), bhTodo = f.bh ? bhAll.filter(p => !p.n) : [];
   const part = (arr, i) => arr.slice(Math.floor(i * arr.length / L), Math.floor((i + 1) * arr.length / L)).map(p => p.key);
+  const dsaWeeks = packWeeks(todo, L, p => p.topic), bhWeeks = packWeeks(bhTodo, L, p => p.unit), keys = ps => ps.map(p => p.key);
   const weeks = [];
   for (let i = 0; i < W; i++) {
     const s = addDays(S.today, i * 7), e = i === W - 1 ? end : addDays(S.today, i * 7 + 6);
-    weeks.push(i < L ? { s, e, dsa: part(todo, i), sd: part(sdTodo, i), bh: part(bhTodo, i) } : i < W - 1 ? { s, e, dsa: [], sd: [], bh: [], review: true } : { s, e, dsa: [], sd: [], bh: [], polish: true });
+    weeks.push(i < L ? { s, e, dsa: keys(dsaWeeks[i]), sd: part(sdTodo, i), bh: keys(bhWeeks[i]) } : i < W - 1 ? { s, e, dsa: [], sd: [], bh: [], review: true } : { s, e, dsa: [], sd: [], bh: [], polish: true });
   }
   return { v: 1, list: f.list, goal: master ? "master" : "finish", start: S.today, end, days: Number(f.days) || 5, sd: !!f.sd, bh: !!f.bh, weeks,
     already: (code.length - todo.length) + (f.sd ? sdAll.length - sdTodo.length : 0) + (f.bh ? bhAll.length - bhTodo.length : 0) };
@@ -2612,7 +2795,7 @@ function renderDrawer(list) {
   $("#dr-next").innerHTML = others.length && !SESS.on ? `<span>${plural(others.length, "more review")} due</span><button class="btn btn-sm" data-act="open" data-key="${esc(others[0].key)}">Next: ${esc(others[0].name)}</button>` : "";
   for (const r of RATINGS) { const h = $("#iv-hint-" + r); if (h) h.textContent = ivText(p, r, true); }
   $("#f-date").max = S.today;
-  for (const b of $$(".rate")) b.setAttribute("aria-pressed", String(b.dataset.r === S.form.r));
+  for (const b of $$("#drawer .rate")) b.setAttribute("aria-pressed", String(b.dataset.r === S.form.r));
   updatePreview(p);
   $("#hist-title").textContent = p.n ? "History (" + p.n + ")" : "History";
   const ta = $("#dr-notes");
@@ -2868,7 +3051,7 @@ function saveAttempt() {
   const { a, p, msg } = logAttempt(S.open, f.r, extra);
   S.form = { d: S.today, r: null, min: "", note: "" };
   $("#f-min").value = ""; $("#f-note").value = ""; $("#f-date").value = S.today;
-  for (const b of $$(".rate")) b.setAttribute("aria-pressed", "false");
+  for (const b of $$("#drawer .rate")) b.setAttribute("aria-pressed", "false");
   S.hold = { key: p.key, msg, until: Date.now() + 4000 };
   updatePreview();
   if (a.r === "Green") confetti(rect.left + rect.width / 2, rect.top, p.status === "mastered" ? 140 : 70);
@@ -3464,8 +3647,13 @@ document.addEventListener("click", e => {
   if (act === "bh-round") return bhLaunch(mockRound(allItems().filter(p => p.track === "bh")).map(p => p.key));
   if (act === "bh-rate") return bhRate(el);
   if (act === "bh-copy") { const ok = copyText(BHL.prompt); el.textContent = ok ? "Copied" : "Couldn't copy"; setTimeout(() => { if (document.contains(el)) el.textContent = "Copy prompt"; }, 1800); return; }
-  if (act === "bh-ai") { saveProfile({ ai: el.dataset.ai }, AI[el.dataset.ai].name + " it is."); return; }
+  if (act === "bh-ai") { if (!profile().ai) BHV.setup = true; saveProfile({ ai: el.dataset.ai }, AI[el.dataset.ai].name + " it is."); return; }
   if (act === "bh-res-edit") return resumeModal();
+  if (act === "bh-sel") return bhSelect(key, false);
+  if (act === "bh-step") { const l = allItems().filter(p => p.track === "bh"), i = l.findIndex(p => p.key === BHV.key) + Number(el.dataset.d); if (l[i]) bhSelect(l[i].key, true); return; }
+  if (act === "bh-skill") { const sec = el.closest(".bh-skill"), open = !sec.classList.contains("is-open"); sec.classList.toggle("is-open", open); el.setAttribute("aria-expanded", String(open)); return; }
+  if (act === "bh-setup") { BHV.setup = true; BHV.shown = ""; render(); const c = $("#bh-setup-h"); if (c) c.scrollIntoView({ block: "nearest" }); return; }
+  if (act === "bh-setup-done") { BHV.setup = false; BHV.shown = ""; render(); const b = $("[data-act=bh-setup]"); if (b) b.focus(); return; }
   if (act === "bh-res-remove") return confirmModal("Remove your resume?", "Practice prompts won't include it until you add it again.", "Remove", () => saveProfile({ resume: "", resumeName: "", resumeAt: "" }, "Resume removed."));
   if (act === "close") return closeDrawer();
   if (act === "open") return openDrawer(key, false);
@@ -3496,7 +3684,7 @@ document.addEventListener("click", e => {
   if (act === "dequeue") return removeFromQueue(key);
   if (act === "queue-remove" || act === "sched-reset") return clearSched(key);
   if (act === "resched") return reschedModal(key);
-  if (act === "rate") { S.form.r = el.dataset.r; S.hold = null; for (const b of $$(".rate")) b.setAttribute("aria-pressed", String(b === el)); return updatePreview(); }
+  if (act === "rate") { S.form.r = el.dataset.r; S.hold = null; for (const b of $$("#drawer .rate")) b.setAttribute("aria-pressed", String(b === el)); return updatePreview(); }
   if (act === "status") { S.filter.status = el.dataset.k; return renderProblemList(allItems().filter(p => p.track === "code")); }
   if (act === "jump") { const u = $("#unit-" + el.dataset.u); if (u) u.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }); return; }
   if (act === "howto-hide") { setPref("howto", "hidden"); return render(); }
