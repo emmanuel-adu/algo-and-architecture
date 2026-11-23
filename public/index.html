@@ -336,21 +336,39 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .chip[aria-pressed="true"] b { color: var(--chip-b); }
 .chip.due b { color: var(--red-ink); }
 .plist { overflow: hidden; }
-.prow, .phead { display: grid; grid-template-columns: 34px minmax(0, 1fr) 66px 150px 60px 60px 128px 86px; gap: 12px; align-items: center; padding: 10px 18px; }
+.prow, .phead { display: grid; grid-template-columns: 30px minmax(0, 1fr) 62px 118px 54px 108px 76px; gap: 12px; align-items: center; padding: 10px 18px; }
 .phead { font-size: 12.5px; font-weight: 700; color: var(--ink-2); border-bottom: 1px solid var(--line); background: var(--surface-2); }
-.prow { border-top: 1px solid var(--line); cursor: pointer; }
+.prow { border-top: 1px solid var(--line); cursor: pointer; min-height: 49px; }
 .prow:hover { background: var(--surface-2); }
 .prow:hover .p-name { color: var(--code-ink); }
 .pgroup { padding: 18px 18px 8px; display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--line); }
 .phead + .pgroup { border-top: 0; }
 .pgroup h3 { font-size: 16.5px; }
-.pgroup .prog { flex: 0 1 140px; height: 8px; border-radius: 99px; overflow: hidden; background: var(--heat-0); display: flex; }
-.pgroup .prog span { background: var(--heat-2); }
-.pgroup .prog span + span { background: var(--green); }
+/* progress bars: mastered, then started, then the rest */
+.pgroup .prog, .pat .prog { display: flex; border-radius: 99px; overflow: hidden; background: var(--heat-0); }
+.pgroup .prog { flex: 0 1 140px; height: 8px; }
+.pgroup .prog span:first-child, .pat .prog span:first-child { background: var(--green); }
+.pgroup .prog span + span, .pat .prog span + span { background: var(--heat-2); }
 .pgroup small { color: var(--ink-2); font-size: 12.5px; font-weight: 600; }
 .pgroup + .prow { border-top: 0; }
 .p-num { font-size: 13px; color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
-.p-name { font-weight: 600; min-width: 0; }
+.p-name { font-weight: 600; min-width: 0; display: flex; align-items: flex-start; gap: 10px; }
+/* a dot and a mastered check take the same width, so names line up */
+.p-name .stu-dot { margin: 5px 2px 0; }
+.p-name .stu-dot.is-m { margin: 3px 0 0; }
+.p-title { display: block; min-width: 0; }
+/* the next-review column: quiet text, red only when it's due */
+.when { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+.when.due { color: var(--red-ink); }
+.when.due::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+.when.done { color: var(--green-ink); }
+.when.done svg { width: 12px; height: 12px; }
+.when.mute { color: var(--muted); }
+/* the queue button stays quiet until its row is pointed at */
+.prow .qbtn { background: transparent; border-color: transparent; color: var(--muted); }
+.prow:hover .qbtn, .prow:focus-within .qbtn { border-color: var(--line); background: var(--control); color: var(--ink-2); }
+.prow .qbtn:hover { border-color: var(--ink-2); color: var(--ink); }
+@media (pointer: coarse) { .prow .qbtn { border-color: var(--line); background: var(--control); color: var(--ink-2); } }
 .p-date { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .p-date.none { color: var(--muted); }
 .p-status { justify-self: start; }
@@ -674,7 +692,8 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
   .howto .btn { grid-column: 2; grid-row: 2; align-self: start; }
   .two, .set-grid { grid-template-columns: 1fr; }
   .tiles { grid-template-columns: repeat(2, 1fr); }
-  .prow, .phead { grid-template-columns: 28px minmax(0, 1fr) 136px; }
+  .prow, .phead { grid-template-columns: 28px minmax(0, 1fr) 108px; }
+  .p-name .stu-dot { display: none; }
   .c-diff, .c-hist, .c-last, .c-next { display: none; }
   /* the queue button sits under the status, so it stays reachable without the wide table */
   .prow { row-gap: 6px; }
@@ -796,7 +815,7 @@ html.sess-on { overflow: hidden; }
 .qcard .qr em { display: inline; }
 @media (max-width: 420px) { .qcard .qr em { display: none; } }
 /* small phones: a tighter row gives the problem name room next to the status */
-@media (max-width: 420px) { .prow, .phead { grid-template-columns: 20px minmax(0, 1fr) 136px; gap: 10px; } .prow, .phead, .pgroup { padding-left: 12px; padding-right: 12px; } }
+@media (max-width: 420px) { .prow, .phead { grid-template-columns: 20px minmax(0, 1fr) 100px; gap: 10px; } .prow, .phead, .pgroup { padding-left: 12px; padding-right: 12px; } }
 /* grid children may shrink, so wide content (the heatmap) scrolls inside its card instead of widening the page */
 .two > * { min-width: 0; }
 .q-more { width: 30px; height: 30px; color: var(--ink-2); }
@@ -847,7 +866,7 @@ html.sess-on { overflow: hidden; }
 .stu.bh { --acc: var(--bh); --acc-soft: var(--bh-soft); --acc-ink: var(--bh-ink); }
 .stu-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; }
 .stu-top h2 { font-size: clamp(28px, 3.6vw, 38px); font-weight: 800; }
-.stu-top .prose { margin: 6px 0 0; max-width: 70ch; }
+.stu-top .prose { margin: 6px 0 0; max-width: 70ch; text-wrap: pretty; }
 .stu-top-act { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 .stu-top-act:empty { display: none; }
 .stu-top-act .fine { max-width: none; }
@@ -899,6 +918,34 @@ html.sess-on { overflow: hidden; }
 .stu-note textarea { min-height: 150px; resize: vertical; font-size: 14.5px; line-height: 1.55; }
 .stu-rate { display: flex; flex-direction: column; gap: 10px; }
 .stu-rate .rate[data-r="Red"]:hover { background: var(--red-soft); } .stu-rate .rate[data-r="Yellow"]:hover { background: var(--yellow-soft); } .stu-rate .rate[data-r="Green"]:hover { background: var(--green-soft); }
+/* coding: patterns in the rail, each with its progress and due count */
+.stu.code { --acc: var(--code); --acc-soft: var(--code-soft); --acc-ink: var(--code-ink); grid-template-columns: 244px minmax(0, 1fr); }
+.code-title { display: flex; align-items: baseline; gap: 6px 12px; flex-wrap: wrap; }
+.code-top-act { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.code-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.stu.code { scroll-margin-top: 80px; }
+.code-topic { display: none; }
+.pat-list { list-style: none; margin: 0; padding: 0; }
+.pat-list + .pat-list { border-top: 1px solid var(--line); margin-top: 4px; padding-top: 4px; }
+.stu-item.pat { flex-direction: column; align-items: stretch; gap: 7px; padding: 9px 10px 10px 12px; }
+.pat-top { display: flex; align-items: center; gap: 8px; }
+.pat-n { font-size: 12.5px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stu-item.pat.is-sel .pat-n { color: var(--acc-ink); }
+.pat .prog { height: 4px; }
+.stu-item.pat::before { top: 9px; bottom: 9px; }
+@media (max-width: 1160px) {
+  .stu.code { grid-template-columns: minmax(0, 1fr); }
+  .code-rail { display: none; }
+  .code-topic { display: block; }
+}
+@media (max-width: 640px) {
+  /* phones: search and pattern full width, the two selects side by side */
+  .code-main .toolbar > label { flex: 1 1 calc(50% - 5px); min-width: 0; }
+  .code-main .toolbar > .lsearch, .code-main .toolbar > .code-topic { flex-basis: 100%; }
+  .code-main .toolbar select { width: 100%; }
+  .pgroup { flex-wrap: wrap; row-gap: 6px; }
+  .pgroup h3 { flex-basis: 100%; }
+}
 /* system design: what to be able to explain, or the interview run as minutes on a bar */
 .sd-ready { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .sd-ready li { position: relative; padding-left: 18px; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; }
@@ -1720,25 +1767,35 @@ function renderToday(list) {
 }
 
 /* ----- coding ----- */
+// The Coding tab: patterns in a rail on the left with their progress, the problem list on the right.
+// The rail filters the list to one pattern; on narrower screens a select does the same job.
 function renderProblems(list) {
-  const v = $("#view");
+  const v = $("#view"), weeks = activeList() === "grind75";
   if (S.shellFor !== "problems") {
-    const topics = topicList(list);
     v.innerHTML = `
-    <section class="sec">
-      <div class="sec-head"><div><h2>Coding: ${esc(LISTS[activeList()].name)} <button class="btn btn-ghost btn-sm" data-act="lists" aria-haspopup="menu" aria-expanded="false" style="vertical-align:4px">Switch list</button></h2><p class="prose" style="margin-top:4px">${activeList() === "grind75" ? "Grouped by week" : "Grouped by pattern"}. Click a problem for its history, notes and worksheet, or use + Queue to move it into today's reviews.</p></div><button class="btn btn-sm" data-act="add-problem">+ Add a problem</button></div>
-      <div class="toolbar">
-        <label class="lsearch"><span class="sr">Filter problems</span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 1v-7z" stroke-linejoin="round"/></svg>
-          <input id="f-q" type="text" placeholder="Filter by name, topic or notes" value="${esc(S.filter.q)}" autocomplete="off">
-        </label>
-        <label><span class="sr">Topic</span><select id="f-topic"><option value="">${activeList() === "grind75" ? "All weeks" : "All topics"}</option>${topics.map(t => `<option ${t === S.filter.topic ? "selected" : ""}>${esc(t)}</option>`).join("")}</select></label>
-        <label><span class="sr">Difficulty</span><select id="f-diff"><option value="">Any difficulty</option>${["Easy","Medium","Hard"].map(d => `<option ${d === S.filter.diff ? "selected" : ""}>${d}</option>`).join("")}</select></label>
-        <label><span class="sr">Sort</span><select id="f-sort">${[["order","List order"],["next","Next review"],["last","Last attempt"],["count","Most attempts"],["name","Name"]].map(([k, l]) => `<option value="${k}" ${k === S.filter.sort ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+    <section class="stu-top">
+      <div>
+        <div class="code-title"><h2>Coding: ${esc(LISTS[activeList()].name)}</h2><button class="btn btn-ghost btn-sm" data-act="lists" aria-haspopup="menu" aria-expanded="false">Switch list</button></div>
+        <p class="prose" id="code-sum"></p>
       </div>
-      <div class="chips" id="status-chips" role="group" aria-label="Filter by status"></div>
-      <div class="card plist" id="plist"></div>
-    </section>`;
+      <div class="code-top-act" id="code-top-act"></div>
+    </section>
+    <div class="stu code">
+      <nav class="card stu-rail code-rail" aria-label="${weeks ? "Weeks" : "Patterns"}"><div class="stu-rail-list" id="prail"></div></nav>
+      <div class="code-main">
+        <div class="toolbar">
+          <label class="lsearch"><span class="sr">Filter problems</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 1v-7z" stroke-linejoin="round"/></svg>
+            <input id="f-q" type="text" placeholder="Filter by name, pattern or notes" value="${esc(S.filter.q)}" autocomplete="off">
+          </label>
+          <label class="code-topic"><span class="sr">${weeks ? "Week" : "Pattern"}</span><select id="f-topic"></select></label>
+          <label><span class="sr">Difficulty</span><select id="f-diff"><option value="">Any difficulty</option>${["Easy", "Medium", "Hard"].map(d => `<option ${d === S.filter.diff ? "selected" : ""}>${d}</option>`).join("")}</select></label>
+          <label><span class="sr">Sort</span><select id="f-sort">${[["order", "List order"], ["next", "Next review"], ["last", "Last attempt"], ["count", "Most attempts"], ["name", "Name"]].map(([k, l]) => `<option value="${k}" ${k === S.filter.sort ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+        </div>
+        <div class="chips" id="status-chips" role="group" aria-label="Filter by status"></div>
+        <div class="card plist" id="plist"></div>
+      </div>
+    </div>`;
     S.shellFor = "problems";
     const re = () => renderProblemList(allItems().filter(p => p.track === "code"));
     $("#f-q").addEventListener("input", e => { S.filter.q = e.target.value; re(); });
@@ -1748,10 +1805,36 @@ function renderProblems(list) {
   }
   renderProblemList(list);
 }
+// Progress as a thin bar: mastered, then started, then the rest.
+const progBar = (all, s, m) => `<span class="prog" aria-hidden="true"><span style="flex:${m}"></span><span style="flex:${s - m}"></span><i style="flex:${all - s}"></i></span>`;
+function codeRail(list, topics) {
+  const f = S.filter, row = (t, label, its) => {
+    const s = its.filter(p => p.n).length, m = its.filter(p => p.status === "mastered").length, due = its.filter(p => p.status === "due").length, on = f.topic === t;
+    return `<li><button type="button" class="stu-item pat${on ? " is-sel" : ""}" data-act="code-topic" data-t="${esc(t)}" aria-pressed="${on}">
+      <span class="pat-top"><span class="stu-item-q">${esc(label)}</span>${due ? `<span class="stu-due" data-tip="${plural(due, "review")} due">${due}</span>` : ""}<span class="pat-n">${s}/${its.length}</span></span>
+      ${progBar(its.length, s, m)}</button></li>`;
+  };
+  return `<ul class="pat-list">${row("", activeList() === "grind75" ? "All weeks" : "All patterns", list)}</ul>
+    <ul class="pat-list">${topics.map(t => row(t, t, list.filter(p => p.topic === t))).join("")}</ul>`;
+}
+function whenCell(p) {
+  if (p.status === "due") return `<span class="when due">${p.delta < 0 ? plural(-p.delta, "day") + " late" : "Due today"}</span>`;
+  if (p.status === "mastered") return `<span class="when done">${CHECK_SM}Mastered</span>`;
+  if (p.status === "paused") return `<span class="when mute">Paused</span>`;
+  if (p.status === "scheduled") return `<span class="when" data-tip="${esc(fmtDay(p.next))}">${esc(rel(p.next).replace(/^in /, "In "))}</span>`;
+  return `<span class="when mute"><span class="sr">Not started</span></span>`;
+}
 function renderProblemList(list) {
-  const f = S.filter;
+  const f = S.filter, topics = topicList(list);
+  if (f.topic && !topics.includes(f.topic)) f.topic = "";
   const counts = { all: list.length, due: 0, scheduled: 0, new: 0, mastered: 0, paused: 0, bumped: 0 };
   for (const p of list) { counts[p.status]++; if (p.bumped) counts.bumped++; }
+  const started = list.filter(p => p.n).length;
+  $("#code-sum").innerHTML = `${list.length} problems in ${topics.length} ${activeList() === "grind75" ? "weeks" : "patterns"}. ${started ? `${started} started, ${counts.mastered} mastered${counts.due ? `, <b>${counts.due} due</b>` : ""}.` : "Open one to solve it, then rate how it went."}`;
+  $("#code-top-act").innerHTML = (counts.due ? `<button class="btn btn-primary" data-act="code-review">Review ${counts.due} due</button>` : "") + `<button class="btn" data-act="add-problem">+ Add a problem</button>`;
+  const rail = $("#prail"), top = rail ? rail.scrollTop : 0;
+  if (rail) { rail.innerHTML = codeRail(list, topics); rail.scrollTop = top; }
+  $("#f-topic").innerHTML = `<option value="">${activeList() === "grind75" ? "All weeks" : "All patterns"}</option>` + topics.map(t => `<option ${t === f.topic ? "selected" : ""}>${esc(t)}</option>`).join("");
   $("#status-chips").innerHTML = [["all","All"],["due","Due"],["scheduled","Scheduled"],["new","Not started"],["mastered","Mastered"]].concat(counts.bumped || f.status === "bumped" ? [["bumped","Moved up"]] : []).concat(counts.paused || f.status === "paused" ? [["paused","Paused"]] : [])
     .map(([k, l]) => `<button class="chip ${k === "due" && counts.due ? "due" : ""}" data-act="status" data-k="${k}" aria-pressed="${f.status === k}">${l} <b>${counts[k]}</b></button>`).join("");
   const q = f.q.trim().toLowerCase();
@@ -1762,29 +1845,29 @@ function renderProblemList(list) {
   else if (f.sort === "last") rows.sort((a, b) => (b.last ? b.last.d : "").localeCompare(a.last ? a.last.d : "") || a.order - b.order);
   else if (f.sort === "count") rows.sort((a, b) => b.n - a.n || a.order - b.order);
   else if (f.sort === "name") rows.sort((a, b) => a.name.localeCompare(b.name));
+  // Due problems are already in today's queue; taking one out pauses it, so that lives on its page.
   const row = p => `
     <div class="prow" role="button" tabindex="0" data-act="open" data-key="${esc(p.key)}">
       <span class="p-num">${numLabel(p)}</span>
-      <span class="p-name">${esc(p.name)}${p.sub && p.sub !== p.topic ? ` <span class="badge">${esc(p.sub)}</span>` : ""}${p.premium ? ` <span class="badge" title="LeetCode Premium. Free on NeetCode.">Premium</span>` : ""}${p.custom ? ` <span class="badge">Added</span>` : ""}
-        <span class="p-m"><span class="diff-${p.diff}">${p.diff}</span>${beads(p, 10)}${p.last ? `<span>Last ${fmtShort(p.last.d)}</span>` : ""}</span></span>
+      <span class="p-name">${stuDot(p)}<span class="p-title">${esc(p.name)}${p.sub && p.sub !== p.topic ? ` <span class="badge">${esc(p.sub)}</span>` : ""}${p.premium ? ` <span class="badge" title="LeetCode Premium. Free on NeetCode.">Premium</span>` : ""}${p.custom ? ` <span class="badge">Added</span>` : ""}
+        <span class="p-m"><span class="diff-${p.diff}">${p.diff}</span>${beads(p, 10)}${p.last ? `<span>Last ${fmtShort(p.last.d)}</span>` : ""}</span></span></span>
       <span class="c-diff meta diff-${p.diff}">${p.diff}</span>
-      <span class="c-hist">${beads(p, 12, S.justLogged === p.key)}</span>
+      <span class="c-hist">${beads(p, 7, S.justLogged === p.key)}</span>
       <span class="c-last p-date ${p.last ? "" : "none"}">${p.last ? fmtShort(p.last.d) : "–"}</span>
-      <span class="c-next p-date ${p.next && p.status !== "mastered" ? "" : "none"}">${p.next && p.status !== "mastered" ? fmtShort(p.next) : "–"}</span>
-      <span class="p-status">${statusPill(p)}</span>
-      <span class="c-q">${p.status === "due" ? `<button class="qbtn on" data-act="dequeue" data-key="${esc(p.key)}" data-tip="Remove from today's queue">In queue ✕</button>` : `<button class="qbtn" data-act="queue-add" data-key="${esc(p.key)}" data-tip="Add to today's queue">+ Queue</button>`}</span>
+      <span class="p-status">${whenCell(p)}</span>
+      <span class="c-q">${p.status === "due" ? "" : `<button class="qbtn" data-act="queue-add" data-key="${esc(p.key)}" data-tip="Add to today's queue" aria-label="Add ${esc(p.name)} to today's queue">+ Queue</button>`}</span>
     </div>`;
   let body = "";
-  if (!rows.length) body = `<div class="empty">No problems match these filters.</div>`;
+  if (!rows.length) body = `<div class="empty">No problems match these filters.${f.topic || f.diff || q || f.status !== "all" ? ` <button type="button" class="linkish" data-act="code-clear">Show all problems</button>` : ""}</div>`;
   else if (f.sort === "order") {
     const groups = new Map();
     for (const p of rows) { if (!groups.has(p.topic)) groups.set(p.topic, []); groups.get(p.topic).push(p); }
     for (const [t, ps] of groups) {
       const all = list.filter(p => p.topic === t), s = all.filter(p => p.n).length, m = all.filter(p => p.status === "mastered").length;
-      body += `<div class="pgroup"><h3>${esc(t)}</h3><span class="prog" aria-hidden="true"><span style="flex:${s - m}"></span><span style="flex:${m}"></span><i style="flex:${all.length - s}"></i></span><small>${s} of ${all.length} started${m ? ", " + m + " mastered" : ""}</small></div>` + ps.map(row).join("");
+      body += `<div class="pgroup"><h3>${esc(t)}</h3>${progBar(all.length, s, m)}<small>${s} of ${all.length} started${m ? ", " + m + " mastered" : ""}</small></div>` + ps.map(row).join("");
     }
   } else body = rows.map(row).join("");
-  $("#plist").innerHTML = `<div class="phead"><span>#</span><span>Problem</span><span class="c-diff">Level</span><span class="c-hist">Attempts</span><span class="c-last">Last</span><span class="c-next">Next</span><span>Status</span><span class="c-q"></span></div>` + body;
+  $("#plist").innerHTML = `<div class="phead"><span>#</span><span>Problem</span><span class="c-diff">Level</span><span class="c-hist">Attempts</span><span class="c-last">Last</span><span>Next review</span><span class="c-q"></span></div>` + body;
 }
 
 /* ----- system design ----- */
@@ -3786,6 +3869,15 @@ document.addEventListener("click", e => {
   if (act === "resched") return reschedModal(key);
   if (act === "rate") { S.form.r = el.dataset.r; S.hold = null; for (const b of $$("#drawer .rate")) b.setAttribute("aria-pressed", String(b === el)); return updatePreview(); }
   if (act === "status") { S.filter.status = el.dataset.k; return renderProblemList(allItems().filter(p => p.track === "code")); }
+  if (act === "code-topic" || act === "code-clear") {
+    if (act === "code-clear") Object.assign(S.filter, { topic: "", diff: "", q: "", status: "all" }); else S.filter.topic = el.dataset.t;
+    if (act === "code-clear") { $("#f-q").value = ""; $("#f-diff").value = ""; }
+    renderProblemList(allItems().filter(p => p.track === "code"));
+    // picked further down the page: bring the top of the rail and list back into view
+    const l = $(".stu.code"); if (l && l.getBoundingClientRect().top < 70) l.scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" });
+    return;
+  }
+  if (act === "code-review") return startSession(allItems().filter(p => p.track === "code" && p.status === "due").sort(dueSort).map(p => p.key));
   if (act === "howto-hide") { setPref("howto", "hidden"); return render(); }
   if (act === "howto-show") { setPref("howto", null); return render(); }
   if (act === "ws-open") return openWorksheet(key || S.open);
