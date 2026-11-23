@@ -1,6 +1,6 @@
 # Algo and Architecture
 
-Spaced-repetition practice for data structures and algorithms (Blind 75, NeetCode 150, Grind 75) and a system design path. Solve a problem, rate it Red, Yellow or Green, and it comes back when it's due. Every problem has notes, a full attempt history and an Excalidraw worksheet. It comes in light and dark, following your device until you pick one.
+Spaced-repetition practice for data structures and algorithms (Blind 75, NeetCode 150, Grind 75) and a system design path. Solve a problem, rate it Red, Yellow or Green, and it comes back when it's due. It counts as mastered after two Greens in a row at least two weeks apart, so one lucky solve after a string of Reds doesn't end its reviews. Every problem has notes, a full attempt history and an Excalidraw worksheet. It comes in light and dark, following your device until you pick one.
 
 The Behavioral tab covers 28 common behavioral questions in 7 skills, from conflict to failure to leadership. Pick Claude or ChatGPT, add your resume and target role, and the app writes an interviewer prompt and opens your assistant with it. You answer out loud in voice mode, the assistant follows up and rates you Red, Yellow or Green, and you log that rating so weaker answers come back. Your resume stays in the app: it's never synced to GitHub.
 

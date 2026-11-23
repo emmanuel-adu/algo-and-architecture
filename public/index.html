@@ -256,6 +256,7 @@ main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 80px; display: flex
 .qbtn { border: 1px solid var(--line); background: var(--control); border-radius: 8px; padding: 3px 9px; font-size: 12.5px; font-weight: 700; cursor: pointer; color: var(--ink-2); white-space: nowrap; }
 .qbtn:hover { border-color: var(--ink-2); color: var(--ink); }
 .qbtn.on { background: var(--yellow-soft); color: var(--yellow-ink); border-color: transparent; }
+@media (pointer: coarse) { .qbtn { padding: 6px 11px; } }
 .sched-line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .datechips { display: flex; flex-wrap: wrap; gap: 6px; }
 
@@ -673,8 +674,14 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
   .howto .btn { grid-column: 2; grid-row: 2; align-self: start; }
   .two, .set-grid { grid-template-columns: 1fr; }
   .tiles { grid-template-columns: repeat(2, 1fr); }
-  .prow, .phead { grid-template-columns: 28px minmax(0, 1fr) 120px; }
-  .c-diff, .c-hist, .c-last, .c-next, .c-q { display: none; }
+  .prow, .phead { grid-template-columns: 28px minmax(0, 1fr) 136px; }
+  .c-diff, .c-hist, .c-last, .c-next { display: none; }
+  /* the queue button sits under the status, so it stays reachable without the wide table */
+  .prow { row-gap: 6px; }
+  .prow .p-num, .prow .p-name { grid-row: 1 / span 2; }
+  .prow .p-status { grid-column: 3; grid-row: 1; align-self: end; }
+  .prow .c-q { grid-column: 3; grid-row: 2; align-self: start; }
+  .phead .c-q { display: none; }
   .p-m { display: flex; gap: 10px; align-items: center; margin-top: 4px; color: var(--ink-2); font-size: 12.5px; flex-wrap: wrap; font-weight: 500; }
   .brow { grid-template-columns: 1fr 60px 40px; }
   .brow .tbar { grid-column: 1 / -1; grid-row: 2; }
@@ -788,6 +795,8 @@ html.sess-on { overflow: hidden; }
 .qr em { display: none; font-style: normal; font-weight: 600; font-size: 12px; color: var(--muted); }
 .qcard .qr em { display: inline; }
 @media (max-width: 420px) { .qcard .qr em { display: none; } }
+/* small phones: a tighter row gives the problem name room next to the status */
+@media (max-width: 420px) { .prow, .phead { grid-template-columns: 20px minmax(0, 1fr) 136px; gap: 10px; } .prow, .phead, .pgroup { padding-left: 12px; padding-right: 12px; } }
 /* grid children may shrink, so wide content (the heatmap) scrolls inside its card instead of widening the page */
 .two > * { min-width: 0; }
 .q-more { width: 30px; height: 30px; color: var(--ink-2); }
@@ -1123,7 +1132,7 @@ const GUIDE = {
   bh: { Red: "No story came to mind, or it wandered with no clear result.", Yellow: "Had a story, but my part, the numbers or the ending were fuzzy.", Green: "Clear story in about 2 minutes: my actions, a real result, and steady follow-up answers." }
 };
 const guideFor = it => it.track === "code" ? GUIDE.code : it.track === "bh" ? GUIDE.bh : it.kind === "design" ? GUIDE.design : GUIDE.learn;
-const DEFAULTS = { code: { intervals: { Red: 1, Yellow: 3, Green: 18 }, mastered: 3 }, sd: { intervals: { Red: 2, Yellow: 7, Green: 21 }, mastered: 2 }, bh: { intervals: { Red: 2, Yellow: 5, Green: 21 }, mastered: 2 } };
+const DEFAULTS = { code: { intervals: { Red: 1, Yellow: 3, Green: 18 }, greens: 2 }, sd: { intervals: { Red: 2, Yellow: 7, Green: 21 }, greens: 2 }, bh: { intervals: { Red: 2, Yellow: 5, Green: 21 }, greens: 2 } };
 const VIEWS = ["today", "roadmap", "problems", "design", "behavioral", "progress", "config"];
 
 /* ================= utils ================= */
@@ -1168,12 +1177,27 @@ const DL = true; // downloads work on this site
 function settings() {
   const d = S.docs.get("settings") || {};
   const pick = (iv, m, def) => {
-    const out = { intervals: {}, mastered: def.mastered };
+    const out = { intervals: {}, greens: def.greens };
     for (const r of RATINGS) { const v = Number(iv && iv[r]); out.intervals[r] = Number.isFinite(v) && v >= 0 ? Math.round(v) : def.intervals[r]; }
-    const mm = Number(m); if (Number.isFinite(mm) && mm >= 1) out.mastered = Math.round(mm);
+    const mm = Number(m); if (Number.isFinite(mm) && mm >= 2) out.greens = Math.min(10, Math.round(mm));
     return out;
   };
-  return { code: pick(d.intervals, d.mastered, DEFAULTS.code), sd: pick(d.sdIntervals, d.sdMastered, DEFAULTS.sd), bh: pick(d.bhIntervals, d.bhMastered, DEFAULTS.bh) };
+  // the old mastered/sdMastered/bhMastered counted attempts, not Greens, so they're ignored
+  return { code: pick(d.intervals, d.masterGreens, DEFAULTS.code), sd: pick(d.sdIntervals, d.sdMasterGreens, DEFAULTS.sd), bh: pick(d.bhIntervals, d.bhMasterGreens, DEFAULTS.bh) };
+}
+// Mastered: the latest ratings are Green, at least `greens` in a row, spread over two weeks or more.
+// One Green after a run of Reds isn't mastery; getting it again weeks later is. lib/github.js mirrors this.
+const MASTER_DAYS = 14;
+function greenRun(atts) { let i = atts.length; while (i && atts[i - 1].r === "Green") i--; return { n: atts.length - i, from: i < atts.length ? atts[i].d : null }; }
+function masteredBy(atts, greens) {
+  const run = greenRun(atts);
+  return run.n >= greens && diffDays(run.from, atts[atts.length - 1].d) >= MASTER_DAYS;
+}
+// What it still takes, for an item whose latest rating is Green but isn't mastered yet.
+function masterHint(p, greens) {
+  const run = greenRun(p.atts); if (!run.n || p.status === "mastered") return "";
+  const more = Math.max(1, greens - run.n), after = addDays(run.from, MASTER_DAYS);
+  return more > 1 ? `${more} more Greens in a row, over two weeks, master it.` : after > S.today ? `A Green on or after ${fmtShort(after)} masters it.` : "Another Green masters it.";
 }
 
 function derive(it, st) {
@@ -1183,7 +1207,7 @@ function derive(it, st) {
     .sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : a._i - b._i);
   const n = atts.length, last = n ? atts[n - 1] : null;
   const normalNext = last ? addDays(last.d, cfg.intervals[last.r]) : null;
-  const mastered = !!last && last.r === "Green" && n >= cfg.mastered;
+  const mastered = masteredBy(atts, cfg.greens);
   const sched = doc && doc.sched && (doc.sched.paused === true || /^\d{4}-\d{2}-\d{2}$/.test(doc.sched.d)) ? doc.sched : null;
   let status = "new", next = null, delta = null;
   if (sched && sched.paused) status = "paused";
@@ -1566,7 +1590,7 @@ const numLabel = p => p.num ? pad(p.num) : "+";
 // What a rating does next: when the item comes back, or that it becomes mastered.
 function ivText(p, r, long) {
   const st = settings()[p.track];
-  if (r === "Green" && p.n + 1 >= st.mastered) return "mastered";
+  if (r === "Green" && masteredBy(p.atts.concat({ d: S.today, r }), st.greens)) return "mastered";
   return long ? "+" + plural(st.intervals[r], "day") : "+" + st.intervals[r] + "d";
 }
 function quick(p, label = "How did it go?") {
@@ -2718,7 +2742,7 @@ function renderConfig() {
   const st = settings();
   if (S.shellFor !== "config") {
     const ivRows = (t, g) => RATINGS.map(r => `<label for="iv-${t}-${r}"><span class="rtag r-${r}">${r}</span><small>${g[r]}</small></label><span><input id="iv-${t}-${r}" type="number" min="0" max="365" step="1" inputmode="numeric"> <span class="unit-lbl">days</span></span>`).join("") +
-      `<label for="iv-${t}-m"><b>Mastered</b><small>Latest rating is Green and it has at least this many attempts. Mastered items leave the review queue.</small></label><span><input id="iv-${t}-m" type="number" min="1" max="20" step="1" inputmode="numeric"> <span class="unit-lbl">tries</span></span>`;
+      `<label for="iv-${t}-m"><b>Mastered</b><small>After this many Greens in a row, spread over at least two weeks. Mastered items leave the review queue.</small></label><span><input id="iv-${t}-m" type="number" min="2" max="10" step="1" inputmode="numeric"> <span class="unit-lbl">Greens</span></span>`;
     $("#view").innerHTML = `
     <section class="sec">
       <div class="sec-head"><h2>Settings</h2></div>
@@ -2773,7 +2797,7 @@ function renderConfig() {
 function fillIntervals(st, force) {
   for (const t of ["code", "sd", "bh"]) {
     for (const r of RATINGS) { const el = $(`#iv-${t}-${r}`); if (el && (force || document.activeElement !== el)) el.value = st[t].intervals[r]; }
-    const m = $(`#iv-${t}-m`); if (m && (force || document.activeElement !== m)) m.value = st[t].mastered;
+    const m = $(`#iv-${t}-m`); if (m && (force || document.activeElement !== m)) m.value = st[t].greens;
   }
 }
 function renderConfigActions() {
@@ -2853,7 +2877,7 @@ function renderDrawer(list) {
   $("#dr-links").innerHTML = linkBtns(p, "btn btn-sm " + (p.track === "sd" ? "btn-sd" : p.track === "bh" ? "btn-bh" : "btn-primary"));
   $("#dr-status").innerHTML = statusPill(p) + (p.last
     ? (p.status === "paused" ? `<span>Paused. It stays out of your reviews until you add it back.</span>` : p.status === "mastered" ? `<span>Green on attempt ${p.n}. No more reviews needed.</span>`
-      : `<span>Next review <b>${fmtDay(p.next)}</b> (${rel(p.next)})${p.sched && p.normalNext && !p.wasMastered ? `, normally ${fmtShort(p.normalNext)}` : ""}</span>`)
+      : `<span>Next review <b>${fmtDay(p.next)}</b> (${rel(p.next)})${p.sched && p.normalNext && !p.wasMastered ? `, normally ${fmtShort(p.normalNext)}` : ""}.${(h => h ? " " + h : "")(masterHint(p, settings()[p.track].greens))}</span>`)
     : p.status === "paused" ? `<span>Paused. It stays out of your reviews until you add it back.</span>`
     : p.sched ? `<span>Planned for <b>${fmtDay(p.next)}</b> (${rel(p.next)})</span>` : `<span>Not attempted yet</span>`) + (p.n ? beads(p, 20, S.justLogged === p.key) : "");
   $("#dr-sched").innerHTML = (p.status !== "due" ? `<button class="btn btn-sm" data-act="queue-add" data-key="${esc(p.key)}">Add to today's queue</button>` : `<button class="btn btn-sm" data-act="dequeue" data-key="${esc(p.key)}">Remove from queue</button>`) +
@@ -2888,7 +2912,7 @@ function updatePreview(pIn) {
   if (!f.r) { el.textContent = "Pick a rating to see when it comes back."; return; }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(f.d)) { el.textContent = "Pick a date."; return; }
   if (p.last && f.d < p.last.d) { el.innerHTML = `Adds an earlier attempt. Next review stays <b>${fmtDay(p.next)}</b>.`; return; }
-  if (f.r === "Green" && p.n + 1 >= st.mastered) { el.innerHTML = `This marks it <b>mastered</b>.`; return; }
+  if (f.r === "Green" && masteredBy(p.atts.concat({ d: f.d, r: "Green" }), st.greens)) { el.innerHTML = `This marks it <b>mastered</b>.`; return; }
   el.innerHTML = `Comes back <b>${fmtDay(addDays(f.d, st.intervals[f.r]))}</b>`;
 }
 function renderHistory(p) {
@@ -3159,10 +3183,12 @@ function saveIntervals() {
   for (const t of ["code", "sd", "bh"]) {
     const iv = {};
     for (const r of RATINGS) { const n = parseInt($(`#iv-${t}-${r}`).value, 10); if (!(n >= 0 && n <= 365)) { toast(r + " needs a number of days from 0 to 365."); return; } iv[r] = n; }
-    const m = parseInt($(`#iv-${t}-m`).value, 10); if (!(m >= 1 && m <= 20)) { toast("Mastered needs a number from 1 to 20."); return; }
+    const m = parseInt($(`#iv-${t}-m`).value, 10); if (!(m >= 2 && m <= 10)) { toast("Mastered needs a number of Greens from 2 to 10."); return; }
     out[t] = { iv, m };
   }
-  writeDoc("settings", Object.assign({}, S.docs.get("settings") || {}, { intervals: out.code.iv, mastered: out.code.m, sdIntervals: out.sd.iv, sdMastered: out.sd.m, bhIntervals: out.bh.iv, bhMastered: out.bh.m }));
+  const doc = Object.assign({}, S.docs.get("settings") || {}, { intervals: out.code.iv, masterGreens: out.code.m, sdIntervals: out.sd.iv, sdMasterGreens: out.sd.m, bhIntervals: out.bh.iv, bhMasterGreens: out.bh.m });
+  delete doc.mastered; delete doc.sdMastered; delete doc.bhMastered;
+  writeDoc("settings", doc);
   toast("Intervals saved.");
 }
 
@@ -3781,7 +3807,7 @@ document.addEventListener("click", e => {
     return confirmModal("Delete " + p.name + "?", `This removes the problem and its ${plural(p.n, "attempt")}. It can't be undone unless you have a backup.`, "Delete", async () => { S.open = null; await writeDoc(p.key, null); await writeDoc("w_" + p.key, null); toast("Deleted."); });
   }
   if (act === "modal-close") return closeModal();
-  if (act === "iv-reset") { for (const t of ["code", "sd", "bh"]) { for (const r of RATINGS) $(`#iv-${t}-${r}`).value = DEFAULTS[t].intervals[r]; $(`#iv-${t}-m`).value = DEFAULTS[t].mastered; } return; }
+  if (act === "iv-reset") { for (const t of ["code", "sd", "bh"]) { for (const r of RATINGS) $(`#iv-${t}-${r}`).value = DEFAULTS[t].intervals[r]; $(`#iv-${t}-m`).value = DEFAULTS[t].greens; } return; }
   if (act === "export-dl") return exportDownload();
   if (act === "csv-sample") return csvSampleDownload();
   if (act === "export-copy") return exportCopy();
