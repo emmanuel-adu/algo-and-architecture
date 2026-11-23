@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "algo-and-architecture.vercel.app" }],
+      "destination": "https://algo.emmanueladu.dev/:path*",
+      "permanent": true
+    }
+  ]
+}
