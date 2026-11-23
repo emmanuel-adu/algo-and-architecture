@@ -392,6 +392,12 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .rm-actions { display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
 .rm-state { font-size: 14px; color: var(--ink-2); }
 .rm-note { grid-column: 1 / -1; margin: -2px 0 0; }
+/* a saved plan folds its settings into one line, so the map leads */
+.rm-sum { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 18px; padding: 12px 14px 12px 18px; }
+.rm-sum .rm-state { color: var(--ink); }
+.rm-sum .rm-meta { font-size: 14px; color: var(--ink-2); }
+.rm-sum .btn { margin-left: auto; }
+.rm-sum .rm-note { flex-basis: 100%; margin: 0; max-width: none; }
 .rm-mapcard { position: relative; overflow: hidden; padding: 18px 14px 6px;
   background:
     radial-gradient(600px 260px at 12% 8%, rgba(98,70,234,.07), transparent 70%),
@@ -456,7 +462,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .rm-node.is-col .rm-card { margin-top: 0; }
 .rm-node.is-col .rm-card.rm-endcap { align-items: flex-start; text-align: left; padding-top: 10px; }
 .rm-node.is-col .rm-here { top: 6px; left: 54px; display: none; }
-.rm-node.is-col .rm-sign { top: -24px; left: 50px; }
+.rm-node.is-col .rm-sign, .rm-node.is-col:has(.rm-here) .rm-sign { top: -24px; left: 64px; right: auto; transform: rotate(-3deg); }
 @media (max-width: 1080px) {
   .rm-form { grid-template-columns: 1fr 1fr 1fr; }
   .rm-form .rm-actions { grid-column: 1 / -1; justify-content: flex-start; }
@@ -740,6 +746,75 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 @media (max-width: 400px) { .top-in { gap: 7px; } .star-btn .sb-l { display: none; } .star-btn .sb-star { margin: 0 9px; } }
 /* tablets: the tabs live in the bottom bar, so the header has room for the full logo and the Star label */
 @media (min-width: 761px) and (max-width: 960px) { .brand-text { display: flex; } .star-btn .sb-l { display: inline; } .star-btn .sb-star { margin-right: 0; } }
+
+/* review session: one due problem at a time, full screen so nothing else competes with the rating */
+.btn-lg { padding: 11px 20px; font-size: 16px; border-radius: 12px; }
+.today-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 18px; }
+.today-cta .fine { font-size: 13.5px; max-width: none; }
+.kb { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 5px; font: 700 11.5px/1 var(--font-body); color: var(--ink-2); background: var(--surface); vertical-align: 1px; }
+@media (hover: none), (pointer: coarse), (max-width: 640px) { .kb { display: none; } }
+.btn-ghost:disabled { box-shadow: none; }
+html.sess-on { overflow: hidden; }
+.sess { position: fixed; inset: 0; z-index: 37; background: var(--bg); overflow-y: auto; }
+.sess[hidden] { display: none; }
+.sess-bar { position: sticky; top: 0; z-index: 1; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; height: 56px; padding: 0 20px; background: var(--glass); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.sess-bar .btn { justify-self: start; display: inline-flex; align-items: center; gap: 6px; }
+.sess-count { font-size: 14px; color: var(--ink-2); font-weight: 600; font-variant-numeric: tabular-nums; }
+.sess-count b { color: var(--ink); }
+.sess-time { justify-self: end; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink-2); padding-right: 4px; }
+.sess-track { position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; }
+.sess-track i { display: block; height: 100%; background: var(--code); border-radius: 0 3px 3px 0; transition: width .4s cubic-bezier(.2,.8,.2,1); }
+.sess-body { width: min(760px, calc(100% - 32px)); margin: 0 auto; padding: clamp(28px, 7vh, 72px) 0 56px; display: flex; flex-direction: column; gap: 24px; }
+.sess-card { display: flex; flex-direction: column; gap: 12px; }
+.sess-name { font: 800 clamp(26px, 3.8vw, 40px)/1.08 var(--font-display); letter-spacing: -0.02em; outline: none; text-wrap: balance; }
+.sess-last { margin: 0; color: var(--ink-2); font-size: 14.5px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.sess-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.sess-card.sd .sess-links .btn-primary { background: var(--sd); border-color: color-mix(in srgb, var(--sd) 78%, #000); }
+.sess-notes { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; }
+.sess-notes summary { cursor: pointer; font-weight: 700; font-size: 14px; }
+.sess-notes p { margin: 8px 0 2px; white-space: pre-wrap; color: var(--ink-2); font-size: 14px; line-height: 1.55; }
+.sess-rate { border-top: 1px solid var(--line); padding-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+.sess-rate h3 { font-size: 16px; }
+.sess-rate .rate { padding: 14px; gap: 6px; }
+.sess-rate .rate b { font-size: 16px; }
+.sess-rate .rate .kb { margin-left: 2px; }
+.sess-rate .rate[data-r="Red"]:hover { background: var(--red-soft); } .sess-rate .rate[data-r="Yellow"]:hover { background: var(--yellow-soft); } .sess-rate .rate[data-r="Green"]:hover { background: var(--green-soft); }
+.sess-foot { display: flex; justify-content: space-between; gap: 12px; margin-top: -8px; }
+.sess-foot .btn { display: inline-flex; align-items: center; gap: 8px; }
+.sess-done { align-items: flex-start; gap: 14px; }
+.sess-done h2 { font: 800 clamp(28px, 4vw, 40px)/1.1 var(--font-display); letter-spacing: -0.02em; }
+.sess-done .lede { margin: 0; color: var(--ink-2); font-size: 16px; max-width: 56ch; }
+.sess-results { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; width: 100%; margin-top: 14px; padding-top: 22px; border-top: 1px solid var(--line); }
+.sess-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.sess-col h3 { font-size: 15px; }
+.sess-col > .btn { align-self: flex-start; margin-top: 4px; }
+.sess-next { text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: var(--lift); cursor: pointer; color: var(--ink); font: inherit; }
+.sess-next:hover { border-color: var(--ink-2); }
+.sess-next b { font-size: 15px; }
+.sess-next span { font-size: 13.5px; color: var(--ink-2); }
+.wk-line { display: flex; align-items: center; gap: 8px 12px; flex-wrap: wrap; font-size: 13.5px; color: var(--ink-2); font-weight: 600; }
+/* this week's practice days: the activity purple, same as the heatmap */
+.wk-strip { display: flex; gap: 4px; align-items: center; width: 164px; max-width: 100%; }
+.wk-strip i { flex: 0 1 20px; min-width: 0; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; font: 700 10px/1 var(--font-body); font-style: normal; color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); }
+.wk-strip i.on { background: var(--heat-3); border-color: transparent; color: #fff; }
+.wk-strip i.today { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px var(--code); }
+.wk-strip i.fut { background: transparent; border-style: dashed; color: color-mix(in srgb, var(--muted) 70%, transparent); }
+.kpi-week { gap: 2px; }
+.kpi-week .wk-strip { height: 24px; }
+.tile .wk-strip { margin-top: 8px; }
+.tile { min-width: 0; }
+/* the review queue says what each rating does; new-problem rows stay compact */
+.qr em { display: none; font-style: normal; font-weight: 600; font-size: 12px; color: var(--muted); }
+.qcard .qr em { display: inline; }
+@media (max-width: 420px) { .qcard .qr em { display: none; } }
+/* grid children may shrink, so wide content (the heatmap) scrolls inside its card instead of widening the page */
+.two > * { min-width: 0; }
+.q-more { width: 30px; height: 30px; color: var(--ink-2); }
+@media (max-width: 640px) {
+  .sess-bar { padding: 0 10px; }
+  .sess-results { grid-template-columns: 1fr; }
+  .sess-rate .rate-row { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -768,6 +843,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
   <div id="view"></div>
 </main>
 <nav class="tabbar" id="tabbar" aria-label="Sections"></nav>
+<section class="sess" id="sess" role="dialog" aria-modal="true" aria-label="Review session" hidden></section>
 <div class="scrim" id="scrim" data-act="close"></div>
 <aside class="drawer" id="drawer" aria-label="Details" aria-hidden="true"></aside>
 <aside class="wkp" id="rm-panel" role="dialog" aria-modal="false" aria-label="Week" aria-hidden="true"></aside>
@@ -1180,6 +1256,7 @@ const ICON = {
 };
 const icon = k => `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
 const CHECK = `<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M5 12.5 L10 17 L19 7" fill="none" stroke="#1e1a33" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const CHECK_SM = `<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M5 12.5 L10 17 L19 7" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 function getPref(k) { try { return localStorage.getItem("b75." + k); } catch (e) { return null; } }
 function setPref(k, v) { try { if (v === null) localStorage.removeItem("b75." + k); else localStorage.setItem("b75." + k, v); } catch (e) {} }
 /* ----- GitHub stars ----- */
@@ -1237,6 +1314,7 @@ function render() {
   else if (S.view === "progress") renderProgress(list);
   else renderConfig();
   renderDrawer(list);
+  renderSession(list);
   if (S.view !== "roadmap" && RM.open) { RM.open = false; renderWeekPanel(null); }
   S.justLogged = null;
 }
@@ -1304,10 +1382,28 @@ function linkBtns(p, cls = "btn btn-sm") {
 }
 const trackTag = p => p.track === "sd" ? `<span class="tag sd">System design</span>` : `<span class="tag code">Coding</span>`;
 const numLabel = p => p.num ? pad(p.num) : "+";
+// What a rating does next: when the item comes back, or that it becomes mastered.
+function ivText(p, r, long) {
+  const st = settings()[p.track];
+  if (r === "Green" && p.n + 1 >= st.mastered) return "mastered";
+  return long ? "+" + plural(st.intervals[r], "day") : "+" + st.intervals[r] + "d";
+}
 function quick(p, label = "How did it go?") {
-  const iv = settings()[p.track].intervals, g = guideFor(p);
+  const g = guideFor(p);
   return `<div class="quick" role="group" aria-label="Rate today's attempt at ${esc(p.name)}">${label ? `<span>${label}</span>` : ""}` +
-    RATINGS.map(r => `<button class="qr" data-act="quick" data-r="${r}" data-key="${esc(p.key)}" data-tip="${esc(g[r] + " Back in " + plural(iv[r], "day") + ".")}">${r}</button>`).join("") + `</div>`;
+    RATINGS.map(r => { const iv = ivText(p, r, true); return `<button class="qr" data-act="quick" data-r="${r}" data-key="${esc(p.key)}" aria-label="${r}, ${iv === "mastered" ? "marks it mastered" : "back in " + iv.slice(1)}" data-tip="${esc(g[r])}">${r}<em>${ivText(p, r)}</em></button>`; }).join("") + `</div>`;
+}
+const XMARK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+const DOTS3 = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>';
+// Monday to Sunday of this week, filled on days with any practice, so a streak shows progress from day one.
+function weekStrip(list) {
+  const days = new Set(); for (const p of list) for (const a of p.atts) days.add(a.d);
+  const mon = addDays(S.today, -((parts(S.today).wd + 6) % 7));
+  const ds = [0, 1, 2, 3, 4, 5, 6].map(i => addDays(mon, i)), done = ds.filter(d => days.has(d)).length;
+  return `<span class="wk-strip" role="img" aria-label="Practiced ${plural(done, "day")} this week${days.has(S.today) ? ", including today" : ""}">` + ds.map(d => {
+    const on = days.has(d), fut = d > S.today;
+    return `<i class="${on ? "on" : ""}${d === S.today ? " today" : ""}${fut ? " fut" : ""}" data-tip="${esc(fmtDay(d) + (fut ? "" : on ? ": practiced" : ": no practice"))}">${on ? CHECK_SM : WD[parts(d).wd][0]}</i>`;
+  }).join("") + `</span>`;
 }
 function streak(list) {
   const days = new Set(); for (const p of list) for (const a of p.atts) days.add(a.d);
@@ -1335,10 +1431,10 @@ function renderToday(list) {
     else { fresh = []; freshHint = "Your roadmap"; celebrate = weekDoneCard(rn); }
   }
   if (!fresh) fresh = listOrder;
-  const anyStarted = list.some(p => p.n), n = due.length, iv = settings().code.intervals;
+  const anyStarted = list.some(p => p.n), n = due.length;
   const tp = parts(S.today);
   const head = !S.loaded ? "Loading your reviews…" : n ? plural(n, "review") + " due today" : "You're all caught up";
-  const lede = !S.loaded ? "" : n ? `Redo each one, then rate how it went. Red comes back in ${plural(iv.Red, "day")}, Green in ${plural(iv.Green, "day")}.`
+  const lede = !S.loaded ? "" : n ? "Solve each one again from scratch, then rate how it went. The rating sets when it comes back."
     : anyStarted ? "Nothing to review today. Start something new below." : "Pick a problem below, solve it, then rate how it went.";
   const showHow = getPref("howto") !== "hidden";
   const byDay = new Map();
@@ -1351,10 +1447,11 @@ function renderToday(list) {
       <p class="date">${WD_LONG[tp.wd]}, ${MONTH_LONG[tp.m - 1]} ${tp.d}</p>
       <h1>${esc(head)}</h1>
       ${lede ? `<p class="lede">${esc(lede)}</p>` : ""}
+      ${n && S.loaded ? `<div class="today-cta"><button class="btn btn-primary btn-lg" data-act="sess-start">Start review</button><span class="fine">One problem at a time${matchMedia("(hover: hover) and (pointer: fine) and (min-width: 641px)").matches ? `, rated with ${KBD("1")} ${KBD("2")} ${KBD("3")}` : ""}</span></div>` : ""}
     </div>
     <div class="kpis" aria-label="Summary">
       <div class="kpi"><b>${soon.length}</b><span>due this week</span></div>
-      <div class="kpi"><b>${st}</b><span>day streak</span></div>
+      <div class="kpi kpi-week">${weekStrip(list)}<span>${st ? st + "-day streak" : "Start a streak today"}</span></div>
       <div class="kpi"><b>${code.filter(p => p.n).length}/${code.length}</b><span>${esc(LISTS[activeList()].name)} started</span></div>
       <div class="kpi"><b>${sd.filter(p => p.n).length}/${sd.length}</b><span>design started</span></div>
     </div>
@@ -1380,7 +1477,7 @@ function renderToday(list) {
           </div>
           <span class="q-late ${p.delta < 0 && !p.bumped ? "" : "ok"}">${p.bumped ? "Moved up" : p.delta < 0 ? plural(-p.delta, "day") + " overdue" : "Due today"}</span>
           <div class="q-actions">
-            <div class="left">${linkBtns(p, "btn btn-sm")}<button class="btn btn-ghost btn-sm" data-act="open" data-key="${esc(p.key)}">Notes and worksheet</button><button class="btn btn-ghost btn-sm" data-act="snooze" data-key="${esc(p.key)}" aria-haspopup="menu" aria-expanded="false">Not today</button><button class="btn btn-ghost btn-sm" data-act="dequeue" data-key="${esc(p.key)}">Remove from queue</button></div>
+            <div class="left">${linkBtns(p, "btn btn-sm")}<button class="iconbtn ghost q-more" data-act="qmore" data-key="${esc(p.key)}" aria-haspopup="menu" aria-expanded="false" aria-label="More for ${esc(p.name)}" data-tip="Notes, not today, or remove">${DOTS3}</button></div>
             ${quick(p)}
           </div>
         </article>`).join("")
@@ -1552,7 +1649,7 @@ function layoutPaths() {
 
 /* ================= roadmap ================= */
 const PHASES = ["Foundations", "Core patterns", "Advanced"];
-const RM = { draft: false, form: null, sel: null, open: false, back: null };
+const RM = { draft: false, edit: false, form: null, sel: null, open: false, back: null };
 function savedPlan() { const d = S.docs.get("settings"); const r = d && d.roadmap; return r && r.v === 1 && Array.isArray(r.weeks) && LISTS[r.list] ? r : null; }
 function planForm(plan) {
   return plan ? { list: plan.list, end: plan.end, days: plan.days || 5, sd: plan.sd !== false, goal: plan.goal === "master" ? "master" : "finish" }
@@ -1681,6 +1778,9 @@ function renderRoadmap() {
   if (RM.sel === null || RM.sel >= V.W) RM.sel = Math.max(0, Math.min(V.W - 1, V.cur));
   if (RM.sel >= V.W) RM.open = false;
   const fast = dsaN / learn > 20;
+  const editing = draft || RM.edit;
+  const state = `${V.cur >= V.W ? "Finished." : V.left ? `<b>${V.left}</b> left from earlier weeks.` : "On track."} ${V.started} of ${V.total} started, <b>${V.mastered}</b> mastered.`;
+  const mismatch = saved && saved.list !== activeList() ? `<p class="fine rm-note">This roadmap follows ${esc(LISTS[saved.list].name)}, but your coding list is ${esc(LISTS[activeList()].name)}. <button type="button" class="linkish" data-act="rm-rebuild">Rebuild it for ${esc(LISTS[activeList()].name)}</button></p>` : "";
   $("#view").innerHTML = `
   <section class="rm-head">
     <div>
@@ -1694,7 +1794,13 @@ function renderRoadmap() {
       <div class="kpi"><b>~${Math.max(1, Math.round(perWeek))}h</b><span>a week, est.</span></div>
     </div>
   </section>
-  <form class="card rm-form" id="rm-form" autocomplete="off">
+  ${editing ? "" : `<section class="card rm-sum" aria-label="Your plan">
+    <span class="rm-state">${state}</span>
+    <span class="rm-meta">Planned for ${saved.goal === "master" ? "mastery" : "finishing the list"}, ${plural(saved.days || 5, "study day")} a week.</span>
+    <button type="button" class="btn btn-sm" data-act="rm-edit" aria-expanded="false">Edit plan</button>
+    ${mismatch}
+  </section>`}
+  ${editing ? `<form class="card rm-form" id="rm-form" autocomplete="off">
     <div class="field rm-goal"><span id="rm-goal-l">Plan for</span>
       <div class="rm-goal-row"><div class="datechips" role="group" aria-labelledby="rm-goal-l">${[["finish", "Finishing the list"], ["master", "Mastery"]].map(([g, t]) => `<button type="button" class="chip" data-act="rm-goal" data-g="${g}" aria-pressed="${f.goal === g}">${t}</button>`).join("")}</div>
       <p class="fine">${f.goal === "master" ? "Mastery takes a few spaced reviews, usually 3 to 5 weeks after you first solve a problem. New problems finish early, the last weeks are for reviews, and progress counts what you've mastered." : "New problems are spread across every week, so you've solved everything by your date. Progress counts what you've started."}</p></div>
@@ -1706,11 +1812,11 @@ function renderRoadmap() {
     <label class="check rm-sd"><input type="checkbox" id="rm-sd" ${f.sd ? "checked" : ""}> Include system design</label>
     <div class="rm-actions">
       ${draft ? `<button type="submit" class="btn btn-primary">${saved ? "Save new plan" : "Start this roadmap"}</button>${saved ? `<button type="button" class="btn btn-ghost" data-act="rm-cancel">Cancel</button>` : ""}`
-        : `<span class="rm-state">${V.cur >= V.W ? "Finished." : V.left ? `<b>${V.left}</b> left from earlier weeks.` : "On track."} ${V.started} of ${V.total} started, <b>${V.mastered}</b> mastered.</span><button type="button" class="btn btn-ghost btn-sm btn-danger" data-act="rm-remove">Remove roadmap</button>`}
+        : `<span class="rm-state">${state}</span><button type="button" class="btn btn-ghost btn-sm btn-danger" data-act="rm-remove">Remove roadmap</button><button type="button" class="btn btn-sm" data-act="rm-edit-done">Done</button>`}
     </div>
     ${draft ? `<p class="fine rm-note">${saved ? "Previewing changes. Saving rebuilds the plan from today with what you haven't started yet." : "This is a preview. Start it to save the plan and track your progress on the map."}${fast ? " That's more than 20 new problems a week; a later date or skipping system design gives you more breathing room." : ""} About ${Math.max(10, Math.round(perWeek * 60 / (Number(f.days) || 5) / 5) * 5)} minutes a study day.</p>`
-      : saved.list !== activeList() ? `<p class="fine rm-note">This roadmap follows ${esc(LISTS[saved.list].name)}, but your coding list is ${esc(LISTS[activeList()].name)}. <button type="button" class="linkish" data-act="rm-rebuild">Rebuild it for ${esc(LISTS[activeList()].name)}</button></p>` : ""}
-  </form>
+      : mismatch}
+  </form>` : ""}
   <section class="card rm-mapcard ${draft ? "is-draft" : ""}" aria-label="Roadmap map">
     <div class="rm-map" id="rm-map">
       <svg class="rm-road" aria-hidden="true"><path class="r-edge"/><path class="r-base"/><path class="r-done"/><path class="r-dash"/></svg>
@@ -1721,7 +1827,7 @@ function renderRoadmap() {
     <div class="rm-legend"><span class="rm-hint">Select a week to see its problems.</span><span>Each dot is a problem or topic, by its latest rating:</span>${RM_LEVELS.map(([k, t]) => `<span class="rm-lg"><i class="rm-dot d-${k}"></i>${t}</span>`).join("")}<span>The ring counts what you've ${V.master ? "mastered" : "started"}.</span></div>
   </section>`;
   S.shellFor = "roadmap";
-  $("#rm-form").addEventListener("input", e => {
+  if (editing) $("#rm-form").addEventListener("input", e => {
     const t = e.target;
     if (t.id === "rm-list") RM.form.list = t.value;
     else if (t.id === "rm-end") { if (!/^\d{4}-\d{2}-\d{2}$/.test(t.value)) return; RM.form.end = t.value; }
@@ -1730,7 +1836,7 @@ function renderRoadmap() {
     else return;
     RM.draft = true; renderRoadmap();
   });
-  $("#rm-form").addEventListener("submit", e => { e.preventDefault(); saveRoadmap(); });
+  if (editing) $("#rm-form").addEventListener("submit", e => { e.preventDefault(); saveRoadmap(); });
   layoutRoadmap(V);
   renderWeekPanel(V); markSelectedWeek();
 }
@@ -1908,14 +2014,14 @@ function saveRoadmap(msg) {
   const cur = Object.assign({}, S.docs.get("settings") || {}, { roadmap: plan });
   const switched = plan.list !== activeList();
   if (switched) cur.list = plan.list;
-  RM.draft = false; RM.sel = 0; RM.formFor = plan.start + plan.end + plan.list + plan.goal;
+  RM.draft = false; RM.edit = false; RM.sel = 0; RM.formFor = plan.start + plan.end + plan.list + plan.goal;
   writeDoc("settings", cur);
   toast(msg || (switched ? `Roadmap saved. Your coding list is now ${LISTS[plan.list].name} to match.` : "Roadmap saved. Week 1 starts today."));
 }
 function removeRoadmap() {
   confirmModal("Remove your roadmap?", "Your attempts and notes stay as they are. Only the week-by-week plan is removed.", "Remove", async () => {
     const cur = Object.assign({}, S.docs.get("settings") || {}); delete cur.roadmap;
-    RM.draft = false; RM.form = null; RM.sel = null;
+    RM.draft = false; RM.edit = false; RM.form = null; RM.sel = null;
     await writeDoc("settings", cur); toast("Roadmap removed.");
   });
 }
@@ -1955,7 +2061,7 @@ function renderProgress(list) {
     <div class="sec-head"><h2>Progress</h2><span class="hint">${plural(total, "attempt")} logged so far</span></div>
     <div class="tiles">
       <div class="card tile ${due ? "alert" : ""}"><span class="k">Due now</span><span class="v">${due}</span></div>
-      <div class="card tile"><span class="k">Streak</span><span class="v">${st}<small>${st === 1 ? "day" : "days"}</small></span></div>
+      <div class="card tile"><span class="k">Streak</span><span class="v">${st}<small>${st === 1 ? "day" : "days"}</small></span>${weekStrip(list)}</div>
       <div class="card tile"><span class="k">Mastered</span><span class="v">${mastered}<small>of ${list.length}</small></span></div>
       <div class="card tile"><span class="k">Coding started</span><span class="v">${code.filter(p => p.n).length}<small>of ${code.length}</small></span></div>
       <div class="card tile"><span class="k">Design started</span><span class="v">${sd.filter(p => p.n).length}<small>of ${sd.length}</small></span></div>
@@ -1984,6 +2090,8 @@ function renderProgress(list) {
     <section class="card panel"><h3>System design by unit</h3>${legend}<div class="bars">${head}${barRows(grp(sd, p => p.unit, SD_UNITS.map((u, i) => i)).map(x => Object.assign(x, { t: (x.t + 1) + ". " + SD_UNITS[x.t].name })))}</div></section>
   </div>`;
   S.shellFor = "progress";
+  // on narrow screens the heatmap scrolls; start at the most recent weeks
+  const hw = $(".heat-wrap"); if (hw) hw.scrollLeft = hw.scrollWidth;
 }
 
 /* ----- settings ----- */
@@ -2132,8 +2240,8 @@ function renderDrawer(list) {
     `<button class="btn btn-ghost btn-sm" data-act="resched" data-key="${esc(p.key)}">Reschedule…</button>` +
     (p.sched ? bumpTag(p) + `<button class="btn btn-ghost btn-sm" data-act="sched-reset" data-key="${esc(p.key)}">${p.sched.paused ? "Resume reviews" : "Back to normal schedule"}</button>` : "");
   const others = list.filter(x => x.status === "due" && x.key !== p.key).sort(dueSort);
-  $("#dr-next").innerHTML = others.length ? `<span>${plural(others.length, "more review")} due</span><button class="btn btn-sm" data-act="open" data-key="${esc(others[0].key)}">Next: ${esc(others[0].name)}</button>` : "";
-  for (const r of RATINGS) { const h = $("#iv-hint-" + r); if (h) h.textContent = "+" + plural(st.intervals[r], "day"); }
+  $("#dr-next").innerHTML = others.length && !SESS.on ? `<span>${plural(others.length, "more review")} due</span><button class="btn btn-sm" data-act="open" data-key="${esc(others[0].key)}">Next: ${esc(others[0].name)}</button>` : "";
+  for (const r of RATINGS) { const h = $("#iv-hint-" + r); if (h) h.textContent = ivText(p, r, true); }
   $("#f-date").max = S.today;
   for (const b of $$(".rate")) b.setAttribute("aria-pressed", String(b.dataset.r === S.form.r));
   updatePreview(p);
@@ -2209,7 +2317,7 @@ function closeDrawer() {
   S.open = null; S.editing = null; S.confirmDel = null; render();
   if (lastFocus && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true });
 }
-function logAttempt(key, r, extra = {}) {
+function logAttempt(key, r, extra = {}, opts = {}) {
   const doc = ensureIds(itemDoc(key));
   const prevSched = doc.sched ? Object.assign({}, doc.sched) : null;
   delete doc.sched;
@@ -2224,20 +2332,159 @@ function logAttempt(key, r, extra = {}) {
   const p = byKey(allItems(), key);
   const msg = weekDone ? (rAfter.next ? `Week ${rAfter.done.i + 1} done! Every problem is started.` : "Every new problem on your roadmap is started!")
     : p.status === "mastered" ? `${p.name} is mastered.` : `Logged ${r} for ${p.name}. Back ${fmtDay(p.next)}.`;
-  toast(msg, { label: "Undo", fn: () => undoAttempt(key, a.id, prevSched) });
-  return { a, p, msg };
+  // A review session has its own Back button, so it only toasts the week milestone.
+  if (!opts.quiet) toast(msg, { label: "Undo", fn: () => undoAttempt(key, a.id, prevSched) });
+  else if (weekDone) toast(msg);
+  return { a, p, msg, prevSched };
 }
-function undoAttempt(key, id, prevSched) {
+function undoAttempt(key, id, prevSched, quiet) {
   const doc = itemDoc(key);
   doc.attempts = (doc.attempts || []).filter(x => x.id !== id);
   if (prevSched) doc.sched = prevSched;
-  writeDoc(key, doc); toast("Attempt removed.");
+  writeDoc(key, doc); if (!quiet) toast("Attempt removed.");
 }
 function quickLog(btn) {
   if (!guardLoaded()) return;
   const r = btn.dataset.r, rect = btn.getBoundingClientRect();
   logAttempt(btn.dataset.key, r);
   if (r === "Green") confetti(rect.left + rect.width / 2, rect.top, 70);
+}
+
+/* ----- review session: the due queue one problem at a time ----- */
+// The queue is snapshotted at the start so the count stays honest while ratings move items out of it.
+// Each card times itself; the minutes are saved with the rating, which is what the Green guide asks about.
+const SESS = { on: false, keys: [], i: 0, res: [], skipped: [], hist: [], cardAt: 0, tick: null, shown: "", back: null };
+function startSession(keys) {
+  if (!guardLoaded()) return;
+  const due = keys || allItems().filter(p => p.status === "due").sort(dueSort).map(p => p.key);
+  if (!due.length) return;
+  if (S.open) closeDrawer();
+  Object.assign(SESS, { on: true, keys: due, i: 0, res: [], skipped: [], hist: [], cardAt: Date.now(), shown: "", back: SESS.on ? SESS.back : document.activeElement });
+  clearInterval(SESS.tick); SESS.tick = setInterval(sessTick, 1000);
+  render();
+}
+function exitSession() {
+  if (!SESS.on) return;
+  SESS.on = false; clearInterval(SESS.tick);
+  render();
+  const back = SESS.back; SESS.back = null;
+  const start = $("[data-act=sess-start]");
+  (back && document.contains(back) ? back : start || $("#main")).focus({ preventScroll: true });
+}
+// Skips past anything that left the queue some other way (rated or snoozed from its page).
+function sessCurrent(list) {
+  while (SESS.i < SESS.keys.length) {
+    const key = SESS.keys[SESS.i], p = byKey(list, key);
+    if (p && p.status === "due") return p;
+    if (p && p.last && p.last.d === S.today && !SESS.res.some(x => x.key === key)) { SESS.res.push({ key, r: p.last.r, id: null }); SESS.hist.push({ t: "ext" }); }
+    SESS.i++;
+  }
+  return null;
+}
+function sessRate(r, btn) {
+  if (!SESS.on || !guardLoaded()) return;
+  const p = sessCurrent(allItems()); if (!p) return;
+  const mins = Math.round((Date.now() - SESS.cardAt) / 60000), id = uid();
+  const extra = { id }; if (mins >= 1 && mins <= 180) extra.min = mins;
+  const doc = itemDoc(p.key), prev = doc.sched ? Object.assign({}, doc.sched) : null;
+  const rect = btn ? btn.getBoundingClientRect() : null;
+  SESS.res.push({ key: p.key, r, id, prev, min: extra.min || 0 }); SESS.hist.push({ t: "rate" });
+  SESS.i++; SESS.cardAt = Date.now();
+  const out = logAttempt(p.key, r, extra, { quiet: true });
+  if (r === "Green" && rect) confetti(rect.left + rect.width / 2, rect.top, out.p.status === "mastered" ? 140 : 70);
+  if (SESS.i >= SESS.keys.length && !SESS.skipped.length) setTimeout(() => confetti(window.innerWidth / 2, window.innerHeight / 3, 120), 150);
+}
+function sessSkip() {
+  if (!SESS.on) return;
+  const p = sessCurrent(allItems()); if (!p) return;
+  SESS.skipped.push(p.key); SESS.hist.push({ t: "skip" }); SESS.i++; SESS.cardAt = Date.now(); render();
+}
+function sessBack() {
+  const h = SESS.hist.pop(); if (!h || !SESS.on) return;
+  SESS.i = Math.max(0, SESS.i - 1); SESS.cardAt = Date.now();
+  if (h.t === "skip") { SESS.skipped.pop(); render(); return; }
+  const x = SESS.res.pop();
+  if (h.t === "rate" && x && x.id) { undoAttempt(x.key, x.id, x.prev, true); toast(`Took back ${x.r} for ${byKey(allItems(), x.key).name}.`); }
+  else render();
+}
+function sessTick() {
+  const t = $("#sess-time"); if (!SESS.on || !t) return;
+  const s = Math.floor((Date.now() - SESS.cardAt) / 1000);
+  t.textContent = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+}
+const KBD = k => `<kbd class="kb" aria-hidden="true">${k}</kbd>`;
+function renderSession(list) {
+  const el = $("#sess");
+  document.documentElement.classList.toggle("sess-on", SESS.on);
+  for (const id of ["main", "tabbar"]) { const n = $("#" + id); if (n) n.inert = SESS.on; }
+  $(".top").inert = SESS.on;
+  if (!SESS.on) { if (!el.hidden) { el.hidden = true; el.innerHTML = ""; SESS.shown = ""; } return; }
+  el.hidden = false;
+  const p = sessCurrent(list), total = SESS.keys.length;
+  const state = p ? "c:" + p.key + ":" + SESS.i : "done:" + SESS.res.length + ":" + SESS.skipped.length;
+  if (state === SESS.shown) return;
+  SESS.shown = state;
+  const pct = Math.round(100 * SESS.i / total);
+  const bar = `<header class="sess-bar">
+      <button class="btn btn-ghost btn-sm" data-act="sess-exit" data-tip="Ratings are saved as you go">${XMARK}Exit</button>
+      <span class="sess-count" aria-live="polite">${p ? `<b>${SESS.i + 1}</b> of ${total}` : "Review done"}</span>
+      <span class="sess-time" ${p ? `id="sess-time" data-tip="Time on this problem. It's saved with your rating."` : ""}>${p ? "0:00" : ""}</span>
+      <div class="sess-track" role="progressbar" aria-label="Review progress" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${SESS.i}"><i style="width:${pct}%"></i></div>
+    </header>`;
+  if (!p) { el.innerHTML = bar + sessDone(list); const go = $(".sess-done .btn-primary", el); if (go) go.focus({ preventScroll: true }); return; }
+  const g = guideFor(p), late = p.bumped ? "Moved up" : p.delta < 0 ? plural(-p.delta, "day") + " overdue" : "Due today";
+  el.innerHTML = bar + `
+    <div class="sess-body">
+      <article class="sess-card ${p.track}">
+        <div class="q-sub">${trackTag(p)}${bumpTag(p)}<span>${esc(p.track === "sd" ? KIND[p.kind] : (p.sub || p.topic))}</span>${p.track === "code" ? `<span class="diff-${p.diff}">${p.diff}</span>` : ""}<span class="q-late ${p.delta < 0 && !p.bumped ? "" : "ok"}">${late}</span></div>
+        <h2 class="sess-name" tabindex="-1">${esc(p.name)}</h2>
+        <p class="sess-last">${p.last ? `Last time <span class="rtag r-${p.last.r}">${p.last.r}</span> on ${fmtShort(p.last.d)}, ${plural(p.n, "attempt")} so far ${beads(p, 14)}` : "First attempt"}</p>
+        <div class="sess-links">${linkBtns(p, "btn btn-primary")}<button class="btn btn-ghost" data-act="open" data-key="${esc(p.key)}">Notes and worksheet</button></div>
+        ${p.notes.trim() ? `<details class="sess-notes"><summary>Your notes</summary><p>${esc(p.notes.trim().slice(0, 1200))}</p></details>` : ""}
+      </article>
+      <section class="sess-rate" aria-labelledby="sess-q">
+        <h3 id="sess-q">${p.track === "sd" ? "Once you've worked through it, how did it go?" : "Once you've solved it again, how did it go?"}</h3>
+        <div class="rate-row">${RATINGS.map((r, j) => `<button type="button" class="rate" data-act="sess-rate" data-r="${r}" aria-keyshortcuts="${j + 1}"><b>${r}<em>${ivText(p, r, true)}</em>${KBD(j + 1)}</b><span>${g[r]}</span></button>`).join("")}</div>
+      </section>
+      <div class="sess-foot">
+        <button type="button" class="btn btn-ghost btn-sm" data-act="sess-back" ${SESS.hist.length ? "" : "disabled"}>Back</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-act="sess-skip" aria-keyshortcuts="S">Skip for now ${KBD("S")}</button>
+      </div>
+    </div>`;
+  sessTick();
+  const h = $(".sess-name", el); if (h) h.focus({ preventScroll: true });
+  el.scrollTop = 0;
+}
+function sessDone(list) {
+  const res = SESS.res, n = res.length, skipped = SESS.skipped.filter(k => { const p = byKey(list, k); return p && p.status === "due"; });
+  const mix = { Red: 0, Yellow: 0, Green: 0 }; for (const x of res) mix[x.r]++;
+  const mins = res.reduce((s, x) => s + (x.min || 0), 0);
+  const mastered = res.filter(x => { const p = byKey(list, x.key); return p && p.status === "mastered"; }).length;
+  const fresh = list.filter(p => p.status === "new" && p.track === "code")[0];
+  const rn = roadmapNext(), next = rn && rn.kind === "items" ? rn.items[0] : fresh;
+  const title = !n ? "Nothing rated this time" : skipped.length ? `${plural(n, "review")} done` : "Review done";
+  const body = !n ? "Everything you skipped is still in your queue." : `You rated ${plural(n, "problem")}${mins ? ` in ${mins} min` : ""}. Each one is back on its schedule${mastered ? `, and ${mastered} ${mastered === 1 ? "is" : "are"} now mastered` : ""}.`;
+  const st = streak(list);
+  return `<div class="sess-body sess-done" role="status">
+    <span class="wkdone-badge" aria-hidden="true">${CHECK}</span>
+    <h2>${title}</h2>
+    <p class="lede">${body}</p>
+    <div class="sess-results">
+      <div class="sess-col">
+        <h3>Your ratings</h3>
+        <div class="mixbar" role="img" aria-label="Red ${mix.Red}, Yellow ${mix.Yellow}, Green ${mix.Green}">${n ? RATINGS.filter(r => mix[r]).map(r => `<span style="flex:${mix[r]};background:var(--${r.toLowerCase()})"></span>`).join("") : `<span style="flex:1;background:var(--heat-0)"></span>`}</div>
+        <div class="legend">${RATINGS.map(r => `<span><i style="background:var(--${r.toLowerCase()})"></i>${r}<b>${mix[r]}</b></span>`).join("")}</div>
+        <h3 style="margin-top:14px">This week</h3>
+        <div class="wk-line">${weekStrip(list)}<span>${st ? st + "-day streak" : "Practice today to start a streak"}</span></div>
+      </div>
+      <div class="sess-col">
+        <h3>Next</h3>
+        ${skipped.length ? `<button class="sess-next" data-act="sess-again"><b>${skipped.length === 1 ? "Review the one you skipped" : `Review the ${skipped.length} you skipped`}</b><span>${esc(skipped.map(k => byKey(list, k).name).slice(0, 2).join(", "))}${skipped.length > 2 ? ", and more" : ""}</span></button>` : ""}
+        ${next ? `<button class="sess-next" data-act="sess-new" data-key="${esc(next.key)}"><b>Start something new</b><span>${esc(next.name)}${rn && rn.kind === "items" ? ", from your roadmap" : ""}</span></button>` : ""}
+        <button class="btn btn-primary" data-act="sess-exit">Back to Today</button>
+      </div>
+    </div>
+  </div>`;
 }
 function saveAttempt() {
   if (!guardLoaded()) return;
@@ -2336,6 +2583,19 @@ function snoozeMenu(btn) {
     { label: "In a week", fn: () => setSched(p.key, addDays(S.today, 7)) },
     { label: "Pick a date…", fn: () => reschedModal(p.key) }];
   openMenu(btn, items);
+}
+// The less common queue actions, kept off the card so the rating buttons stand out.
+function queueMenu(btn) {
+  const p = byKey(allItems(), btn.dataset.key); if (!p) return;
+  openMenu(btn, [
+    { label: "Notes and worksheet", fn: () => openDrawer(p.key, false) },
+    { sep: true }, { head: "Not today" },
+    { label: "Tomorrow", fn: () => setSched(p.key, addDays(S.today, 1)) },
+    { label: "In 3 days", fn: () => setSched(p.key, addDays(S.today, 3)) },
+    { label: "In a week", fn: () => setSched(p.key, addDays(S.today, 7)) },
+    { label: "Pick a date…", fn: () => reschedModal(p.key) },
+    { sep: true },
+    { label: "Remove from queue", fn: () => removeFromQueue(p.key) }]);
 }
 function reschedModal(key) {
   const p = byKey(allItems(), key); if (!p) return;
@@ -2816,10 +3076,19 @@ function confetti(x, y, count) {
 document.addEventListener("click", e => {
   const mi = e.target.closest("#menu [data-mi]");
   if (mi) { const it = MENU.items[+mi.dataset.mi]; closeMenu(); if (it && it.fn) it.fn(); return; }
-  if (!e.target.closest("#menu") && !e.target.closest("[data-act=lists], [data-act=snooze], [data-act=account]")) closeMenu();
+  if (!e.target.closest("#menu") && !e.target.closest("[data-act=lists], [data-act=snooze], [data-act=qmore], [data-act=account]")) closeMenu();
   const el = e.target.closest("[data-act]"); if (!el) return;
+  tip.classList.remove("on");
   if (WS.open && !el.closest("#ws")) return;
   const act = el.dataset.act, key = el.dataset.key;
+  if (act === "sess-start") return startSession();
+  if (act === "sess-exit") return exitSession();
+  if (act === "sess-rate") return sessRate(el.dataset.r, el);
+  if (act === "sess-skip") return sessSkip();
+  if (act === "sess-back") return sessBack();
+  if (act === "sess-again") return startSession(SESS.skipped.filter(k => { const p = byKey(allItems(), k); return p && p.status === "due"; }));
+  if (act === "sess-new") { exitSession(); return openDrawer(key, false); }
+  if (act === "qmore") return queueMenu(el);
   if (act === "close") return closeDrawer();
   if (act === "open") return openDrawer(key, false);
   if (act === "log") return openDrawer(key, true);
@@ -2833,7 +3102,9 @@ document.addEventListener("click", e => {
   if (act === "rm-ahead") return startWeekEarly(Number(el.dataset.i));
   if (act === "rm-listorder") return continueListOrder();
   if (act === "rm-goal") { RM.form.goal = el.dataset.g; RM.draft = true; return renderRoadmap(); }
-  if (act === "rm-cancel") { RM.draft = false; RM.form = null; return renderRoadmap(); }
+  if (act === "rm-cancel") { RM.draft = false; RM.edit = false; RM.form = null; renderRoadmap(); const b = $("[data-act=rm-edit]"); if (b) b.focus(); return; }
+  if (act === "rm-edit") { RM.edit = true; renderRoadmap(); const c = $("#rm-form [aria-pressed=true]"); if (c) c.focus(); return; }
+  if (act === "rm-edit-done") { RM.edit = false; renderRoadmap(); const b = $("[data-act=rm-edit]"); if (b) b.focus(); return; }
   if (act === "rm-remove") return removeRoadmap();
   if (act === "account") return accountMenu(el);
   if (act === "search") return openSearch();
@@ -2896,6 +3167,13 @@ document.addEventListener("keydown", e => {
     if (e.key === "Tab") closeMenu();
   }
   const typing = e.target.matches && e.target.matches("input, textarea, select, [contenteditable]");
+  if (SESS.on && !S.open && !$("#modal-wrap").classList.contains("on") && $("#menu").hidden && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    const k = e.key.toLowerCase();
+    if (["1", "2", "3"].includes(k)) { e.preventDefault(); const b = $(`[data-act=sess-rate][data-r=${RATINGS[+k - 1]}]`); if (b && !e.repeat) sessRate(b.dataset.r, b); return; }
+    if (k === "s") { e.preventDefault(); if ($("[data-act=sess-skip]") && !e.repeat) sessSkip(); return; }
+    if (k === "escape") { e.preventDefault(); return exitSession(); }
+    if (k === "/") return;
+  }
   if (e.key === "/" && !typing && !e.metaKey && !e.ctrlKey) { e.preventDefault(); openSearch(); return; }
   if (e.key === "Escape") {
     if ($("#modal-wrap").classList.contains("on")) return closeModal();
