@@ -304,6 +304,20 @@ main { max-width: 1160px; margin: 0 auto; padding: 28px 20px 80px; display: flex
 .q-late.ok { color: var(--yellow-ink); }
 .q-actions { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; justify-content: space-between; }
 .q-actions .left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+/* picking reviews to move or take out: each card is a checkbox, with the actions in a bar at the bottom */
+.qcard.q-pick { grid-template-columns: 22px minmax(0, 1fr) auto; padding-left: 18px; cursor: pointer; }
+.qcard.q-pick:hover { border-color: var(--ink-2); }
+.qcard.q-pick.is-picked { border-color: var(--code); box-shadow: 0 0 0 1px var(--code), var(--lift); background: color-mix(in srgb, var(--code-soft) 55%, var(--surface)); }
+.q-check { width: 18px; height: 18px; margin: 0; accent-color: var(--code); cursor: pointer; }
+.qcard.q-pick .q-name { display: block; }
+.qbulk { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 36; display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 16px; border-radius: 14px;
+  background: var(--raised); border: 1px solid var(--edge); box-shadow: var(--lift), 0 14px 36px -12px rgba(30,26,51,.35); max-width: calc(100% - 24px); }
+.qb-n { font-size: 14px; color: var(--ink-2); margin-right: 6px; white-space: nowrap; }
+.qb-n b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.qbulk .btn[disabled] { opacity: .45; pointer-events: none; }
+.queue:has(.qbulk) { padding-bottom: 64px; }
+/* while the bar is up, messages appear above it */
+body:has(.qbulk) .toast { bottom: 84px; }
 .empty { padding: 20px; color: var(--ink-2); }
 .empty strong { color: var(--ink); }
 .two { display: grid; grid-template-columns: 1.25fr 1fr; gap: 24px; align-items: start; }
@@ -383,6 +397,7 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
 .rm-form .rm-actions { grid-column: 1 / -1; justify-content: flex-start; }
 .rm-actions [data-act=rm-remove] { margin-left: auto; }
 .rm-goal { grid-column: 1 / -1; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.rm-goal.rm-done { padding: 14px 0 0; border-bottom: 0; border-top: 1px solid var(--line); }
 .rm-goal-row { display: flex; align-items: center; gap: 8px 16px; flex-wrap: wrap; }
 .rm-goal-row .fine { flex: 1 1 320px; max-width: 76ch; }
 .rm-form .field > span { font-size: 13px; font-weight: 600; color: var(--ink-2); }
@@ -742,6 +757,8 @@ select:focus, input:focus, textarea:focus { outline: none; border-color: var(--c
   .tabbar a[aria-current="page"] { color: var(--code-ink); background: var(--code-soft); }
   .tabbar .due { position: absolute; top: 0; left: calc(50% + 6px); font: 700 10.5px/1 var(--font-body); background: var(--red); color: #fff; border-radius: 99px; padding: 2px 5px; }
   main { padding-bottom: 96px; }
+  .qbulk { bottom: calc(76px + env(safe-area-inset-bottom)); }
+  body:has(.qbulk) .toast { bottom: calc(136px + env(safe-area-inset-bottom)); }
   .toast { bottom: 84px; }
   .gb { bottom: calc(76px + env(safe-area-inset-bottom)); }
   .wkp { bottom: calc(64px + env(safe-area-inset-bottom)); }
@@ -1694,6 +1711,9 @@ function renderToday(list) {
   const byDay = new Map();
   for (const p of soon) { if (!byDay.has(p.next)) byDay.set(p.next, []); byDay.get(p.next).push(p); }
   const st = streak(list);
+  if (S.qsel) for (const k of [...S.qsel]) if (!due.some(p => p.key === k)) S.qsel.delete(k);
+  const pick = n > 1 && S.loaded ? S.qsel : null;
+  if (!pick) S.qsel = null;
 
   $("#view").innerHTML = `
   <section class="today-head">
@@ -1720,9 +1740,15 @@ function renderToday(list) {
   </section>` : ""}
 
   <section class="sec" aria-labelledby="h-due">
-    <div class="sec-head"><h2 id="h-due">Review queue${n ? ` <span class="cnt">${n}</span>` : ""}</h2><span class="hint">${n ? "Most overdue first" : ""}${showHow ? "" : ` <button class="btn btn-ghost btn-sm" data-act="howto-show">How this works</button>`}</span></div>
+    <div class="sec-head"><h2 id="h-due">Review queue${n ? ` <span class="cnt">${n}</span>` : ""}</h2><span class="hint">${pick ? `<button class="btn btn-ghost btn-sm" data-act="q-all">${pick.size === n ? "Clear selection" : "Select all"}</button>` : `${n ? "Most overdue first" : ""}${n > 1 && S.loaded ? ` <button class="btn btn-ghost btn-sm" data-act="q-select">Select</button>` : ""}`}${showHow ? "" : ` <button class="btn btn-ghost btn-sm" data-act="howto-show">How this works</button>`}</span></div>
     <div class="queue">
-      ${n ? due.map(p => `
+      ${n && pick ? due.map(p => `
+        <label class="card qcard q-pick ${p.track}${pick.has(p.key) ? " is-picked" : ""}">
+          <input type="checkbox" class="q-check" data-key="${esc(p.key)}" ${pick.has(p.key) ? "checked" : ""}>
+          <div><span class="q-name">${esc(p.name)}</span><div class="q-sub">${trackTag(p)}<span>${esc(subOf(p))}</span>${p.last ? `<span>Last: <span class="rtag r-${p.last.r}">${p.last.r}</span> on ${fmtShort(p.last.d)}</span>` : ""}</div></div>
+          <span class="q-late ${p.delta < 0 && !p.bumped ? "" : "ok"}">${p.bumped ? "Moved up" : p.delta < 0 ? plural(-p.delta, "day") + " overdue" : "Due today"}</span>
+        </label>`).join("") + qBulkBar(pick)
+      : n ? due.map(p => `
         <article class="card qcard ${p.track}">
           <span class="bar" aria-hidden="true"></span>
           <div>
@@ -2319,9 +2345,15 @@ const RM = { draft: false, edit: false, form: null, sel: null, open: false, back
 function savedPlan() { const d = S.docs.get("settings"); const r = d && d.roadmap; return r && r.v === 1 && Array.isArray(r.weeks) && LISTS[r.list] ? r : null; }
 function planForm(plan) {
   // plans saved before behavioral existed have no bh flag, so they stay without it until edited
-  return plan ? { list: plan.list, end: plan.end, days: plan.days || 5, sd: plan.sd !== false, bh: plan.bh === true, goal: plan.goal === "master" ? "master" : "finish" }
-    : { list: activeList(), end: addDays(S.today, 8 * 7 - 1), days: 5, sd: true, bh: true, goal: "finish" };
+  return plan ? { list: plan.list, end: plan.end, days: plan.days || 5, sd: plan.sd !== false, bh: plan.bh === true, goal: plan.goal === "master" ? "master" : "finish", started: planMode(plan) }
+    : { list: activeList(), end: addDays(S.today, 8 * 7 - 1), days: 5, sd: true, bh: true, goal: "finish", started: "skip" };
 }
+// What a plan does with work started before it: leave it out (it stays in reviews), show it in its
+// week as done, or plan it again. A redone item counts once it has an attempt since the plan began;
+// lib/github.js mirrors this for the roadmap file.
+const planMode = plan => plan && (plan.started === "done" || plan.started === "redo") ? plan.started : "skip";
+const planDone = (p, plan) => planMode(plan) === "redo" ? p.atts.some(a => a.d >= plan.start) : p.n > 0;
+const STARTED_MODES = [["skip", "Leave out"], ["done", "Show as done"], ["redo", "Plan again"]];
 // Splits a list into `weeks` runs, in order, keeping each group (a pattern or a skill) inside one week.
 // A group splits across back-to-back weeks only when it won't fit in about a third more than an average
 // week. Dynamic programming over the cut points: the cost is each week's distance from the average,
@@ -2359,22 +2391,42 @@ function buildPlan(f) {
   // plan stops new problems early and keeps review weeks before the final week.
   const master = f.goal === "master";
   const reserve = W < 4 ? 0 : master ? Math.min(3, Math.max(1, Math.floor(W / 2) - 1)) : 1, L = W - reserve;
+  const mode = planMode(f);
   const code = CATS[f.list].map(c => derive(Object.assign({}, c, { doc: S.docs.get(c.key) || null }), st));
   // patterns stay in list order; inside each one, easier problems come first
-  const todo = [], byTopic = new Map();
-  for (const p of code) if (!p.n) { if (!byTopic.has(p.topic)) byTopic.set(p.topic, []); byTopic.get(p.topic).push(p); }
-  for (const ps of byTopic.values()) todo.push(...ps.sort((a, b) => DIFF_RANK[a.diff] - DIFF_RANK[b.diff] || a.order - b.order));
-  const sdAll = sdItems(st), sdTodo = f.sd ? sdAll.filter(p => !p.n) : [];
-  const bhAll = bhItems(st), bhTodo = f.bh ? bhAll.filter(p => !p.n) : [];
-  const part = (arr, i) => arr.slice(Math.floor(i * arr.length / L), Math.floor((i + 1) * arr.length / L)).map(p => p.key);
-  const dsaWeeks = packWeeks(todo, L, p => p.topic), bhWeeks = packWeeks(bhTodo, L, p => p.unit), keys = ps => ps.map(p => p.key);
-  const weeks = [];
+  const dsaAll = [], byTopic = new Map();
+  for (const p of code) { if (!byTopic.has(p.topic)) byTopic.set(p.topic, []); byTopic.get(p.topic).push(p); }
+  for (const ps of byTopic.values()) dsaAll.push(...ps.sort((a, b) => DIFF_RANK[a.diff] - DIFF_RANK[b.diff] || a.order - b.order));
+  const sdAll = f.sd ? sdItems(st) : [], bhAll = f.bh ? bhItems(st) : [];
+  // the work that's spread over the weeks: new items, or everything when started work is planned again
+  const work = arr => mode === "redo" ? arr : arr.filter(p => !p.n);
+  const even = arr => Array.from({ length: L }, (_, i) => arr.slice(Math.floor(i * arr.length / L), Math.floor((i + 1) * arr.length / L)));
+  let dsaW = packWeeks(work(dsaAll), L, p => p.topic), sdW = even(work(sdAll)), bhW = packWeeks(work(bhAll), L, p => p.unit);
+  if (mode === "done") { dsaW = placeDone(dsaAll, dsaW, p => p.topic); sdW = placeDone(sdAll, sdW, p => p.unit); bhW = placeDone(bhAll, bhW, p => p.unit); }
+  const keys = ps => ps.map(p => p.key), weeks = [];
   for (let i = 0; i < W; i++) {
     const s = addDays(S.today, i * 7), e = i === W - 1 ? end : addDays(S.today, i * 7 + 6);
-    weeks.push(i < L ? { s, e, dsa: keys(dsaWeeks[i]), sd: part(sdTodo, i), bh: keys(bhWeeks[i]) } : i < W - 1 ? { s, e, dsa: [], sd: [], bh: [], review: true } : { s, e, dsa: [], sd: [], bh: [], polish: true });
+    weeks.push(i < L ? { s, e, dsa: keys(dsaW[i]), sd: keys(sdW[i]), bh: keys(bhW[i]) } : i < W - 1 ? { s, e, dsa: [], sd: [], bh: [], review: true } : { s, e, dsa: [], sd: [], bh: [], polish: true });
   }
-  return { v: 1, list: f.list, goal: master ? "master" : "finish", start: S.today, end, days: Number(f.days) || 5, sd: !!f.sd, bh: !!f.bh, weeks,
-    already: (code.length - todo.length) + (f.sd ? sdAll.length - sdTodo.length : 0) + (f.bh ? bhAll.length - bhTodo.length : 0) };
+  const before = dsaAll.concat(sdAll, bhAll).filter(p => p.n);
+  return { v: 1, list: f.list, goal: master ? "master" : "finish", start: S.today, end, days: Number(f.days) || 5, sd: !!f.sd, bh: !!f.bh, weeks, started: mode,
+    // what was already started when the plan was made: left out, or shown as done
+    already: mode === "skip" ? before.length : 0, prior: mode === "done" ? keys(before) : undefined };
+}
+// "Show as done": each started item joins the week of the next new item after it in list order, so a
+// week reads like that stretch of the list. With nothing new left, the whole list is spread instead.
+function placeDone(all, packed, groupOf) {
+  const weekOf = new Map();
+  packed.forEach((w, i) => w.forEach(p => weekOf.set(p.key, i)));
+  if (!weekOf.size) return all.length ? packWeeks(all, packed.length, groupOf) : packed;
+  const out = packed.map(() => []);
+  let wait = [], last = 0;
+  for (const p of all) {
+    if (!weekOf.has(p.key)) { wait.push(p); continue; }
+    last = weekOf.get(p.key); out[last].push(...wait, p); wait = [];
+  }
+  out[last].push(...wait);
+  return out;
 }
 // Everything the map needs to draw a plan, with live progress.
 function planView(plan) {
@@ -2389,7 +2441,7 @@ function planView(plan) {
   const weeks = plan.weeks.map((w, i) => {
     const dsa = w.dsa.map(k => byK.get(k)).filter(Boolean), sd = w.sd.map(k => byK.get(k)).filter(Boolean);
     const bh = (Array.isArray(w.bh) ? w.bh : []).map(k => byK.get(k)).filter(Boolean);
-    const items = dsa.concat(sd, bh), done = items.filter(p => p.n > 0).length, mastered = items.filter(p => p.status === "mastered").length;
+    const items = dsa.concat(sd, bh), done = items.filter(p => planDone(p, plan)).length, mastered = items.filter(p => p.status === "mastered").length;
     let phase = w.polish ? "Interview polish" : w.review ? "Review" : PHASES[Math.min(2, Math.floor(3 * (totalDsa ? seen / totalDsa : i / Math.max(1, W - 1))))];
     seen += w.dsa.length;
     const sign = phase !== lastPhase ? phase : null; lastPhase = phase;
@@ -2404,9 +2456,10 @@ function planView(plan) {
     return { i, s: w.s, e: w.e, polish: !!w.polish, review: !!w.review, dsa, sd, bh, items, done, mastered, status, groups, skills, sign };
   });
   const left = weeks.filter(w => w.i < cur).reduce((s, w) => s + w.items.length - w.done, 0);
-  const todo = weeks.flatMap(w => w.items).filter(p => !p.n);
+  const todo = weeks.flatMap(w => w.items).filter(p => !planDone(p, plan));
   const all = weeks.flatMap(w => w.items);
-  return { plan, master, weeks, cur, left, todo, W, total: all.length, started: all.filter(p => p.n > 0).length, mastered: all.filter(p => p.status === "mastered").length };
+  // a plan that redoes started work counts what's done again, not what's ever been started
+  return { plan, master, weeks, cur, left, todo, W, total: all.length, started: all.filter(p => planDone(p, plan)).length, mastered: all.filter(p => p.status === "mastered").length, word: planMode(plan) === "redo" ? "done" : "started" };
 }
 // What Today suggests from the roadmap. Once every new problem up to this week (or a week the
 // person chose to start early) is started, it reports the finished week instead.
@@ -2415,7 +2468,7 @@ function roadmapNext() {
   const V = planView(plan), cur = Math.max(0, Math.min(V.cur, V.W - 1));
   const key = plan.start + plan.list + plan.end, saved = (getPref("rmAhead") || "").split("|");
   const ahead = saved[0] === key ? Number(saved[1]) : -1, listOk = saved[0] === key && saved[1] === "list";
-  const open = w => w.items.filter(p => !p.n && p.status !== "paused");
+  const open = w => w.items.filter(p => !planDone(p, plan) && p.status !== "paused" && p.status !== "due");
   const upto = Math.max(cur, ahead);
   const pending = V.weeks.filter(w => w.i <= upto).flatMap(open);
   // Today shows five: mostly coding, plus a design topic and a behavioral question when the plan has them
@@ -2436,14 +2489,14 @@ function weekBar(rn) {
   if (!w.items.length) return `<a class="card wkbar" href="#roadmap"><div class="wkbar-top"><b>${label}</b><span>${w.polish ? "Mock interviews and review." : "A review week: no new problems. Clear your review queue."}</span></div></a>`;
   const total = w.items.length, done = w.done, pct = Math.round(100 * done / total), daysLeft = diffDays(S.today, w.e) + 1;
   const early = rn.focus > rn.cur, full = done === total;
-  const bits = full ? [`All ${total} started. Nice work.`]
-    : [`${done} of ${total} started`, `${total - done} to go`, early ? "started early" : plural(daysLeft, "day") + " left"];
+  const bits = full ? [`All ${total} ${V.word}. Nice work.`]
+    : [`${done} of ${total} ${V.word}`, `${total - done} to go`, early ? "started early" : plural(daysLeft, "day") + " left"];
   if (w.mastered) bits.push(`${w.mastered} mastered`);
   if (rn.earlier) bits.push(`plus ${rn.earlier} from earlier weeks`);
   const from = lastWkPct === null ? pct : lastWkPct; lastWkPct = pct;
   return `<a class="card wkbar${full ? " is-done" : ""}" href="#roadmap" aria-label="${esc(label + ": " + bits.join(", "))}. Open the roadmap.">
     <div class="wkbar-top"><b>${label}${full ? " done" : ""}</b><span>${esc(bits.join(", "))}</span></div>
-    <div class="wkbar-track" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${done}" aria-label="${esc(label)} problems started"><i style="width:${from}%" data-pct="${pct}"></i></div>
+    <div class="wkbar-track" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${done}" aria-label="${esc(label)} problems ${V.word}"><i style="width:${from}%" data-pct="${pct}"></i></div>
   </a>`;
 }
 function startWeekEarly(i) { const r = roadmapNext(); if (r && r.key) setPref("rmAhead", r.key + "|" + i); render(); }
@@ -2478,7 +2531,7 @@ const TROPHY = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stro
 
 function renderRoadmap() {
   const saved = savedPlan();
-  const planKey = p => p ? p.start + p.end + p.list + (p.goal || "finish") : "";
+  const planKey = p => p ? p.start + p.end + p.list + (p.goal || "finish") + planMode(p) : "";
   if (!RM.form || (!RM.draft && saved && RM.formFor !== planKey(saved))) { RM.form = planForm(saved); RM.formFor = planKey(saved); }
   if (!saved && !RM.draft && RM.form.list !== activeList()) RM.form.list = activeList();
   const draft = !saved || RM.draft;
@@ -2486,26 +2539,35 @@ function renderRoadmap() {
   const V = planView(plan);
   const learn = plan.weeks.filter(w => !w.polish && !w.review).length || 1;
   const reviewN = plan.weeks.filter(w => w.review).length, lastNew = [...plan.weeks].reverse().find(w => !w.polish && !w.review);
-  const dsaN = plan.weeks.reduce((s, w) => s + w.dsa.length, 0), sdKeys = plan.weeks.flatMap(w => w.sd);
+  // work in the plan: what's shown as already done doesn't count
+  const prior = new Set(planMode(plan) === "done" && Array.isArray(plan.prior) ? plan.prior : []), fresh = k => !prior.has(k);
+  const dsaN = plan.weeks.reduce((s, w) => s + w.dsa.filter(fresh).length, 0), sdKeys = plan.weeks.flatMap(w => w.sd.filter(fresh));
   const sdList = sdKeys.map(k => SD.find(x => x.key === k)).filter(Boolean);
-  const bhN = plan.weeks.reduce((s, w) => s + (Array.isArray(w.bh) ? w.bh.length : 0), 0);
+  const bhN = plan.weeks.reduce((s, w) => s + (Array.isArray(w.bh) ? w.bh.filter(fresh).length : 0), 0);
+  const mode = planMode(plan), fm = RM.form ? planMode(RM.form) : "skip";
+  // how much is already started in what the form would plan, so the choice only shows when it matters
+  const stF = settings(), startedN = { code: CATS[RM.form.list].filter(c => { const d = S.docs.get(c.key); return d && Array.isArray(d.attempts) && d.attempts.some(validAtt); }).length,
+    sd: RM.form.sd ? sdItems(stF).filter(p => p.n).length : 0, bh: RM.form.bh ? bhItems(stF).filter(p => p.n).length : 0 };
+  const startedAll = startedN.code + startedN.sd + startedN.bh;
+  const startedWords = joinWords([startedN.code && plural(startedN.code, "problem"), startedN.sd && plural(startedN.sd, "design topic"), startedN.bh && plural(startedN.bh, "behavioral question")].filter(Boolean));
+  const MODE_NOTE = { skip: "They stay out of the plan and come back through your review queue.", done: "They sit in their pattern's week, already counted, so each week follows the list.", redo: "They're planned again like new ones. Each counts once you log a new attempt during the roadmap." };
   const perWeek = estimate(dsaN, sdList, learn, bhN);
   const f = RM.form;
   if (RM.sel === null || RM.sel >= V.W) RM.sel = Math.max(0, Math.min(V.W - 1, V.cur));
   if (RM.sel >= V.W) RM.open = false;
   const fast = dsaN / learn > 20;
   const editing = draft || RM.edit;
-  const state = `${V.cur >= V.W ? "Finished." : V.left ? `<b>${V.left}</b> left from earlier weeks.` : "On track."} ${V.started} of ${V.total} started, <b>${V.mastered}</b> mastered.`;
+  const state = `${V.cur >= V.W ? "Finished." : V.left ? `<b>${V.left}</b> left from earlier weeks.` : "On track."} ${V.started} of ${V.total} ${V.word}, <b>${V.mastered}</b> mastered.`;
   const mismatch = saved && saved.list !== activeList() ? `<p class="fine rm-note">This roadmap follows ${esc(LISTS[saved.list].name)}, but your coding list is ${esc(LISTS[activeList()].name)}. <button type="button" class="linkish" data-act="rm-rebuild">Rebuild it for ${esc(LISTS[activeList()].name)}</button></p>` : "";
   $("#view").innerHTML = `
   <section class="rm-head">
     <div>
       <h2>Roadmap</h2>
-      <p class="prose">A week-by-week route through ${esc(joinWords([LISTS[plan.list].name, plan.sd && "the system design path", plan.bh && "behavioral questions"].filter(Boolean)))}, finishing ${esc(fmtFull(plan.end))}.${V.master && reviewN && lastNew ? ` New problems end ${esc(fmtShort(lastNew.e))}, leaving ${plural(reviewN, "review week")} and a final week so they have time to reach mastery.` : ""} Problems you've already started stay in your review queue; the map spreads out everything else.</p>
+      <p class="prose">A week-by-week route through ${esc(joinWords([LISTS[plan.list].name, plan.sd && "the system design path", plan.bh && "behavioral questions"].filter(Boolean)))}, finishing ${esc(fmtFull(plan.end))}.${V.master && reviewN && lastNew ? ` New problems end ${esc(fmtShort(lastNew.e))}, leaving ${plural(reviewN, "review week")} and a final week so they have time to reach mastery.` : ""}${mode === "skip" ? " Problems you've already started stay in your review queue; the map spreads out everything else." : mode === "done" ? " Problems you've already started sit in their pattern's week as done." : " Problems you've already started are planned again, and count once you redo them."}</p>
     </div>
     <div class="kpis rm-kpis">
       <div class="kpi"><b>${plan.weeks.length}</b><span>${plan.weeks.length === 1 ? "week" : "weeks"}</span></div>
-      <div class="kpi"><b>${dsaN}</b><span>new problems</span></div>
+      <div class="kpi"><b>${dsaN}</b><span>${mode === "redo" ? "problems" : "new problems"}</span></div>
       <div class="kpi"><b>${sdKeys.length}</b><span>design topics</span></div>
       ${plan.bh ? `<div class="kpi"><b>${bhN}</b><span>behavioral</span></div>` : ""}
       <div class="kpi"><b>~${Math.max(1, Math.round(perWeek))}h</b><span>a week, est.</span></div>
@@ -2513,7 +2575,7 @@ function renderRoadmap() {
   </section>
   ${editing ? "" : `<section class="card rm-sum" aria-label="Your plan">
     <span class="rm-state">${state}</span>
-    <span class="rm-meta">Planned for ${saved.goal === "master" ? "mastery" : "finishing the list"}${saved.sd || saved.bh ? ", with " + joinWords([saved.sd && "system design", saved.bh && "behavioral"].filter(Boolean)) : ""}, ${plural(saved.days || 5, "study day")} a week.</span>
+    <span class="rm-meta">Planned for ${saved.goal === "master" ? "mastery" : "finishing the list"}${saved.sd || saved.bh ? ", with " + joinWords([saved.sd && "system design", saved.bh && "behavioral"].filter(Boolean)) : ""}, ${plural(saved.days || 5, "study day")} a week${mode === "done" ? ", started work shown as done" : mode === "redo" ? ", started work planned again" : ""}.</span>
     <button type="button" class="btn btn-sm" data-act="rm-edit" aria-expanded="false">Edit plan</button>
     ${mismatch}
   </section>`}
@@ -2529,11 +2591,15 @@ function renderRoadmap() {
     <fieldset class="field rm-inc"><legend>Also include</legend>
       <div class="rm-checks"><label class="check"><input type="checkbox" id="rm-sd" ${f.sd ? "checked" : ""}> System design</label><label class="check"><input type="checkbox" id="rm-bh" ${f.bh ? "checked" : ""}> Behavioral</label></div>
     </fieldset>
+    ${startedAll ? `<div class="field rm-goal rm-done"><span id="rm-done-l">What you've already started</span>
+      <div class="rm-goal-row"><div class="datechips" role="group" aria-labelledby="rm-done-l">${STARTED_MODES.map(([k, t]) => `<button type="button" class="chip" data-act="rm-started" data-s="${k}" aria-pressed="${fm === k}">${t}</button>`).join("")}</div>
+      <p class="fine">${esc(startedWords)} so far. ${MODE_NOTE[fm]}</p></div>
+    </div>` : ""}
     <div class="rm-actions">
       ${draft ? `<button type="submit" class="btn btn-primary">${saved ? "Save new plan" : "Start this roadmap"}</button>${saved ? `<button type="button" class="btn btn-ghost" data-act="rm-cancel">Cancel</button>` : ""}`
         : `<span class="rm-state">${state}</span><button type="button" class="btn btn-ghost btn-sm btn-danger" data-act="rm-remove">Remove roadmap</button><button type="button" class="btn btn-sm" data-act="rm-edit-done">Done</button>`}
     </div>
-    ${draft ? `<p class="fine rm-note">${saved ? "Previewing changes. Saving rebuilds the plan from today with what you haven't started yet." : "This is a preview. Start it to save the plan and track your progress on the map."}${fast ? " That's more than 20 new problems a week; a later date or fewer extras gives you more breathing room." : ""} About ${Math.max(10, Math.round(perWeek * 60 / (Number(f.days) || 5) / 5) * 5)} minutes a study day.</p>`
+    ${draft ? `<p class="fine rm-note">${saved ? `Previewing changes. Saving rebuilds the plan from today${planMode(RM.form) === "skip" ? " with what you haven't started yet" : ""}.` : "This is a preview. Start it to save the plan and track your progress on the map."}${fast ? " That's more than 20 new problems a week; a later date or fewer extras gives you more breathing room." : ""} About ${Math.max(10, Math.round(perWeek * 60 / (Number(f.days) || 5) / 5) * 5)} minutes a study day.</p>`
       : mismatch}
   </form>` : ""}
   <section class="card rm-mapcard ${draft ? "is-draft" : ""}" aria-label="Roadmap map">
@@ -2579,7 +2645,7 @@ function rmDots(w) {
 }
 function rmCard(w, V) {
   const got = V && V.master ? w.mastered : w.done, pct = w.items.length ? Math.round(100 * got / w.items.length) : 0;
-  const ring = w.items.length ? `<span class="rm-ring" style="--p:${pct}%" title="${got} of ${w.items.length} ${V && V.master ? "mastered" : "started"}"><i>${got}/${w.items.length}</i></span>` : "";
+  const ring = w.items.length ? `<span class="rm-ring" style="--p:${pct}%" title="${got} of ${w.items.length} ${V && V.master ? "mastered" : V ? V.word : "started"}"><i>${got}/${w.items.length}</i></span>` : "";
   const topics = w.groups.length ? w.groups.map(g => `${esc(g.t)} <b>${g.n}</b>`).join(", ") : "";
   const sdNames = w.sd.slice(0, 2).map(p => esc(p.name)).join(", ") + (w.sd.length > 2 ? `, +${w.sd.length - 2} more` : "");
   const skills = w.skills.map(g => `${esc(g.t)} <b>${g.n}</b>`).join(", ");
@@ -2695,7 +2761,7 @@ function renderWeekPanel(V, focus) {
   const w = RM.open && V && S.view === "roadmap" ? V.weeks[RM.sel] : null;
   if (!w) { el.classList.remove("open"); el.setAttribute("aria-hidden", "true"); setPanelSpace(false, V); return; }
   const draft = RM.draft || !savedPlan();
-  const status = w.status === "done" ? (w.polish || w.review ? "Done" : V.master ? "Mastered" : "All started") : WEEK_STATUS[w.status];
+  const status = w.status === "done" ? (w.polish || w.review ? "Done" : V.master ? "Mastered" : "All " + V.word) : WEEK_STATUS[w.status];
   const topics = w.groups.map(g => `${esc(g.t)} <b>${g.n}</b>`).join(", ");
   const row = p => `
     <div class="wk-row">
@@ -2720,7 +2786,7 @@ function renderWeekPanel(V, focus) {
       ${topics ? `<p class="rm-line"><span class="tag code">DSA</span> ${topics}</p>` : ""}
       ${w.sd.length ? `<p class="rm-line"><span class="tag sd">Design</span> ${plural(w.sd.length, "topic")}</p>` : ""}
       ${w.bh.length ? `<p class="rm-line"><span class="tag bh">Behavioral</span> ${plural(w.bh.length, "question")}</p>` : ""}
-      ${w.items.length ? `<div class="wkp-prog"><span>${w.done} of ${w.items.length} started${w.mastered ? `, <b>${w.mastered}</b> mastered` : ""}</span>${rmDots(w)}</div>` : ""}
+      ${w.items.length ? `<div class="wkp-prog"><span>${w.done} of ${w.items.length} ${V.word}${w.mastered ? `, <b>${w.mastered}</b> mastered` : ""}</span>${rmDots(w)}</div>` : ""}
     </div>
     <div class="wkp-body">
       ${w.review ? `<p class="wkp-empty">No new problems this week. Work through your review queue on <a href="#today">Today</a>: problems from earlier weeks come back on schedule, and each clean Green moves them toward mastery.</p>`
@@ -2737,7 +2803,7 @@ function saveRoadmap(msg) {
   const cur = Object.assign({}, S.docs.get("settings") || {}, { roadmap: plan });
   const switched = plan.list !== activeList();
   if (switched) cur.list = plan.list;
-  RM.draft = false; RM.edit = false; RM.sel = 0; RM.formFor = plan.start + plan.end + plan.list + plan.goal;
+  RM.draft = false; RM.edit = false; RM.sel = 0; RM.formFor = plan.start + plan.end + plan.list + plan.goal + planMode(plan);
   writeDoc("settings", cur);
   track("Roadmap saved", { list: plan.list, goal: plan.goal, weeks: plan.weeks.length });
   toast(msg || (switched ? `Roadmap saved. Your coding list is now ${LISTS[plan.list].name} to match.` : "Roadmap saved. Week 1 starts today."));
@@ -3352,6 +3418,72 @@ function queueMenu(btn) {
     { sep: true },
     { label: "Remove from queue", fn: () => removeFromQueue(p.key) }]);
 }
+// Several reviews out of today at once: pick cards, then move them to a later day or take them out.
+function qBulkBar(pick) {
+  const k = pick.size, off = k ? "" : " disabled";
+  return `<div class="qbulk" role="region" aria-label="Selected reviews">
+    <span class="qb-n" aria-live="polite"><b>${k}</b> selected</span>
+    <button type="button" class="btn btn-sm" data-act="q-move" aria-haspopup="menu" aria-expanded="false"${off}>Move to…</button>
+    <button type="button" class="btn btn-sm" data-act="q-remove"${off}>Take out</button>
+    <button type="button" class="btn btn-ghost btn-sm" data-act="q-cancel">Done</button>
+  </div>`;
+}
+function qPicked() { const due = allItems().filter(p => p.status === "due").sort(dueSort); return due.filter(p => S.qsel && S.qsel.has(p.key)); }
+function qSync() {
+  const bar = $(".qbulk"); if (!bar || !S.qsel) return;
+  const k = S.qsel.size, n = $$(".q-check").length;
+  $(".qb-n b", bar).textContent = k;
+  for (const b of $$("[data-act=q-move], [data-act=q-remove]", bar)) b.disabled = !k;
+  const all = $("[data-act=q-all]"); if (all) all.textContent = k === n ? "Clear selection" : "Select all";
+  for (const c of $$(".q-check")) { c.checked = S.qsel.has(c.dataset.key); c.closest(".q-pick").classList.toggle("is-picked", c.checked); }
+}
+// Apply a schedule change to many items with one render and one undo.
+function bulkSched(ps, change, msg) {
+  if (!guardLoaded() || !ps.length) return;
+  const prev = ps.map(p => { const d = S.docs.get(p.key); return [p.key, d && d.sched ? JSON.parse(JSON.stringify(d.sched)) : null]; });
+  ps.forEach((p, i) => { const doc = itemDoc(p.key); change(doc, p, i); writeDoc(p.key, doc, { quiet: true }); });
+  S.qsel = null; render();
+  toast(msg, { label: "Undo", fn: () => {
+    for (const [k, sc] of prev) { const doc = itemDoc(k); if (sc) doc.sched = sc; else delete doc.sched; writeDoc(k, doc, { quiet: true }); }
+    render(); toast("Undone.");
+  } });
+}
+function bulkMove(ps, dateOf, msg) {
+  bulkSched(ps, (doc, p, i) => { const why = doc.sched && doc.sched.why; doc.sched = { d: dateOf(i), set: S.today }; if (why) doc.sched.why = why; }, msg);
+}
+function qMoveMenu(btn) {
+  const ps = qPicked(), n = ps.length; if (!n) return;
+  const rv = plural(n, "review"), day = d => fmtDay(addDays(S.today, d));
+  openMenu(btn, [{ head: `Move ${rv} to` },
+    { label: "Tomorrow", fn: () => bulkMove(ps, () => addDays(S.today, 1), `Moved ${rv} to tomorrow.`) },
+    { label: "In 3 days", fn: () => bulkMove(ps, () => addDays(S.today, 3), `Moved ${rv} to ${day(3)}.`) },
+    { label: "In a week", fn: () => bulkMove(ps, () => addDays(S.today, 7), `Moved ${rv} to ${day(7)}.`) },
+    ...(n > 1 ? [{ label: "Spread over the next week", sub: "A few a day, most overdue first", fn: () => bulkMove(ps, i => addDays(S.today, 1 + Math.floor(i * 7 / n)), `Spread ${rv} over the next 7 days.`) }] : []),
+    { label: "Pick a date…", fn: () => qDateModal(ps) }]);
+}
+function qDateModal(ps) {
+  const rv = plural(ps.length, "review");
+  openModal(`<h2>Move ${rv}</h2>
+    <p class="prose">Pick the day they come back. Logging an attempt puts each one back on its normal schedule.</p>
+    <form id="qd-form" style="display:flex;flex-direction:column;gap:12px" autocomplete="off">
+      <label class="field">Review on<input type="date" id="qd-date" min="${addDays(S.today, 1)}" value="${addDays(S.today, 7)}" required></label>
+      <div class="actions"><button type="button" class="btn btn-ghost" data-act="modal-close">Cancel</button><button type="submit" class="btn btn-primary">Move</button></div>
+    </form>`);
+  const d = $("#qd-date"); d.focus();
+  $("#qd-form").addEventListener("submit", e => {
+    e.preventDefault(); const v = d.value; if (!/^\d{4}-\d{2}-\d{2}$/.test(v) || v <= S.today) return;
+    closeModal(); bulkMove(ps, () => v, `Moved ${rv} to ${fmtDay(v)}.`);
+  });
+}
+// Same rule as one at a time: a review that was only moved up goes back to its normal day; the rest pause.
+function qRemove() {
+  const ps = qPicked(); if (!ps.length) return;
+  const unbump = p => p.bumped && (!p.normalNext || p.wasMastered || p.normalNext > S.today);
+  const paused = ps.filter(p => !unbump(p)).length, rv = plural(ps.length, "review");
+  bulkSched(ps, (doc, p) => { if (unbump(p)) delete doc.sched; else doc.sched = { paused: true, set: S.today }; },
+    paused === ps.length ? `Took ${rv} out and paused ${ps.length === 1 ? "it" : "them"}. Add any back from its page.`
+      : paused ? `Took ${rv} out. ${paused} ${paused === 1 ? "is" : "are"} paused until you add ${paused === 1 ? "it" : "them"} back.` : `Took ${rv} out of today's queue.`);
+}
 function reschedModal(key) {
   const p = byKey(allItems(), key); if (!p) return;
   const reasons = [...new Set([...S.docs.values()].map(d => d && d.sched && d.sched.why).filter(Boolean))];
@@ -3483,7 +3615,7 @@ function switchList(id) {
   const plan = savedPlan();
   if (!plan || plan.list === id) { toast("Switched to " + LISTS[id].name + "."); return; }
   openModal(`<h2>Rebuild your roadmap for ${esc(LISTS[id].name)}?</h2>
-    <p class="prose">Your roadmap follows ${esc(LISTS[plan.list].name)}. Rebuilding plans ${esc(LISTS[id].name)} from today, keeping your date (${esc(fmtShort(plan.end))}), study days and goal. Problems you've already started stay in your review queue.</p>
+    <p class="prose">Your roadmap follows ${esc(LISTS[plan.list].name)}. Rebuilding plans ${esc(LISTS[id].name)} from today, keeping your date (${esc(fmtShort(plan.end))}), study days and goal. ${planMode(plan) === "skip" ? "Problems you've already started stay in your review queue." : planMode(plan) === "done" ? "Problems you've already started show as done in their week." : "Problems you've already started are planned again."}</p>
     <div class="actions"><button class="btn btn-ghost" id="rb-keep">Keep current roadmap</button><button class="btn btn-primary" id="rb-go">Rebuild roadmap</button></div>`);
   $("#rb-go").focus();
   $("#rb-go").addEventListener("click", () => { closeModal(); rebuildRoadmapFor(id); });
@@ -3846,6 +3978,11 @@ document.addEventListener("click", e => {
   if (act === "sess-again") return startSession(SESS.skipped.filter(k => { const p = byKey(allItems(), k); return p && p.status === "due"; }));
   if (act === "sess-new") { exitSession(); return openDrawer(key, false); }
   if (act === "qmore") return queueMenu(el);
+  if (act === "q-select") { S.qsel = new Set(); render(); const b = $("[data-act=q-all]"); if (b) b.focus({ preventScroll: true }); return; }
+  if (act === "q-all") { const keys = $$(".q-check").map(c => c.dataset.key); S.qsel = new Set(S.qsel && S.qsel.size === keys.length ? [] : keys); return qSync(); }
+  if (act === "q-cancel") { S.qsel = null; render(); const b = $("[data-act=q-select]"); if (b) b.focus({ preventScroll: true }); return; }
+  if (act === "q-move") return qMoveMenu(el);
+  if (act === "q-remove") return qRemove();
   if (act === "bh-launch") return bhLaunch([key]);
   if (act === "bh-round") return bhLaunch(mockRound(allItems().filter(p => p.track === "bh")).map(p => p.key));
   if (act === "bh-rate") return bhRate(el);
@@ -3872,6 +4009,7 @@ document.addEventListener("click", e => {
   if (act === "rm-ahead") return startWeekEarly(Number(el.dataset.i));
   if (act === "rm-listorder") return continueListOrder();
   if (act === "rm-goal") { RM.form.goal = el.dataset.g; RM.draft = true; return renderRoadmap(); }
+  if (act === "rm-started") { RM.form.started = el.dataset.s; RM.draft = true; return renderRoadmap(); }
   if (act === "rm-cancel") { RM.draft = false; RM.edit = false; RM.form = null; renderRoadmap(); const b = $("[data-act=rm-edit]"); if (b) b.focus(); return; }
   if (act === "rm-edit") { RM.edit = true; renderRoadmap(); const c = $("#rm-form [aria-pressed=true]"); if (c) c.focus(); return; }
   if (act === "rm-edit-done") { RM.edit = false; renderRoadmap(); const b = $("[data-act=rm-edit]"); if (b) b.focus(); return; }
@@ -3958,18 +4096,25 @@ document.addEventListener("keydown", e => {
     if (S.editing) { S.editing = null; S.editDraft = null; return render(); }
     if (S.open) return closeDrawer();
     if (RM.open) return closeWeek();
+    if (S.qsel && S.view === "today") { S.qsel = null; render(); const b = $("[data-act=q-select]"); if (b) b.focus({ preventScroll: true }); return; }
     if (getPref("guestBubble") === "open" && $("#guest-bubble").contains(document.activeElement)) { setPref("guestBubble", "closed"); return renderGuestBubble(true); }
   }
   if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".prow")) { e.preventDefault(); openDrawer(e.target.dataset.key, false); }
   if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".rm-card[data-i]")) { e.preventDefault(); e.target.click(); }
 });
 $("#modal-wrap").addEventListener("click", e => { if (e.target.id === "modal-wrap") closeModal(); });
+document.addEventListener("change", e => {
+  const c = e.target.closest && e.target.closest(".q-check"); if (!c || !S.qsel) return;
+  if (c.checked) S.qsel.add(c.dataset.key); else S.qsel.delete(c.dataset.key);
+  qSync();
+});
 let rz = 0;
 let rzW = window.innerWidth;
 window.addEventListener("resize", () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { if (S.view === "roadmap" && window.innerWidth !== rzW) { rzW = window.innerWidth; renderRoadmap(); } }); });
 window.addEventListener("beforeunload", () => { if (WS.open && WS.ver !== WS.savedVer) saveWorksheet(); });
 
 function route() {
+  S.qsel = null;
   if (S.ivTimer) { clearTimeout(S.ivTimer); saveIntervals(true); }
   const h = (location.hash || "").slice(1), v = VIEWS.includes(h) ? h : "today";
   if (v !== S.view || S.shellFor === null) { S.view = v; S.shellFor = null; tip.classList.remove("on"); render(); window.scrollTo(0, 0); }
